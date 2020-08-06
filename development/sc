@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wget $1 -O - 2> /dev/null | python3 extractlfs.py > ../resources/make-scripts/basic-system/$2

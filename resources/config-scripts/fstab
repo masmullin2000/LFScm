@@ -1,0 +1,10 @@
+# Begin /etc/fstab
+
+# file system  mount-point  type     options             dump  fsck
+#                                                              order
+
+/dev/sda3		/	      	ext4    defaults	            1		1
+/dev/sda2		/boot		ext4	defaults				1		1
+/dev/sda1		swap		swap	pri=1					0		0
+
+# End /etc/fstab

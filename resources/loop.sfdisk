@@ -1,0 +1,9 @@
+label: dos
+label-id: 0xf27a000d
+device: /dev/loop0
+unit: sectors
+sector-size: 512
+
+/dev/loop0p1 : start=        2048, size=     1048576, type=82
+/dev/loop0p2 : start=     1050624, size=      524288, type=83
+/dev/loop0p3 : start=     1574912, size=    15202304, type=83
