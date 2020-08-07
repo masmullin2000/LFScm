@@ -5,7 +5,7 @@ Instructions Assuming Docker is installed
 where NAME is whatever you want to give the docker image
 
 docker build -t NAME .
-docker run --rm --privileged -v /dev:/dev -v /home/masmullin/code/docker/lfs-docker-build/output/:/output/ -v /home/masmullin/code/docker/lfs-docker-build/input:/input -it NAME ./makeit.sh
+docker run --rm --privileged -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input:/input -it NAME ./makeit.sh
 
 once complete, you should find output/tools.tar.gz and output/lfs.qcow2
 
