@@ -391,7 +391,7 @@ function make_lfs_system {
 
 	make_lfs_system_final $1
 
-	cp lfs.img /output/
+	cp /build/lfs.img /output/
 }
 
 setup_loop val
