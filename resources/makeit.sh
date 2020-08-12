@@ -380,6 +380,12 @@ function make_lfs_system_final {
 			mkdir -p /boot/grub/
 			cp /basic-system/grub.cfg /boot/grub/grub.cfg
 			sed -i 's/VERSION/5.7.14/g' /boot/grub/grub.cfg
+
+			rm -rvf /usr/share/{info,man,doc}
+			rm -rvf /tools
+			rm -rvf /sources/
+			rm -rvf /mnt/lfs
+
 			sync
 		"
 }
