@@ -73,6 +73,25 @@ function tarxzget {
 	rm -rf $1
 }
 
+function tarbz2get {
+	echo "WGET fetching $2 to $1"
+	echo "---------------------------------"
+	wget $2 -O $1.tar.bz2
+	tar xf $1.tar.bz2
+	rm $1.tar.bz2
+	mv ./$1* $1
+	tar czf $1.tar.gz $1
+
+	rm -rf $1
+}
+
+
+#gitget		dbus			dbus-1.13.16			https://gitlab.freedesktop.org/dbus/dbus.git 							yes
+targzget	dbus 									https://dbus.freedesktop.org/releases/dbus/dbus-1.12.20.tar.gz
+#gitget		procps			v3.3.16					https://gitlab.com/procps-ng/procps.git 								yes
+tarxzget	procps 									https://sourceforge.net/projects/procps-ng/files/Production/procps-ng-3.3.16.tar.xz
+gitget		e2fsprogs		v1.45.6					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+
 gitget		binutils 		binutils-2_35 			git://sourceware.org/git/binutils-gdb.git
 gitget		gcc 			releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
 
@@ -120,6 +139,7 @@ tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
 tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
 tarxzget	perl									https://www.cpan.org/src/5.0/perl-5.32.0.tar.xz
 tarxzget	Python									https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz
+wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
 tarxzget	texinfo									http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.xz
 tarxzget	util-linux								https://www.kernel.org/pub/linux/utils/util-linux/v2.36/util-linux-2.36.tar.xz
 
@@ -138,7 +158,40 @@ tarxzget	zlib									https://zlib.net/zlib-1.2.11.tar.xz
 targzget	bzip2 									https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
 targzget	zstd 									https://github.com/facebook/zstd/releases/download/v1.4.5/zstd-1.4.5.tar.gz
 targzget	readline								http://ftp.gnu.org/gnu/readline/readline-8.0.tar.gz
+tarxzget	bc 										https://github.com/gavinhoward/bc/releases/download/3.1.5/bc-3.1.5.tar.xz
+targzget	flex									https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
+targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
+targzget	acl 									http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz
+tarxzget	libcap									https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-2.42.tar.xz
+tarxzget	shadow									https://github.com/shadow-maint/shadow/releases/download/4.8.1/shadow-4.8.1.tar.xz
+targzget 	pkg-config								https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
+tarxzget	psmisc									https://sourceforge.net/projects/psmisc/files/psmisc/psmisc-23.3.tar.xz
+tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
+targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
+targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
+tarxzget	expat									https://prdownloads.sourceforge.net/expat/expat-2.2.9.tar.xz
+tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
+targzget	XML-Parser								https://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-2.46.tar.gz
+targzget	intltool								https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
+tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
+tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
+tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
+tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
+targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
+targzget	openssl									https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+targzget	ninja									https://github.com/ninja-build/ninja/archive/v1.10.0/ninja-1.10.0.tar.gz
+targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.0/meson-0.55.0.tar.gz
+targzget	check 									https://github.com/libcheck/check/releases/download/0.15.1/check-0.15.1.tar.gz
+targzget	groff									http://ftp.gnu.org/gnu/groff/groff-1.22.4.tar.gz
+tarxzget	grub									https://ftp.gnu.org/gnu/grub/grub-2.04.tar.xz
+targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
+tarxzget	iproute									https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.7.0.tar.xz
+tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
+targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.2.tar.gz
+tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
+targzget	vim										http://anduin.linuxfromscratch.org/LFS/vim-8.2.1361.tar.gz
 
+gitget		systemd 		v246					https://github.com/systemd/systemd.git
 
 
 wget http://www.linuxfromscratch.org/patches/lfs/development/bash-5.0-upstream_fixes-1.patch
@@ -153,7 +206,7 @@ wget http://www.linuxfromscratch.org/patches/lfs/development/systemd-245-gcc_10-
 wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums -O - | tail -n 7 > md5sums
 md5sum -c md5sums
 
-tar -czf /output/all-sources.tar.gz .
+#tar -czf /output/all-sources.tar.gz .
 
 
 
