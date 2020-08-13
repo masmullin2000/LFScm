@@ -2,36 +2,43 @@
 
 set +e
 
-sudo umount "$LFS"/boot
-sudo umount "$LFS"
-sudo losetup -d /dev/loop0
+umount "$LFS"/boot
+umount "$LFS"
 rm lfs.img
 
 set -e
 
 qemu-img create -f raw lfs.img 8G
-sudo losetup -fP lfs.img
-sudo sfdisk /dev/loop0 < loop.sfdisk
-sudo mkswap /dev/loop0p1
-sudo mkfs.ext4 /dev/loop0p2
-sudo mkfs.ext4 /dev/loop0p3
+
+LOOP_DEV=$(losetup -f)
+
+
+losetup -fP lfs.img
+sfdisk "$LOOP_DEV" < loop.sfdisk
+mkswap "$LOOP_DEV"p1
+mkfs.ext4 "$LOOP_DEV"p2
+mkfs.ext4 "$LOOP_DEV"p3
 
 mkdir -p "$LFS"
-sudo mount /dev/loop0p3 "$LFS"
+mount "$LOOP_DEV"p3 "$LFS"
 mkdir -p "$LFS"/boot
-sudo mount /dev/loop0p2 "$LFS"/boot
+mount "$LOOP_DEV"p2 "$LFS"/boot
 mkdir -p "$LFS"/sources
 chmod -v a+wt "$LFS"/sources
 mkdir -p "$LFS"/tools
 ln -sv "$LFS"/tools /
 
 cd "$LFS"/sources
-wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/wget-list
-wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
-wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/md5sums
-pushd $LFS/sources
-md5sum -c md5sums
-popd
+if test -f "/input/all-sources.tar.gz"
+then
+	tar xf /input/all-sources.tar.gz -C "$LFS"/sources
+else
+	wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/wget-list
+	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+	wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/md5sums
+	md5sum -c md5sums
+	tar -czf /output/all-sources.tar.gz .
+fi
 
 mv /build/config-scripts/bashrc /home/lfs/.bashrc
 mv /build/config-scripts/bash_profile /home/lfs/.bash_profile
@@ -109,9 +116,9 @@ rm -rf "$LFS"/sources
 rm -rf "$LFS"/tools
 rm -rf "$LFS"/basic-system
 
-umount /dev/loop0p2
-umount /dev/loop0p3
+umount "$LOOP_DEV"p2
+umount "$LOOP_DEV"p3
 
-sudo losetup -d /dev/loop0
+losetup -d "$LOOP_DEV"
 
 qemu-img convert -f raw -O qcow2 -c /build/lfs.img /output/lfs.qcow2
