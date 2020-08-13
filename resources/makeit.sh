@@ -15,8 +15,10 @@ function backup {
 			cd "$LFS"/sources 
 		fi
 		tar --exclude='sources/*' --exclude='boot/*' --exclude='proc/*' \
-			--exclude='basic-system' --exclude='sys/module/*' --exclude='sys/bus/*' \
-			--exclude='sys/fs/*' -cf - . | xz -3 --threads=0 > $1
+			--exclude='basic-system' --exclude='sys/module/*' \
+			--exclude='sys/bus/*' --exclude='sys/fs/*' \
+			--exclude='sys/firmware' --exclude='sys/devices' \
+			-cf - . | xz -1 --threads=0 > $1
 
 	fi
 }
@@ -348,6 +350,7 @@ function make_lfs_system_final {
 
 	cp /build/config-scripts/{config*,hosts,locale.conf,inputrc,shells,fstab,10-eth-dhcp.network,passwd,group,grub.cfg} "$LFS"/basic-system/
     make_vfs
+    VERSION="5.8.1"
     chroot "$LFS" /usr/bin/env -i          \
 	    HOME=/root TERM="$TERM"            \
 	    PS1='(lfs chroot) \u:\w\$ '        \
@@ -360,6 +363,8 @@ function make_lfs_system_final {
 			rm -f /usr/lib/libltdl.a
 			rm -f /usr/lib/libfl.a
 			rm -f /usr/lib/libz.a
+
+			echo $VERSION
 
 			find /usr/lib /usr/libexec -name \*.la -delete
 			find /usr -depth -name $(uname -m)-lfs-linux-gnu\* | xargs rm -rf
@@ -374,17 +379,17 @@ function make_lfs_system_final {
 			cp basic-system/shells /etc/shells
 			cp basic-system/fstab /etc/fstab
 
-			cd /sources && /basic-system/100.kernel.sh 5.7.14
+			cd /sources && /basic-system/100.kernel.sh $VERSION
 
 			grub-install --target=i386-pc $1
 			mkdir -p /boot/grub/
 			cp /basic-system/grub.cfg /boot/grub/grub.cfg
-			sed -i 's/VERSION/5.7.14/g' /boot/grub/grub.cfg
+			sed -i 's/VERSION/$VERSION/g' /boot/grub/grub.cfg
 
-			rm -rvf /usr/share/{info,man,doc}
-			rm -rvf /tools
-			rm -rvf /sources/
-			rm -rvf /mnt/lfs
+			rm -rf /usr/share/{info,man,doc}
+			rm -rf /tools
+			rm -rf /sources/
+			rm -rf /mnt/lfs
 
 			sync
 		"
@@ -397,7 +402,7 @@ function make_lfs_system {
 
 	make_lfs_system_final $1
 
-	cp /build/lfs.img /output/
+	qemu-img convert -c -f raw -O qcow2 /build/lfs.img /output/lfs.qcow2
 }
 
 setup_loop val

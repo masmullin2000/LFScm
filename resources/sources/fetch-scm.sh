@@ -104,7 +104,7 @@ tarxzget	gmp										http://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
 # gitget		mpc				1.1.0					https://gforge.inria.fr/anonscm/git/mpc/mpc.git						yes
 targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
 
-gitget		linux 			v5.7.14 				git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+gitget		linux 			v5.8.1	 				git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 gitget		glibc 			glibc-2.32 				git://sourceware.org/git/glibc.git
 #gitget		m4				v1.4.18					git://git.savannah.gnu.org/m4.git 										no		/build/sources/m4-bootstrap.sh
 tarxzget	m4 										http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz
@@ -181,11 +181,12 @@ targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 targzget	openssl									https://www.openssl.org/source/openssl-1.1.1g.tar.gz
 targzget	ninja									https://github.com/ninja-build/ninja/archive/v1.10.0/ninja-1.10.0.tar.gz
 targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.0/meson-0.55.0.tar.gz
-targzget	check 									https://github.com/libcheck/check/releases/download/0.15.1/check-0.15.1.tar.gz
+targzget	check 									https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz
 targzget	groff									http://ftp.gnu.org/gnu/groff/groff-1.22.4.tar.gz
 tarxzget	grub									https://ftp.gnu.org/gnu/grub/grub-2.04.tar.xz
 targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
-tarxzget	iproute									https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.7.0.tar.xz
+#tarxzget	iproute									https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.7.0.tar.xz
+gitget		iproute 		v5.8.0					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
 targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.2.tar.gz
 tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
@@ -201,9 +202,8 @@ wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.pa
 wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
 wget http://www.linuxfromscratch.org/patches/lfs/development/libpipeline-1.5.2-check_fixes-3.patch
 wget http://www.linuxfromscratch.org/patches/lfs/development/sysvinit-2.97-consolidated-1.patch
-wget http://www.linuxfromscratch.org/patches/lfs/development/systemd-245-gcc_10-fixes-2.patch
 
-wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums -O - | tail -n 7 > md5sums
+wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums -O - | tail -n 6 > md5sums
 md5sum -c md5sums
 
 #tar -czf /output/all-sources.tar.gz .

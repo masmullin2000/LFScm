@@ -9,7 +9,7 @@ ln -sf /bin/true /usr/bin/xsltproc
 
 #tar -xf ../systemd-man-pages-244.tar.xz
 
-#sed '177,$ d' -i src/resolve/meson.build
+sed '177,$ d' -i src/resolve/meson.build
 
 sed -i 's/GROUP="render", //' rules.d/50-udev-default.rules.in
 
