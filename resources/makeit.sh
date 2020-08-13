@@ -25,8 +25,13 @@ chmod -v a+wt "$LFS"/sources
 mkdir -p "$LFS"/tools
 ln -sv "$LFS"/tools /
 
-cp /build/sources/* "$LFS"/sources
-cd "$LFS"/sources && md5sum -c md5sums
+cd "$LFS"/sources
+wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/wget-list
+wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/md5sums
+pushd $LFS/sources
+md5sum -c md5sums
+popd
 
 mv /build/config-scripts/bashrc /home/lfs/.bashrc
 mv /build/config-scripts/bash_profile /home/lfs/.bash_profile
@@ -35,6 +40,9 @@ chown lfs:lfs /build/make-scripts/toolchain/ -R
 
 chown -v lfs "$LFS"/tools
 chown -v lfs "$LFS"/sources
+
+
+
 if test -f "/input/tools.tar.gz"
 then
 	tar xvf /input/tools.tar.gz -C "$LFS"/tools
