@@ -1,0 +1,11 @@
+[Unit]
+Description=Update PKI/TLS certificate store weekly
+
+[Timer]
+OnStartupSec=0
+OnCalendar=Sun 02:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

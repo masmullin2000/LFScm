@@ -14,10 +14,11 @@ function backup {
 		then
 			cd "$LFS"/sources 
 		fi
-		tar --exclude='sources/*' --exclude='boot/*' --exclude='proc/*' \
+		tar --exclude='sources/*' --exclude='proc/*' \
 			--exclude='basic-system' --exclude='sys/module/*' \
 			--exclude='sys/bus/*' --exclude='sys/fs/*' \
-			--exclude='sys/firmware' --exclude='sys/devices' \
+			--exclude='sys/firmware' --exclude='sys/devices' --exclude='sys/kernel/*' \
+			--exclude='sys/power' --exclude='sys/class/*' \
 			-cf - . | xz -1 --threads=0 > $1
 
 	fi
@@ -76,7 +77,7 @@ function fetch_sources {
 		tar xvf /input/all-sources.tar.xz -C "$LFS"/sources
 	else
 		cd "$LFS"/sources
-		/build/sources/fetch-scm.sh
+		/build/sources/fetch-scm.sh $1
 		backup /output/all-sources.tar.xz
 	fi
 }
@@ -346,53 +347,47 @@ function make_lfs_system_pt7 {
 }
 
 function make_lfs_system_final {
-	make_lfs_system_pt7
+	if test -f "/input/lfs.tar.xz"
+	then
+		tar xf /input/lfs.tar.xz -C "$LFS"
+	else
+		make_lfs_system_pt7
 
-	cp /build/config-scripts/{config*,hosts,locale.conf,inputrc,shells,fstab,10-eth-dhcp.network,passwd,group,grub.cfg} "$LFS"/basic-system/
-    make_vfs
-    VERSION="5.8.1"
-    chroot "$LFS" /usr/bin/env -i          \
-	    HOME=/root TERM="$TERM"            \
-	    PS1='(lfs chroot) \u:\w\$ '        \
-	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-	    /bin/bash --login -c "
-	    	rm -f /usr/lib/lib{bfd,opcodes}.a
-			rm -f /usr/lib/libctf{,-nobfd}.a
-			rm -f /usr/lib/libbz2.a
-			rm -f /usr/lib/lib{com_err,e2p,ext2fs,ss}.a
-			rm -f /usr/lib/libltdl.a
-			rm -f /usr/lib/libfl.a
-			rm -f /usr/lib/libz.a
+		cp /build/config-scripts/{grub.cfg,config,hosts,locale.conf,inputrc,shells,fstab,10-eth-dhcp.network,passwd,group} "$LFS"/basic-system/
+	    make_vfs
 
-			echo $VERSION
+	    chroot "$LFS" /usr/bin/env -i          \
+		    HOME=/root TERM="$TERM"            \
+		    PS1='(lfs chroot) \u:\w\$ '        \
+		    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+		    /bin/bash --login -c "
+		    	rm -f /usr/lib/lib{bfd,opcodes}.a
+				rm -f /usr/lib/libctf{,-nobfd}.a
+				rm -f /usr/lib/libbz2.a
+				rm -f /usr/lib/lib{com_err,e2p,ext2fs,ss}.a
+				rm -f /usr/lib/libltdl.a
+				rm -f /usr/lib/libfl.a
+				rm -f /usr/lib/libz.a
 
-			find /usr/lib /usr/libexec -name \*.la -delete
-			find /usr -depth -name $(uname -m)-lfs-linux-gnu\* | xargs rm -rf
-			userdel -r tester
+				echo $VERSION
 
-			cp basic-system/10-eth-dhcp.network /etc/systemd/network/
-			ln -sfv /run/systemd/resolve/resolv.conf /etc/resolv.conf
-			echo "LFS" > /etc/hostname
-			cp basic-system/hosts /etc/hosts
-			cp basic-system/locale.conf /etc/locale.conf
-			cp basic-system/inputrc /etc/inputrc
-			cp basic-system/shells /etc/shells
-			cp basic-system/fstab /etc/fstab
+				find /usr/lib /usr/libexec -name \*.la -delete
+				find /usr -depth -name $(uname -m)-lfs-linux-gnu\* | xargs rm -rf
+				userdel -r tester
 
-			cd /sources && /basic-system/100.kernel.sh $VERSION
+				ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+				echo "LFS" > /etc/hostname
+				cp basic-system/hosts /etc/hosts
+				cp basic-system/locale.conf /etc/locale.conf
+				cp basic-system/inputrc /etc/inputrc
+				cp basic-system/shells /etc/shells
+				cp basic-system/fstab /etc/fstab
+				cp basic-system/10-eth-dhcp.network /etc/systemd/network/
 
-			grub-install --target=i386-pc $1
-			mkdir -p /boot/grub/
-			cp /basic-system/grub.cfg /boot/grub/grub.cfg
-			sed -i 's/VERSION/$VERSION/g' /boot/grub/grub.cfg
-
-			rm -rf /usr/share/{info,man,doc}
-			rm -rf /tools
-			rm -rf /sources/
-			rm -rf /mnt/lfs
-
-			sync
-		"
+				cd /sources && /basic-system/100.kernel.sh
+			"
+		backup /output/lfs.tar.xz
+	fi
 }
 
 function make_lfs_system {
@@ -401,11 +396,70 @@ function make_lfs_system {
 	chmod +x "$LFS"/basic-system	
 
 	make_lfs_system_final $1
+}
+
+function fetch_extra_sources {
+	mkdir -p "$LFS"/sources
+	cd "$LFS"/sources
+	/build/sources/fetch-scm.sh wget
+}
+
+function make_extras {
+	fetch_extra_sources
+
+	mkdir -p "$LFS"/extras
+	cp /build/make-scripts/extras/* "$LFS"/extras
+	cp /build/config-scripts/extras/* "$LFS"/extras
+
+	make_vfs
+
+	# Make WGET and dependencies
+	chroot "$LFS" /usr/bin/env -i          \
+	    HOME=/root TERM="$TERM"            \
+	    PS1='(lfs chroot) \u:\w\$ '        \
+	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+	    /bin/bash --login -c "
+	    	cd /sources
+	    	/extras/libtasn1.sh
+	    	/extras/p11-kit.sh
+	    	/extras/make-ca.sh
+	    	/extras/wget.sh
+
+	    	cp /extras/update-pki.timer /lib/systemd/system/update-pki.timer
+	    	systemctl enable update-pki.timer
+	    "
+}
+
+function finish_build {
+
+	cp /build/config-scripts/grub.cfg "$LFS"/basic-system/
+
+	make_vfs
+
+	chroot "$LFS" /usr/bin/env -i          \
+	    HOME=/root TERM="$TERM"            \
+	    PS1='(lfs chroot) \u:\w\$ '        \
+	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+	    /bin/bash --login -c "
+			rm -rf /usr/share/{info,man,doc}
+			rm -rf /tools
+			rm -rf /sources
+			rm -rf /mnt/lfs
+			rm -rf /extras
+
+			grub-install --target=i386-pc $1
+			mkdir -p /boot/grub/
+			cp /basic-system/grub.cfg /boot/grub/grub.cfg
+
+			sync
+		"
 
 	qemu-img convert -c -f raw -O qcow2 /build/lfs.img /output/lfs.qcow2
 }
 
 setup_loop val
 create_and_mount $val
-fetch_sources
-make_lfs_system $val
+fetch_sources scm
+make_lfs_system
+make_extras
+finish_build $val
