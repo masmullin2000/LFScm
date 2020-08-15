@@ -1,9 +1,15 @@
 #!/bin/bash
 
 BACKUP="no"
-if [ -n "$1" ]
-then
+if [[ -n "$1" ]]; then
 	BACKUP=$1
+	shift
+fi
+
+SOURCE_FETCH_METHOD="scm"
+if [[ -n "$1" ]]; then
+	SOURCE_FETCH_METHOD=$1
+	shift
 fi
 
 function backup {
@@ -41,7 +47,7 @@ function setup_loop {
 
 	set -e
 
-	qemu-img create -f raw lfs.img 15G
+	qemu-img create -f raw lfs.img 10G
 	losetup -fP lfs.img
 
 	sfdisk "$LOOP_DEV" < loop.sfdisk
@@ -210,7 +216,7 @@ function make_lfs_system_pt1 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "
-		    	/basic-system/build-system.sh 1 12
+		    	/basic-system/build-system.sh 1 32
 		    "
 		backup /output/system-pt1.tar.xz
 	fi
@@ -226,123 +232,17 @@ function make_lfs_system_pt2 {
 		make_vfs
 
 		chroot "$LFS" /usr/bin/env -i   \
-				HOME=/root                  \
-				TERM="$TERM"                \
-				PS1='(lfs chroot) \u:\w\$ ' \
-				PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-				/bin/bash --login +h -c "
-			    	/basic-system/build-system.sh 13 24
-			    "
-		backup /output/system-pt2.tar.xz
-	fi
-}
-
-function make_lfs_system_pt3 {
-	if test -f "/input/system-pt3.tar.xz"
-	then
-		tar xf /input/system-pt3.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt2
-
-		make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   \
-		HOME=/root                  \
-		TERM="$TERM"                \
-		PS1='(lfs chroot) \u:\w\$ ' \
-		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-		/bin/bash --login +h -c "
-	    	/basic-system/build-system.sh 25 32
-	    "
-		backup /output/system-pt3.tar.xz
-	fi
-}
-
-function make_lfs_system_pt4 {
-	if test -f "/input/system-pt4.tar.xz"
-	then
-		tar xf /input/system-pt4.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt3
-
-		make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   \
 			HOME=/root                  \
 			TERM="$TERM"                \
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "
-				/basic-system/build-system.sh 33 45
+				/basic-system/build-system.sh 33 72
+				/basic-system/99.strip.sh
+				rm -rf /tmp/*
 			"
-		backup /output/system-pt4.tar.xz
-	fi
-}
 
-function make_lfs_system_pt5 {
-	if test -f "/input/system-pt5.tar.xz"
-	then
-		tar xf /input/system-pt5.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt4
-
-		make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   	\
-			HOME=/root                 		\
-			TERM="$TERM"               		\
-			PS1='(lfs chroot) \u:\w\$ '		\
-			PATH=/bin:/usr/bin:/sbin:/usr/sbin 	\
-			/bin/bash --login +h -c "
-		    	/basic-system/build-system.sh 46 60
-		    "
-
-		backup /output/system-pt5.tar.xz
-	fi
-}
-
-function make_lfs_system_pt6 {
-	if test -f "/input/system-pt6.tar.xz"
-	then
-		tar xf /input/system-pt6.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt5
-
-		make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   \
-		HOME=/root                  \
-		TERM="$TERM"                \
-		PS1='(lfs chroot) \u:\w\$ ' \
-		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-		/bin/bash --login +h -c "
-	    	/basic-system/build-system.sh 60 67
-	    "
-		backup /output/system-pt6.tar.xz
-	fi		
-}
-
-function make_lfs_system_pt7 {
-	if test -f "/input/system-pt7.tar.xz"
-	then
-		tar xf /input/system-pt7.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt6
-
-		make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   \
-		HOME=/root                  \
-		TERM="$TERM"                \
-		PS1='(lfs chroot) \u:\w\$ ' \
-		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-		/bin/bash --login +h -c "
-	    	/basic-system/build-system.sh 68 72
-	    	/basic-system/99.strip.sh
-	    	rm -rf /tmp/*
-	    "
-
-		backup /output/system-pt7.tar.xz
+		backup /output/system-pt2.tar.xz
 	fi		
 }
 
@@ -351,7 +251,7 @@ function make_lfs_system_final {
 	then
 		tar xf /input/lfs.tar.xz -C "$LFS"
 	else
-		make_lfs_system_pt7
+		make_lfs_system_pt2
 
 		cp /build/config-scripts/{grub.cfg,config,hosts,locale.conf,inputrc,shells,fstab,10-eth-dhcp.network,passwd,group} "$LFS"/basic-system/
 	    make_vfs
@@ -398,20 +298,16 @@ function make_lfs_system {
 	make_lfs_system_final $1
 }
 
-function fetch_extra_sources {
-	mkdir -p "$LFS"/sources
-	cd "$LFS"/sources
-	/build/sources/fetch-scm.sh wget
-}
-
-function make_extras {
-	fetch_extra_sources
+function make_wget {
+	make_vfs
 
 	mkdir -p "$LFS"/extras
 	cp /build/make-scripts/extras/* "$LFS"/extras
-	cp /build/config-scripts/extras/* "$LFS"/extras
+	cp /build/config-scripts/extras/certs/* "$LFS"/extras
 
-	make_vfs
+	mkdir -p "$LFS"/sources
+	cd "$LFS"/sources
+	/build/sources/fetch-scm.sh wget
 
 	# Make WGET and dependencies
 	chroot "$LFS" /usr/bin/env -i          \
@@ -428,6 +324,50 @@ function make_extras {
 	    	cp /extras/update-pki.timer /lib/systemd/system/update-pki.timer
 	    	systemctl enable update-pki.timer
 	    "
+}
+
+function make_ssh {
+	make_vfs
+
+	mkdir -p "$LFS"/extras
+	cp /build/make-scripts/extras/* "$LFS"/extras
+	cp /build/config-scripts/extras/ssh/* "$LFS"/extras
+
+	mkdir -p "$LFS"/sources
+	cd "$LFS"/sources
+	/build/sources/fetch-scm.sh ssh
+
+	ALLOW_ROOT="no"
+	if [[ "allow_root" == $1 ]]; then
+		ALLOW_ROOT="yes"
+	fi
+
+	chroot "$LFS" /usr/bin/env -i          \
+	    HOME=/root TERM="$TERM"            \
+	    PS1='(lfs chroot) \u:\w\$ '        \
+	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+	    /bin/bash --login -c "
+	    	cd /sources
+	    	/extras/openssh.sh
+
+	    	cp /extras/sshd.* /lib/systemd/system/
+	    	cp /extras/sshdat.service /lib/systemd/system/sshd@.service
+
+	    	if [[ $ALLOW_ROOT == yes ]]; then
+	    		echo allowing root
+	    		sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
+	    	fi
+
+	    	systemctl enable sshd
+	    "
+}
+
+function make_extras {
+	mkdir -p "$LFS"/extras
+	cp /build/make-scripts/extras/* "$LFS"/extras
+
+	make_wget
+	make_ssh allow_root
 }
 
 function finish_build {

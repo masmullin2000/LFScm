@@ -5,7 +5,7 @@ set -e
 tar xf bash.tar.gz
 cd bash
 
-patch -Np1 -i ../bash-5.0-upstream_fixes-1.patch
+#patch -Np1 -i ../bash-5.0-upstream_fixes-1.patch
 
 ./configure --prefix=/usr                    \
             --docdir=/usr/share/doc/bash-5.0 \

@@ -109,7 +109,7 @@ function fetch_scm {
 	#gitget		m4				v1.4.18					git://git.savannah.gnu.org/m4.git 										no		/build/sources/m4-bootstrap.sh
 	tarxzget	m4 										http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
-	gitget		bash			bash-5.0				git://git.savannah.gnu.org/bash.git
+	gitget		bash			devel 					git://git.savannah.gnu.org/bash.git
 	#gitget		coreutils		v8.32					git://git.savannah.gnu.org/coreutils.git
 	tarxzget	coreutils 								http://ftp.gnu.org/gnu/coreutils/coreutils-8.32.tar.xz
 	#gitget		diffutils		v3.7					git://git.savannah.gnu.org/diffutils.git
@@ -144,7 +144,7 @@ function fetch_scm {
 	tarxzget	util-linux								https://www.kernel.org/pub/linux/utils/util-linux/v2.36/util-linux-2.36.tar.xz
 
 	## TODO: Basic system, having tried to get scm repos yet
-	tarxzget	man-pages								https://www.kernel.org/pub/linux/docs/man-pages/man-pages-5.07.tar.xz
+	tarxzget	man-pages								https://www.kernel.org/pub/linux/docs/man-pages/man-pages-5.08.tar.xz
 	targzget	tcl										https://downloads.sourceforge.net/tcl/tcl8.6.10-src.tar.gz
 	wget												https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
 	targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
@@ -178,7 +178,8 @@ function fetch_scm {
 	tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
-	targzget	openssl									https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+	#targzget	openssl									https://www.openssl.org/source/openssl-1.1.1f.tar.gz
+	gitget		openssl 		OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
 	targzget	ninja									https://github.com/ninja-build/ninja/archive/v1.10.0/ninja-1.10.0.tar.gz
 	targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.0/meson-0.55.0.tar.gz
 	targzget	check 									https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz
@@ -188,9 +189,10 @@ function fetch_scm {
 	#tarxzget	iproute									https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.7.0.tar.xz
 	gitget		iproute 		v5.8.0					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 	tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
-	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.2.tar.gz
+	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
-	targzget	vim										http://anduin.linuxfromscratch.org/LFS/vim-8.2.1361.tar.gz
+	#targzget	vim										http://anduin.linuxfromscratch.org/LFS/vim-8.2.1361.tar.gz
+	gitget		vim 			master					https://github.com/vim/vim.git
 
 	gitget		systemd 		v246					https://github.com/systemd/systemd.git
 
@@ -221,6 +223,10 @@ function fetch_wget_lfs {
 	targzget	libtasn1	https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.16.0.tar.gz
 }
 
+function fetch_ssh_lfs {
+	targzget	openssh		http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-8.3p1.tar.gz
+}
+
 FETCH=$1
 if [ -z "$FETCH" ]
 then
@@ -234,6 +240,8 @@ elif [[ "lfs" == "$FETCH" ]]; then
 	fetch_lfs
 elif [[ "wget" == "$FETCH" ]]; then
 	fetch_wget_lfs
+elif [[ "ssh" == "$FETCH" ]]; then
+	fetch_ssh_lfs
 fi
 
 #tar -czf /output/all-sources.tar.gz .
