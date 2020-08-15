@@ -386,6 +386,7 @@ function finish_build {
 			rm -rf /sources
 			rm -rf /mnt/lfs
 			rm -rf /extras
+			rm -rf /basic-system
 
 			grub-install --target=i386-pc $1
 			mkdir -p /boot/grub/
@@ -399,7 +400,7 @@ function finish_build {
 
 setup_loop val
 create_and_mount $val
-fetch_sources scm
+fetch_sources "$SOURCE_FETCH_METHOD"
 make_lfs_system
 make_extras
 finish_build $val

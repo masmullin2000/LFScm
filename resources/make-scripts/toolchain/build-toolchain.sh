@@ -39,6 +39,7 @@ else
 				else
 					for i in {1..5}
 					do
+						echo -e "Building $i\n\n\n\n\n"
 						cd "$LFS"/sources && /build/make-scripts/toolchain/toolchain/$i.*.sh > /dev/null || exit
 					done
 					backup /output/toolchain.tar.xz
@@ -46,7 +47,7 @@ else
 
 				for i in {6..9}
 				do
-					echo "Building $i\n\n\n\n\n"
+					echo -e "Building $i\n\n\n\n\n"
 					cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null || exit
 				done
 				backup /output/tools-pt1.tar.xz
@@ -54,7 +55,7 @@ else
 
 			for i in {10..12}
 			do
-				echo "Building $i\n\n\n\n\n"
+				echo -e "Building $i\n\n\n\n\n"
 				cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null|| exit
 			done
 			backup /output/tools-pt2.tar.xz
@@ -62,7 +63,7 @@ else
 
 		for i in {13..17}
 		do
-			echo "Building $i\n\n\n\n\n"
+			echo -e "Building $i\n\n\n\n\n"
 			cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null || exit
 		done
 		backup /output/tools-pt3.tar.xz
@@ -70,7 +71,7 @@ else
 
 	for i in {18..22}
 	do
-		echo "Building $i\n\n\n\n\n"
+		echo -e "Building $i\n\n\n\n\n"
 		cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null|| exit
 	done
 	backup /output/tools-pt4.tar.xz

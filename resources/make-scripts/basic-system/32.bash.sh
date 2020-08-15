@@ -12,7 +12,10 @@ cd bash
             --without-bash-malloc            \
             --with-installed-readline
 
-make -j$(nproc)
+# on machines with an extreme amount of cpu, bash has problems
+# change due to testing on amazon aws 32 core machine
+#make -j$(nproc)
+make -j12
 
 #chown -Rv tester .
 #su tester << EOF

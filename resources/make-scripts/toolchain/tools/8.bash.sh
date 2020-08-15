@@ -10,7 +10,10 @@ cd bash
             --host=$LFS_TGT                 \
             --without-bash-malloc
 
-make -j$(nproc)
+# on machines with an extreme amount of cpu, bash has problems
+# change due to testing on amazon aws 32 core machine
+#make -j$(nproc)
+make -j12
 
 make DESTDIR=$LFS install
 
