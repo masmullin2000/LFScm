@@ -2,8 +2,8 @@
 
 set -e
 
-tar xf XML-Parser.tar.gz
-cd XML-Parser
+tar xf XML.tar.gz
+cd XML
 
 perl Makefile.PL
 
@@ -14,4 +14,4 @@ make -j$(nproc)
 make install
 
 cd ../
-rm -rf XML-Parser
+rm -rf XML

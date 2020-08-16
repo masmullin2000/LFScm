@@ -23,4 +23,4 @@ make -j$(nproc)
 make install
 
 cd ..
-rm -rf man-db-2.9.0
+rm -rf man-db

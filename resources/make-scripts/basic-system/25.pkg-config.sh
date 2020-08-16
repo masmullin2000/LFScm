@@ -2,8 +2,8 @@
 
 set -e
 
-tar xf pkg-config.tar.gz
-cd pkg-config
+tar xf pkg.tar.gz
+cd pkg
 
 ./configure --prefix=/usr              \
             --with-internal-glib       \
@@ -17,4 +17,4 @@ make -j$(nproc)
 make install
 
 cd ../
-rm -rf pkg-config
+rm -rf pkg

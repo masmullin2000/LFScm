@@ -2,8 +2,8 @@
 
 set -e
 
-tar xf util-linux.tar.gz
-cd util-linux
+tar xf util.tar.gz
+cd util
 
 mkdir -pv /var/lib/hwclock
 
@@ -29,5 +29,5 @@ make -j$(nproc)
 make install
 
 cd ../
-rm -rf util-linux
+rm -rf util
 

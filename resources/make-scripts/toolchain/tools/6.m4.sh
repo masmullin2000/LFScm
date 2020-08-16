@@ -2,8 +2,8 @@
 
 set -e
 
-tar xvf m4.tar.gz
-cd m4
+tar xf m.tar.gz
+cd m
 
 sed -i 's/IO_ftrylockfile/IO_EOF_SEEN/' lib/*.c
 echo "#define _IO_IN_BACKUP 0x100" >> lib/stdio-impl.h
@@ -17,4 +17,4 @@ make -j$(nproc)
 make DESTDIR=$LFS install
 
 cd ../
-rm -rf m4
+rm -rf m

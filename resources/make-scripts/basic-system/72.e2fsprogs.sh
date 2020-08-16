@@ -2,8 +2,8 @@
 
 set -e
 
-tar xf e2fsprogs.tar.gz
-cd e2fsprogs
+tar xf e.tar.gz
+cd e
 
 mkdir -v build
 cd       build
@@ -33,4 +33,4 @@ install -v -m644 doc/com_err.info /usr/share/info
 install-info --dir-file=/usr/share/info/dir /usr/share/info/com_err.info
 
 cd ../../
-rm -rf e2fsprogs
+rm -rf e

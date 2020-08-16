@@ -2,10 +2,10 @@
 
 set -e
 
-tar xf man-pages.tar.gz
-cd man-pages
+tar xf man.tar.gz
+cd man
 
 make install
 
 cd ../
-rm -rf man-pages
+rm -rf man

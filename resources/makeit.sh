@@ -176,7 +176,7 @@ function make_temp_system {
 		    TERM="$TERM"                \
 		    PS1='(lfs chroot) \u:\w\$ ' \
 		    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-		    /bin/bash --login +h -c "
+		    /bin/bash --login +h -c "set -e
 		    	touch /var/log/{btmp,lastlog,faillog,wtmp}
 				chgrp -v utmp /var/log/lastlog
 				chmod -v 664  /var/log/lastlog
@@ -215,7 +215,7 @@ function make_lfs_system_pt1 {
 			TERM="$TERM"                \
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-			/bin/bash --login +h -c "
+			/bin/bash --login +h -c "set -e
 		    	/basic-system/build-system.sh 1 32
 		    "
 		backup /output/system-pt1.tar.xz
@@ -236,13 +236,34 @@ function make_lfs_system_pt2 {
 			TERM="$TERM"                \
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-			/bin/bash --login +h -c "
-				/basic-system/build-system.sh 33 72
+			/bin/bash --login +h -c "set -e
+		    	/basic-system/build-system.sh 33 52
+		    "
+		backup /output/system-pt2.tar.xz
+	fi
+}
+
+function make_lfs_system_pt3 {
+	if test -f "/input/system-pt3.tar.xz"
+	then
+		tar xf /input/system-pt3.tar.xz -C "$LFS"
+	else
+		make_lfs_system_pt2
+
+		make_vfs
+
+		chroot "$LFS" /usr/bin/env -i   \
+			HOME=/root                  \
+			TERM="$TERM"                \
+			PS1='(lfs chroot) \u:\w\$ ' \
+			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+			/bin/bash --login +h -c "set -e
+				/basic-system/build-system.sh 53 72
 				/basic-system/99.strip.sh
 				rm -rf /tmp/*
 			"
 
-		backup /output/system-pt2.tar.xz
+		backup /output/system-pt3.tar.xz
 	fi		
 }
 
@@ -251,7 +272,7 @@ function make_lfs_system_final {
 	then
 		tar xf /input/lfs.tar.xz -C "$LFS"
 	else
-		make_lfs_system_pt2
+		make_lfs_system_pt3
 
 		cp /build/config-scripts/{grub.cfg,config,hosts,locale.conf,inputrc,shells,fstab,10-eth-dhcp.network,passwd,group} "$LFS"/basic-system/
 	    make_vfs
@@ -305,8 +326,8 @@ function make_wget {
 	cp /build/make-scripts/extras/* "$LFS"/extras
 	cp /build/config-scripts/extras/certs/* "$LFS"/extras
 
-	mkdir -p "$LFS"/sources
-	cd "$LFS"/sources
+	mkdir -p "$LFS"/extra-sources
+	cd "$LFS"/extra-sources
 	/build/sources/fetch-scm.sh wget
 
 	# Make WGET and dependencies
@@ -314,8 +335,8 @@ function make_wget {
 	    HOME=/root TERM="$TERM"            \
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-	    /bin/bash --login -c "
-	    	cd /sources
+	    /bin/bash --login -c "set -e
+	    	cd /extra-sources
 	    	/extras/libtasn1.sh
 	    	/extras/p11-kit.sh
 	    	/extras/make-ca.sh
@@ -333,8 +354,8 @@ function make_ssh {
 	cp /build/make-scripts/extras/* "$LFS"/extras
 	cp /build/config-scripts/extras/ssh/* "$LFS"/extras
 
-	mkdir -p "$LFS"/sources
-	cd "$LFS"/sources
+	mkdir -p "$LFS"/extra-sources
+	cd "$LFS"/extra-sources
 	/build/sources/fetch-scm.sh ssh
 
 	ALLOW_ROOT="no"
@@ -346,8 +367,8 @@ function make_ssh {
 	    HOME=/root TERM="$TERM"            \
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-	    /bin/bash --login -c "
-	    	cd /sources
+	    /bin/bash --login -c "set -e
+	    	cd /extra-sources
 	    	/extras/openssh.sh
 
 	    	cp /extras/sshd.* /lib/systemd/system/
@@ -384,13 +405,17 @@ function finish_build {
 			rm -rf /usr/share/{info,man,doc}
 			rm -rf /tools
 			rm -rf /sources
+			rm -rf /extra-sources
 			rm -rf /mnt/lfs
 			rm -rf /extras
-			rm -rf /basic-system
+
+			set -e
 
 			grub-install --target=i386-pc $1
 			mkdir -p /boot/grub/
 			cp /basic-system/grub.cfg /boot/grub/grub.cfg
+
+			rm -rf /basic-system
 
 			sync
 		"

@@ -2,8 +2,8 @@
 
 set -e
 
-tar xf bzip2.tar.gz
-cd bzip2
+tar xf bzip.tar.gz
+cd bzip
 
 patch -Np1 -i ../bzip2-1.0.8-install_docs-1.patch
 
@@ -26,7 +26,7 @@ ln -sv bzip2 /bin/bunzip2
 ln -sv bzip2 /bin/bzcat
 
 cd ../
-rm -rf bzip2
+rm -rf bzip
 
 
 

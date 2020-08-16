@@ -1,7 +1,7 @@
 #!/bin/bash
 
-tar xvf util-linux.tar.gz
-cd util-linux
+tar xvf util.tar.gz
+cd util
 
 ./configure ADJTIME_PATH=/var/lib/hwclock/adjtime    \
             --docdir=/usr/share/doc/util-linux-2.36 \
@@ -20,4 +20,4 @@ make -j$(nproc)
 make install
 
 cd ../
-rm -rf util-linux
+rm -rf util
