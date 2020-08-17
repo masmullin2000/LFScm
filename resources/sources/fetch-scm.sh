@@ -173,7 +173,8 @@ function fetch_scm {
 	tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
 	tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
 	targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
-	tarxzget	libcap									https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-2.42.tar.xz
+	#tarxzget	libcap									https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-2.42.tar.xz
+	gitget		libcap			libcap-2.43				git://git.kernel.org/pub/scm/libs/libcap/libcap.git
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
@@ -184,7 +185,8 @@ function fetch_scm {
 	targzget 	make 									http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
 	tarxzget	man										https://www.kernel.org/pub/linux/docs/man-pages/man-pages-5.08.tar.xz
 	tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
-	targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.0/meson-0.55.0.tar.gz
+	#targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.1/meson-0.55.1.tar.gz
+	gitget		meson 			0.55.1					https://github.com/mesonbuild/meson.git
 	#gitget		mpc				1.1.0					https://gforge.inria.fr/anonscm/git/mpc/mpc.git						yes
 	targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
 	#svnget		mpfr			branches/4.1			svn://scm.gforge.inria.fr/svnroot/mpfr
