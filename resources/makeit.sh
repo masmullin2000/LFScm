@@ -420,7 +420,7 @@ function finish_build {
 			sync
 		"
 
-	qemu-img convert -c -f raw -O qcow2 /build/lfs.img /output/lfs.qcow2
+	qemu-img convert -c -f raw -O qcow2 /build/lfs.img /output/lfs-$SOURCE_FETCH_METHOD.qcow2
 }
 
 setup_loop val
