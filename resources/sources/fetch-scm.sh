@@ -178,7 +178,7 @@ function fetch_scm {
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
-	gitget		linux 			v5.8.1	 				git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+	gitget		linux 			v5.8.2	 				git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 	#gitget		m				v1.4.18					git://git.savannah.gnu.org/m4.git 										no		/build/sources/m4-bootstrap.sh
 	tarxzget	m 										http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz
 	#gitget		make			4.3						git://git.savannah.gnu.org/make.git
@@ -188,12 +188,13 @@ function fetch_scm {
 	#targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.1/meson-0.55.1.tar.gz
 	gitget		meson 			0.55.1					https://github.com/mesonbuild/meson.git
 	#gitget		mpc				1.1.0					https://gforge.inria.fr/anonscm/git/mpc/mpc.git						yes
-	targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
+	targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz
 	#svnget		mpfr			branches/4.1			svn://scm.gforge.inria.fr/svnroot/mpfr
 	#tarxzget	mpfr									http://www.mpfr.org/mpfr-4.1.0/mpfr-4.1.0.tar.xz
 	targzget 	mpfr 									https://gforge.inria.fr/frs/download.php/file/38343/mpfr-4.1.0.tar.gz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
-	targzget	ninja									https://github.com/ninja-build/ninja/archive/v1.10.0/ninja-1.10.0.tar.gz
+	#targzget	ninja									https://github.com/ninja-build/ninja/archive/v1.10.0/ninja-1.10.0.tar.gz
+	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
 	#targzget	openssl									https://www.openssl.org/source/openssl-1.1.1f.tar.gz
 	gitget		openssl 		OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
 	#gitget		patch			v2.7.6					git://git.savannah.gnu.org/patch.git
