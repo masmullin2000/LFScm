@@ -36,15 +36,31 @@ function svnget {
 	echo "---------------------------------"
 	svn co $3/$2 $1
 	rm -rf $1/.svn
+
+	if [ ! -z "$4" ]
+	then
+		cd $1
+		$4
+		cd ..
+	fi
+
 	tar czf $1.tar.gz $1
 	rm -rf $1
 }
 
 function mercget {
-	echo "Mercurial Fetching $3$2 into $1"
+	echo "Mercurial Fetching $2 into $1"
 	echo "---------------------------------"
-	hg clone "$3$2" $1
+	hg clone "$2" $1
 	rm -rf $1/.hg
+	
+	if [ ! -z "$3" ]
+	then
+		cd $1
+		$3
+		cd ..
+	fi
+
 	tar czf $1.tar.gz $1
 	rm -rf $1
 }
@@ -156,8 +172,8 @@ function fetch_scm {
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
 	gitget		glibc 			glibc-2.32 				git://sourceware.org/git/glibc.git
-	#mercget	gmp				-6.2					https://gmplib.org/repo/gmp
-	tarxzget	gmp										http://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
+	mercget		gmp										https://gmplib.org/repo/gmp 		"/build/sources/gmp-conf.sh"
+	#tarxzget	gmp										http://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
 	targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
 	#gitget		grep			v3.4					git://git.savannah.gnu.org/grep.git
 	tarxzget	grep									http://ftp.gnu.org/gnu/grep/grep-3.4.tar.xz
@@ -187,11 +203,11 @@ function fetch_scm {
 	tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
 	#targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.1/meson-0.55.1.tar.gz
 	gitget		meson 			0.55.1					https://github.com/mesonbuild/meson.git
-	#gitget		mpc				1.1.0					https://gforge.inria.fr/anonscm/git/mpc/mpc.git						yes
-	targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz
-	#svnget		mpfr			branches/4.1			svn://scm.gforge.inria.fr/svnroot/mpfr
+	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git						yes		"autoreconf -i"
+	#targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz
+	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr 		"autoreconf -i"
 	#tarxzget	mpfr									http://www.mpfr.org/mpfr-4.1.0/mpfr-4.1.0.tar.xz
-	targzget 	mpfr 									https://gforge.inria.fr/frs/download.php/file/38343/mpfr-4.1.0.tar.gz
+	#targzget 	mpfr 									https://gforge.inria.fr/frs/download.php/file/38343/mpfr-4.1.0.tar.gz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
 	#targzget	ninja									https://github.com/ninja-build/ninja/archive/v1.10.0/ninja-1.10.0.tar.gz
 	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
@@ -238,19 +254,12 @@ function fetch_scm {
 }
 
 function fetch_lfs {
-	if test -f "/input/lfs-sources.tar.xz"
-	then
-		tar xf /input/lfs-sources.tar.xz
-	else
-		wget http://www.linuxfromscratch.org/lfs/view/systemd/wget-list
-		wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums
-		wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
-		md5sum -c md5sums
+	wget http://www.linuxfromscratch.org/lfs/view/systemd/wget-list
+	wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums
+	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+	md5sum -c md5sums
 
-		tar -cf - . | xz -1 --threads=0 > /output/lfs-sources.tar.xz
-	fi
-
-	echo "continue"
+	tar -cf - . | xz -1 --threads=0 > /output/lfs-sources.tar.xz
 
 	for f in *.tar.gz
 	do

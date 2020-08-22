@@ -13,6 +13,12 @@ if [[ -n "$1" ]]; then
 fi
 
 function backup {
+
+	local LEVEL=1
+	if [[ -n $2 ]]; then
+		LEVEL=$2
+	fi
+
 	if [ "$BACKUP" == "yes" ]
 	then
 		cd "$LFS"
@@ -25,7 +31,7 @@ function backup {
 			--exclude='sys/bus/*' --exclude='sys/fs/*' \
 			--exclude='sys/firmware' --exclude='sys/devices' --exclude='sys/kernel/*' \
 			--exclude='sys/power' --exclude='sys/class/*' \
-			-cf - . | xz -1 --threads=0 > $1
+			-cf - . | xz -$LEVEL --threads=0 > $1
 
 	fi
 }
@@ -201,10 +207,10 @@ set -e
 	fi
 }
 
-function make_lfs_system_pt1 {
-	if test -f "/input/system-pt1.tar.xz"
+function make_lfs_system_pt0 {
+	if test -f "/input/system-pt0.tar.xz"
 	then
-		tar xf /input/system-pt1.tar.xz -C "$LFS"
+		tar xf /input/system-pt0.tar.xz -C "$LFS"
 	else
 		make_temp_system
 
@@ -216,7 +222,28 @@ function make_lfs_system_pt1 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 1 32
+		    	/basic-system/build-system.sh 1 16
+		    "
+		backup /output/system-pt0.tar.xz
+	fi
+}
+
+function make_lfs_system_pt1 {
+	if test -f "/input/system-pt1.tar.xz"
+	then
+		tar xf /input/system-pt1.tar.xz -C "$LFS"
+	else
+		make_lfs_system_pt0
+
+		make_vfs
+
+		chroot "$LFS" /usr/bin/env -i   \
+			HOME=/root                  \
+			TERM="$TERM"                \
+			PS1='(lfs chroot) \u:\w\$ ' \
+			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+			/bin/bash --login +h -c "set -e
+		    	/basic-system/build-system.sh 17 32
 		    "
 		backup /output/system-pt1.tar.xz
 	fi
@@ -419,6 +446,10 @@ function finish_build {
 
 			sync
 		"
+
+	cd /mnt/lfs
+	BACKUP="yes"
+	backup /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz 9e
 
 	qemu-img convert -c -f raw -O qcow2 /build/lfs.img /output/lfs-$SOURCE_FETCH_METHOD.qcow2
 }
