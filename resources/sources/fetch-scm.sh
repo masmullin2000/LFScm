@@ -141,6 +141,8 @@ function repackage {
 }
 
 function fetch_scm {
+	#git clone git://git.sv.gnu.org/gnulib.git
+
 	targzget	acl 									http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz
 	targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
@@ -172,7 +174,7 @@ function fetch_scm {
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
 	gitget		glibc 			glibc-2.32 				git://sourceware.org/git/glibc.git
-	mercget		gmp										https://gmplib.org/repo/gmp 		"/build/sources/gmp-conf.sh"
+	mercget		gmp										https://gmplib.org/repo/gmp 					"/build/sources/gmp-conf.sh"
 	#tarxzget	gmp										http://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
 	targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
 	#gitget		grep			v3.4					git://git.savannah.gnu.org/grep.git
@@ -185,7 +187,7 @@ function fetch_scm {
 	tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
 	targzget	intltool								https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
 	#tarxzget	iproute									https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.7.0.tar.xz
-	gitget		iproute 		v5.8.0					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
+	gitget		iproute 		master					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 	tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
 	tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
 	targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
@@ -194,8 +196,10 @@ function fetch_scm {
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
-	gitget		linux 			v5.8.2	 				git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-	#gitget		m				v1.4.18					git://git.savannah.gnu.org/m4.git 										no		/build/sources/m4-bootstrap.sh
+	gitget		linux 			master	 				git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+	## Holy Christ this was difficult, eventually gave up
+	#gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git 		no 		"/build/sources/m4-conf.sh"
 	tarxzget	m 										http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz
 	#gitget		make			4.3						git://git.savannah.gnu.org/make.git
 	targzget 	make 									http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
@@ -203,16 +207,17 @@ function fetch_scm {
 	tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
 	#targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.1/meson-0.55.1.tar.gz
 	gitget		meson 			0.55.1					https://github.com/mesonbuild/meson.git
-	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git						yes		"autoreconf -i"
+	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git		yes		"autoreconf -i"
 	#targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz
-	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr 		"autoreconf -i"
+	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr 			"autoreconf -i"
 	#tarxzget	mpfr									http://www.mpfr.org/mpfr-4.1.0/mpfr-4.1.0.tar.xz
 	#targzget 	mpfr 									https://gforge.inria.fr/frs/download.php/file/38343/mpfr-4.1.0.tar.gz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
 	#targzget	ninja									https://github.com/ninja-build/ninja/archive/v1.10.0/ninja-1.10.0.tar.gz
 	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
 	#targzget	openssl									https://www.openssl.org/source/openssl-1.1.1f.tar.gz
-	gitget		openssl 		OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
+	#gitget		openssl 		OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
+	gitget		libressl		master					https://github.com/libressl-portable/portable.git	no		"./autogen.sh"
 	#gitget		patch			v2.7.6					git://git.savannah.gnu.org/patch.git
 	tarxzget	patch 									http://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
 	tarxzget	perl									https://www.cpan.org/src/5.0/perl-5.32.0.tar.xz
@@ -259,8 +264,6 @@ function fetch_lfs {
 	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
 	md5sum -c md5sums
 
-	tar -cf - . | xz -1 --threads=0 > /output/lfs-sources.tar.xz
-
 	for f in *.tar.gz
 	do
 		echo "$f"
@@ -297,7 +300,6 @@ then
 	FETCH="scm"
 fi
 
-
 if [[ "scm" == "$FETCH" ]]; then
 	fetch_scm
 elif [[ "lfs" == "$FETCH" ]]; then
@@ -307,9 +309,3 @@ elif [[ "wget" == "$FETCH" ]]; then
 elif [[ "ssh" == "$FETCH" ]]; then
 	fetch_ssh_lfs
 fi
-
-#tar -czf /output/all-sources.tar.gz .
-
-
-
-

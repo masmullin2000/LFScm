@@ -264,7 +264,7 @@ function make_lfs_system_pt2 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 33 52
+		    	/basic-system/build-system.sh 33 45
 		    "
 		backup /output/system-pt2.tar.xz
 	fi
@@ -279,18 +279,66 @@ function make_lfs_system_pt3 {
 
 		make_vfs
 
+    	if [[ $SOURCE_FETCH_METHOD == "scm" ]]; then
+    		echo -e "Building LibreSSL\n\n\n\n\n\n"
+    		chroot "$LFS" /usr/bin/env -i   \
+				HOME=/root                  \
+				TERM="$TERM"                \
+				PS1='(lfs chroot) \u:\w\$ ' \
+				PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+				/bin/bash --login +h -c "set -e
+					cd /sources && /basic-system/46.libressl.sh > /dev/null || exit
+				"
+		else
+			echo -e "Building OpenSSL\n\n\n\n\n\n"
+
+			chroot "$LFS" /usr/bin/env -i   \
+				HOME=/root                  \
+				TERM="$TERM"                \
+				PS1='(lfs chroot) \u:\w\$ ' \
+				PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+				/bin/bash --login +h -c "set -e
+					cd /sources && /basic-system/46.openssl.sh > /dev/null || exit
+				"
+    	fi
+
+    	make_vfs
+
 		chroot "$LFS" /usr/bin/env -i   \
 			HOME=/root                  \
 			TERM="$TERM"                \
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-				/basic-system/build-system.sh 53 72
+
+
+		    	/basic-system/build-system.sh 47 60
+		    "
+		backup /output/system-pt3.tar.xz
+	fi
+}
+
+function make_lfs_system_pt4 {
+	if test -f "/input/system-pt4.tar.xz"
+	then
+		tar xf /input/system-pt4.tar.xz -C "$LFS"
+	else
+		make_lfs_system_pt3
+
+		make_vfs
+
+		chroot "$LFS" /usr/bin/env -i   \
+			HOME=/root                  \
+			TERM="$TERM"                \
+			PS1='(lfs chroot) \u:\w\$ ' \
+			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+			/bin/bash --login +h -c "set -e
+				/basic-system/build-system.sh 61 72
 				/basic-system/99.strip.sh
 				rm -rf /tmp/*
 			"
 
-		backup /output/system-pt3.tar.xz
+		backup /output/system-pt4.tar.xz
 	fi		
 }
 
@@ -299,7 +347,7 @@ function make_lfs_system_final {
 	then
 		tar xf /input/lfs.tar.xz -C "$LFS"
 	else
-		make_lfs_system_pt3
+		make_lfs_system_pt4
 
 		cp /build/config-scripts/{grub.cfg,config,hosts,locale.conf,inputrc,shells,fstab,10-eth-dhcp.network,passwd,group} "$LFS"/basic-system/
 	    make_vfs

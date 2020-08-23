@@ -2,8 +2,8 @@
 
 set -e
 
-tar xf openssl.tar.gz
-cd openssl
+tar xf libressl.tar.gz
+cd libressl
 
 ./config --prefix=/usr         \
          --openssldir=/etc/ssl \
@@ -22,4 +22,4 @@ make MANSUFFIX=ssl install
 #cp -vfr doc/* /usr/share/doc/openssl
 
 cd ../
-rm -rf openssl
+rm -rf libressl
