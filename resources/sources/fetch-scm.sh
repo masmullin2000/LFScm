@@ -187,7 +187,7 @@ function fetch_scm {
 	tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
 	targzget	intltool								https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
 	#tarxzget	iproute									https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.7.0.tar.xz
-	gitget		iproute 		master					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
+	gitget		iproute 		main					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 	tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
 	tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
 	targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
