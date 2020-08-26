@@ -20,7 +20,7 @@ make -j$(nproc)
 sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
 make MANSUFFIX=ssl install
 
-mv apps/nc/nc /bin/
+mv apps/nc/.libs/nc /bin/
 
 #mv -v /usr/share/doc/openssl /usr/share/doc/openssl
 #cp -vfr doc/* /usr/share/doc/openssl

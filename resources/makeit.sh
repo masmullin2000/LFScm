@@ -310,8 +310,6 @@ function make_lfs_system_pt3 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-
-
 		    	/basic-system/build-system.sh 47 60
 		    "
 		backup /output/system-pt3.tar.xz

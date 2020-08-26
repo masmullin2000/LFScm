@@ -158,13 +158,13 @@ function fetch_scm {
 	#gitget		dbus			dbus-1.13.16			https://gitlab.freedesktop.org/dbus/dbus.git 							yes
 	targzget	dbus 									https://dbus.freedesktop.org/releases/dbus/dbus-1.12.20.tar.gz
 	targzget	dejagnu									http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.6.2.tar.gz
-	#gitget		diffutils		v3.7					git://git.savannah.gnu.org/diffutils.git
-	tarxzget	diffutils								http://ftp.gnu.org/gnu/diffutils/diffutils-3.7.tar.xz
+	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git	no 		"/build/sources/diffutils-conf.sh"
+	#tarxzget	diffutils								http://ftp.gnu.org/gnu/diffutils/diffutils-3.7.tar.xz
 	gitget		e				v1.45.6					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	tarxzget	expat									https://prdownloads.sourceforge.net/expat/expat-2.2.9.tar.xz
 	targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
-	#gitget		file			FILE5_39				git://github.com/file/file
+	#gitget		file			master					git://github.com/file/file 					no 		"autoreconf -fi"
 	targzget	file 									ftp://ftp.astron.com/pub/file/file-5.39.tar.gz
 	#gitget		findutils		v4.7.0					git://git.savannah.gnu.org/findutils.git
 	tarxzget	findutils								http://ftp.gnu.org/gnu/findutils/findutils-4.7.0.tar.xz
