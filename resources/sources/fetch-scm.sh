@@ -141,7 +141,7 @@ function repackage {
 }
 
 function fetch_scm {
-	#git clone git://git.sv.gnu.org/gnulib.git
+	git clone git://git.sv.gnu.org/gnulib.git
 
 	targzget	acl 									http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz
 	targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
@@ -153,8 +153,8 @@ function fetch_scm {
 	tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
 	targzget	bzip 									https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
 	targzget	check 									https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz
-	#gitget		coreutils		v8.32					git://git.savannah.gnu.org/coreutils.git
-	tarxzget	coreutils 								http://ftp.gnu.org/gnu/coreutils/coreutils-8.32.tar.xz
+	gitget		coreutils		master					git://git.savannah.gnu.org/coreutils.git  no 	"/build/sources/coreutils-conf.sh"
+	#tarxzget	coreutils 								http://ftp.gnu.org/gnu/coreutils/coreutils-8.32.tar.xz
 	#gitget		dbus			dbus-1.13.16			https://gitlab.freedesktop.org/dbus/dbus.git 							yes
 	targzget	dbus 									https://dbus.freedesktop.org/releases/dbus/dbus-1.12.20.tar.gz
 	targzget	dejagnu									http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.6.2.tar.gz
@@ -198,9 +198,8 @@ function fetch_scm {
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
 	gitget		linux 			master	 				git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
-	## Holy Christ this was difficult, eventually gave up
-	#gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git 		no 		"/build/sources/m4-conf.sh"
-	tarxzget	m 										http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz
+	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git 		no 		"/build/sources/m4-conf.sh"
+	#tarxzget	m 										http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz
 	#gitget		make			4.3						git://git.savannah.gnu.org/make.git
 	targzget 	make 									http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
 	tarxzget	man										https://www.kernel.org/pub/linux/docs/man-pages/man-pages-5.08.tar.xz
@@ -248,7 +247,7 @@ function fetch_scm {
 
 	#wget http://www.linuxfromscratch.org/patches/lfs/development/bash-5.0-upstream_fixes-1.patch
 	wget http://www.linuxfromscratch.org/patches/lfs/development/bzip2-1.0.8-install_docs-1.patch
-	wget http://www.linuxfromscratch.org/patches/lfs/development/coreutils-8.32-i18n-1.patch
+	#wget http://www.linuxfromscratch.org/patches/lfs/development/coreutils-8.32-i18n-1.patch
 	wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
 	wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
 	#wget http://www.linuxfromscratch.org/patches/lfs/development/libpipeline-1.5.2-check_fixes-3.patch

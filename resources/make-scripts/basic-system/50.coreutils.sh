@@ -5,7 +5,10 @@ set -e
 tar xf coreutils.tar.gz
 cd coreutils
 
-patch -Np1 -i ../coreutils-8.32-i18n-1.patch
+if test -f "../coreutils-8.32-i18n-1.patch"
+then
+	patch -Np1 -i ../coreutils-8.32-i18n-1.patch
+fi
 
 sed -i '/test.lock/s/^/#/' gnulib-tests/gnulib.mk
 
