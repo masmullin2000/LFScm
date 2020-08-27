@@ -164,8 +164,8 @@ function fetch_scm {
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	tarxzget	expat									https://prdownloads.sourceforge.net/expat/expat-2.2.9.tar.xz
 	targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
-	#gitget		file			master					git://github.com/file/file 					no 		"autoreconf -fi"
-	targzget	file 									ftp://ftp.astron.com/pub/file/file-5.39.tar.gz
+	gitget		file			master					git://github.com/file/file 					no 		"autoreconf -fi"
+	#targzget	file 									ftp://ftp.astron.com/pub/file/file-5.39.tar.gz
 	#gitget		findutils		v4.7.0					git://git.savannah.gnu.org/findutils.git
 	tarxzget	findutils								http://ftp.gnu.org/gnu/findutils/findutils-4.7.0.tar.xz
 	targzget	flex									https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
