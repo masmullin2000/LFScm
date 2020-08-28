@@ -8,7 +8,7 @@ cd acl
 ./configure --prefix=/usr         \
             --disable-static      \
             --libexecdir=/usr/lib \
-            --docdir=/usr/share/doc/acl-2.2.53
+            --docdir=/usr/share/doc/acl
 
 make -j$(nproc)
 

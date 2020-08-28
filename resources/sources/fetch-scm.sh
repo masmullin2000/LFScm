@@ -143,7 +143,8 @@ function repackage {
 function fetch_scm {
 	git clone git://git.sv.gnu.org/gnulib.git
 
-	targzget	acl 									http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz
+	gitget		acl 			master					git://git.savannah.gnu.org/acl.git 			no 		"/build/sources/acl-conf.sh"
+	#targzget	acl 									http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz
 	targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
 	tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
@@ -166,8 +167,8 @@ function fetch_scm {
 	targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
 	gitget		file			master					git://github.com/file/file 					no 		"autoreconf -fi"
 	#targzget	file 									ftp://ftp.astron.com/pub/file/file-5.39.tar.gz
-	#gitget		findutils		v4.7.0					git://git.savannah.gnu.org/findutils.git
-	tarxzget	findutils								http://ftp.gnu.org/gnu/findutils/findutils-4.7.0.tar.xz
+	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git 	no 		"/build/sources/findutils-conf.sh"
+	#tarxzget	findutils								http://ftp.gnu.org/gnu/findutils/findutils-4.7.0.tar.xz
 	targzget	flex									https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
 	gitget		gawk			gawk-5.1.0				git://git.savannah.gnu.org/gawk.git
 	gitget		gcc 			releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git

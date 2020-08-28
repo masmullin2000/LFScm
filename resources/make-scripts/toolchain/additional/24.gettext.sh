@@ -9,7 +9,7 @@ cd gettext
 
 make -j$(nproc)
 
-cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /usr/bin
+cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext,msgconv} /usr/bin
 
 cd ../
 rm -rf gettext
