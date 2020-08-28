@@ -2,7 +2,7 @@
 
 set -e
 
-GNULIB_SRCDIR=../gnulib ./bootstrap -c
+GNULIB_SRCDIR=../gnulib ./bootstrap --copy
 ./configure
 
 make -j$(nproc)

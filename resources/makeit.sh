@@ -102,12 +102,12 @@ function make_toolchain {
 	chown lfs:lfs /home/lfs/ -R
 	chown lfs:lfs /build/make-scripts/toolchain/ -R
 
-	chown -vR lfs:lfs $LFS
+	chown -R lfs:lfs $LFS
 	case $(uname -m) in
-		x86_64) chown -v lfs $LFS/lib64 ;;
+		x86_64) chown lfs $LFS/lib64 ;;
 	esac
 
-	chown -Rv lfs:lfs "$LFS"/sources
+	chown -R lfs:lfs "$LFS"/sources
 	sudo -u lfs /bin/bash -c "/build/make-scripts/toolchain/build-toolchain.sh $BACKUP"
 	chown -R root:root "$LFS"
 }
