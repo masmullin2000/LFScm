@@ -161,7 +161,7 @@ function fetch_scm {
 	targzget	dejagnu									http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.6.2.tar.gz
 	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git	no 		"/build/sources/diffutils-conf.sh"
 	#tarxzget	diffutils								http://ftp.gnu.org/gnu/diffutils/diffutils-3.7.tar.xz
-	gitget		e				v1.45.6					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+	gitget		e				maint					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	tarxzget	expat									https://prdownloads.sourceforge.net/expat/expat-2.2.9.tar.xz
 	targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
@@ -170,7 +170,7 @@ function fetch_scm {
 	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git 	no 		"/build/sources/findutils-conf.sh"
 	#tarxzget	findutils								http://ftp.gnu.org/gnu/findutils/findutils-4.7.0.tar.xz
 	targzget	flex									https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
-	gitget		gawk			gawk-5.1.0				git://git.savannah.gnu.org/gawk.git
+	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git
 	gitget		gcc 			releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
@@ -193,7 +193,7 @@ function fetch_scm {
 	tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
 	targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
 	#tarxzget	libcap									https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-2.42.tar.xz
-	gitget		libcap			libcap-2.43				git://git.kernel.org/pub/scm/libs/libcap/libcap.git
+	gitget		libcap			master					git://git.kernel.org/pub/scm/libs/libcap/libcap.git
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
@@ -206,7 +206,7 @@ function fetch_scm {
 	tarxzget	man										https://www.kernel.org/pub/linux/docs/man-pages/man-pages-5.08.tar.xz
 	tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
 	#targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.1/meson-0.55.1.tar.gz
-	gitget		meson 			0.55.1					https://github.com/mesonbuild/meson.git
+	gitget		meson 			master					https://github.com/mesonbuild/meson.git
 	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git		yes		"autoreconf -i"
 	#targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz
 	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr 			"autoreconf -i"
@@ -258,12 +258,7 @@ function fetch_scm {
 	#md5sum -c md5sums
 }
 
-function fetch_lfs {
-	wget http://www.linuxfromscratch.org/lfs/view/systemd/wget-list
-	wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums
-	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
-	md5sum -c md5sums
-
+function pak {
 	for f in *.tar.gz
 	do
 		echo "$f"
@@ -281,6 +276,24 @@ function fetch_lfs {
 		echo "$f"		
 		repackage "$f" ".tar.bz2"
 	done
+}
+
+function fetch_lfs_dev {
+	wget http://www.linuxfromscratch.org/lfs/view/systemd/wget-list
+	wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums
+	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+	md5sum -c md5sums
+
+	pak
+}
+
+function fetch_lfs {
+	wget http://www.linuxfromscratch.org/lfs/view/10.0-systemd-rc1/wget-list
+	wget http://www.linuxfromscratch.org/lfs/view/10.0-systemd-rc1/md5sums
+	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+	md5sum -c md5sums
+
+	pak
 }
 
 function fetch_wget_lfs {
@@ -303,6 +316,8 @@ fi
 if [[ "scm" == "$FETCH" ]]; then
 	fetch_scm
 elif [[ "lfs" == "$FETCH" ]]; then
+	fetch_lfs
+elif [[ "lfs_dev" == "$FETCH" ]]; then
 	fetch_lfs
 elif [[ "wget" == "$FETCH" ]]; then
 	fetch_wget_lfs
