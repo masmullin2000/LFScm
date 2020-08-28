@@ -150,6 +150,7 @@ function fetch_scm {
 	gitget		acl 			master					git://git.savannah.gnu.org/acl.git 			no 		"/build/sources/acl-conf.sh"
 	gitget		bash			devel 					git://git.savannah.gnu.org/bash.git
 	gitget		binutils 		binutils-2_35 			git://sourceware.org/git/binutils-gdb.git
+	gitget		bzip 			master 					git://sourceware.org/git/bzip2.git
 	gitget		check 			master					https://github.com/libcheck/check.git 		no 		"autoreconf -i"
 	gitget		coreutils		master					git://git.savannah.gnu.org/coreutils.git  no 	"/build/sources/coreutils-conf.sh"
 	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git	no 		"/build/sources/diffutils-conf.sh"
@@ -181,7 +182,7 @@ function fetch_scm {
 	tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
 	tarxzget	bc 										https://github.com/gavinhoward/bc/releases/download/3.1.5/bc-3.1.5.tar.xz
 	tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
-	targzget	bzip 									https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
+	#targzget	bzip 									https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
 	#targzget	check 									https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz
 	#tarxzget	coreutils 								http://ftp.gnu.org/gnu/coreutils/coreutils-8.32.tar.xz
 	#gitget		dbus			dbus-1.13.16			https://gitlab.freedesktop.org/dbus/dbus.git 							yes
@@ -255,7 +256,7 @@ function fetch_scm {
 	mv tzdata2020a.tar.gz tzdata.tar.gz
 
 	#wget http://www.linuxfromscratch.org/patches/lfs/development/bash-5.0-upstream_fixes-1.patch
-	wget http://www.linuxfromscratch.org/patches/lfs/development/bzip2-1.0.8-install_docs-1.patch
+	#wget http://www.linuxfromscratch.org/patches/lfs/development/bzip2-1.0.8-install_docs-1.patch
 	#wget http://www.linuxfromscratch.org/patches/lfs/development/coreutils-8.32-i18n-1.patch
 	wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
 	wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch

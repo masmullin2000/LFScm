@@ -5,7 +5,9 @@ set -e
 tar xf bzip.tar.gz
 cd bzip
 
-patch -Np1 -i ../bzip2-1.0.8-install_docs-1.patch
+if [[ -f "../bzip2-1.0.8-install_docs-1.patch" ]]; then
+	patch -Np1 -i ../bzip2-1.0.8-install_docs-1.patch
+fi
 
 sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
 
