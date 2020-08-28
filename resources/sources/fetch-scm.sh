@@ -149,10 +149,12 @@ function fetch_scm {
 
 	gitget		acl 			master					git://git.savannah.gnu.org/acl.git 			no 		"/build/sources/acl-conf.sh"
 	gitget		bash			devel 					git://git.savannah.gnu.org/bash.git
+	gitget		bc 				master 					https://git.yzena.com/gavin/bc.git
 	gitget		binutils 		binutils-2_35 			git://sourceware.org/git/binutils-gdb.git
 	gitget		bzip 			master 					git://sourceware.org/git/bzip2.git
 	gitget		check 			master					https://github.com/libcheck/check.git 		no 		"autoreconf -i"
 	gitget		coreutils		master					git://git.savannah.gnu.org/coreutils.git  no 	"/build/sources/coreutils-conf.sh"
+	gitget		dbus 			master 					https://gitlab.freedesktop.org/dbus/dbus.git 	no "./autogen.sh"
 	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git	no 		"/build/sources/diffutils-conf.sh"
 	gitget		e				maint					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
 	gitget		file			master					git://github.com/file/file 					no 		"autoreconf -fi"
@@ -171,6 +173,7 @@ function fetch_scm {
 	#gitget		openssl 		OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
 	gitget		systemd 		v246					https://github.com/systemd/systemd.git
 	gitget		vim 			master					https://github.com/vim/vim.git
+	gitget		zstd 			dev 					https://github.com/facebook/zstd.git
 
 	mercget		gmp										https://gmplib.org/repo/gmp 					"/build/sources/gmp-conf.sh"
 
@@ -180,13 +183,13 @@ function fetch_scm {
 	targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
 	tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
-	tarxzget	bc 										https://github.com/gavinhoward/bc/releases/download/3.1.5/bc-3.1.5.tar.xz
+	#tarxzget	bc 										https://github.com/gavinhoward/bc/releases/download/3.1.5/bc-3.1.5.tar.xz
 	tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
 	#targzget	bzip 									https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
 	#targzget	check 									https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz
 	#tarxzget	coreutils 								http://ftp.gnu.org/gnu/coreutils/coreutils-8.32.tar.xz
 	#gitget		dbus			dbus-1.13.16			https://gitlab.freedesktop.org/dbus/dbus.git 							yes
-	targzget	dbus 									https://dbus.freedesktop.org/releases/dbus/dbus-1.12.20.tar.gz
+	#targzget	dbus 									https://dbus.freedesktop.org/releases/dbus/dbus-1.12.20.tar.gz
 	targzget	dejagnu									http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.6.2.tar.gz
 	#tarxzget	diffutils								http://ftp.gnu.org/gnu/diffutils/diffutils-3.7.tar.xz
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
@@ -248,7 +251,7 @@ function fetch_scm {
 	targzget	XML										https://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-2.46.tar.gz
 	tarxzget	xz										https://tukaani.org/xz/xz-5.2.5.tar.xz
 	tarxzget	zlib									https://zlib.net/zlib-1.2.11.tar.xz
-	targzget	zstd 									https://github.com/facebook/zstd/releases/download/v1.4.5/zstd-1.4.5.tar.gz
+	#targzget	zstd 									https://github.com/facebook/zstd/releases/download/v1.4.5/zstd-1.4.5.tar.gz
 
 	wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
 	wget												https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
