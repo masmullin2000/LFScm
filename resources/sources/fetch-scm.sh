@@ -157,6 +157,7 @@ function fetch_scm {
 	gitget		dbus 			master 					https://gitlab.freedesktop.org/dbus/dbus.git 	no "./autogen.sh"
 	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git	no 		"/build/sources/diffutils-conf.sh"
 	gitget		e				maint					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+	gitget 		expat 			master					https://github.com/libexpat/libexpat.git 	no 		"/build/sources/expat-conf.sh"
 	gitget		file			master					git://github.com/file/file 					no 		"autoreconf -fi"
 	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git 	no 		"/build/sources/findutils-conf.sh"
 	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git
@@ -193,7 +194,7 @@ function fetch_scm {
 	targzget	dejagnu									http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.6.2.tar.gz
 	#tarxzget	diffutils								http://ftp.gnu.org/gnu/diffutils/diffutils-3.7.tar.xz
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
-	tarxzget	expat									https://prdownloads.sourceforge.net/expat/expat-2.2.9.tar.xz
+	#tarxzget	expat									https://prdownloads.sourceforge.net/expat/expat-2.2.9.tar.xz
 	targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
 	#targzget	file 									ftp://ftp.astron.com/pub/file/file-5.39.tar.gz
 	#tarxzget	findutils								http://ftp.gnu.org/gnu/findutils/findutils-4.7.0.tar.xz
