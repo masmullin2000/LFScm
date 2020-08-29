@@ -144,8 +144,43 @@ function tarbz2get {
 	tarballget $1 $2 bz2
 }
 
+function fossilget {
+	provided_source $1 getit
+
+	echo $getit
+
+	if [[ $getit -eq 1 ]]; then
+		echo "Developer provided $1"
+	else
+		mkdir -p $1
+		fossil clone $2 $1/$1.fossil --user root
+		cd $1
+		fossil open $1.fossil
+		rm $1.fossil
+		cd ..
+		tar czf $1.tar.gz $1
+		store_source $1
+	fi
+}
+
+function gitgetkeep {
+	provided_source $1 getit
+
+	echo $getit
+
+	if [[ $getit -eq 1 ]]; then
+		echo "Developer provided $1"
+		tar xf $1.tar.gz
+	else
+		git clone $2 $1
+		tar czf $1.tar.gz $1
+		store_source $1
+	fi
+}
+
 function fetch_scm {
-	git clone git://git.sv.gnu.org/gnulib.git
+	#git clone git://git.sv.gnu.org/gnulib.git
+	gitgetkeep	gnulib									git://git.sv.gnu.org/gnulib.git
 
 	gitget		acl 			master					git://git.savannah.gnu.org/acl.git 			no 		"/build/sources/acl-conf.sh"
 	gitget		bash			devel 					git://git.savannah.gnu.org/bash.git
@@ -180,6 +215,8 @@ function fetch_scm {
 
 	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr 			"autoreconf -i"
 
+	fossilget	expect 									https://core.tcl-lang.org/expect
+
 	#targzget	acl 									http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz
 	targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
@@ -195,7 +232,7 @@ function fetch_scm {
 	#tarxzget	diffutils								http://ftp.gnu.org/gnu/diffutils/diffutils-3.7.tar.xz
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	#tarxzget	expat									https://prdownloads.sourceforge.net/expat/expat-2.2.9.tar.xz
-	targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
+	#targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
 	#targzget	file 									ftp://ftp.astron.com/pub/file/file-5.39.tar.gz
 	#tarxzget	findutils								http://ftp.gnu.org/gnu/findutils/findutils-4.7.0.tar.xz
 	targzget	flex									https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
