@@ -130,7 +130,7 @@ function make_temp_system {
 
 	if test -f "/input/tools.tar.xz"
 	then
-		tar xvf /input/tools.tar.xz -C "$LFS"
+		tar xf /input/tools.tar.xz -C "$LFS"
 	else
 		make_toolchain
 

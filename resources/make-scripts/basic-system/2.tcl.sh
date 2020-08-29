@@ -5,7 +5,9 @@ set -e
 tar xf tcl.tar.gz
 cd tcl
 
-tar -xf ../tcl8.6.10-html.tar.gz --strip-components=1
+if [[ -f "../tcl8.6.10-html.tar.gz" ]]; then
+    tar -xf ../tcl8.6.10-html.tar.gz --strip-components=1
+fi
 
 SRCDIR=$(pwd)
 cd unix

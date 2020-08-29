@@ -10,7 +10,7 @@ function provided_source {
 		tar czf $1.tar.gz -C /input/sources/ $1
 		eval $__ret=1
 	elif [[ -f "/input/sources/$1.tar.gz" ]]; then
-		cp /input/sources/$1.tar.gz /mnt/lfs/sources/
+		cp /input/sources/$1.tar.gz .
 		eval $__ret=1
 	fi
 }
@@ -152,6 +152,8 @@ function fossilget {
 	if [[ $getit -eq 1 ]]; then
 		echo "Developer provided $1"
 	else
+		echo "FOSSIL fetching $2 into $1"
+		echo "---------------------------------"
 		mkdir -p $1
 		fossil clone $2 $1/$1.fossil --user root
 		cd $1
@@ -159,6 +161,32 @@ function fossilget {
 		rm $1.fossil
 		cd ..
 		tar czf $1.tar.gz $1
+		store_source $1
+	fi
+}
+
+function bzrget {
+	provided_source $1 getit
+
+	echo $getit
+
+	if [[ $getit -eq 1 ]]; then
+		echo "Developer provided $1"
+	else
+		echo "BZR fetching $2 into $1"
+		echo "---------------------------------"
+		bzr branch lp:$2 $1
+		cd $1
+
+		if [ ! -z "$3" ]
+		then
+			$3
+		fi
+
+		rm -rf .bzr
+		cd ..
+		tar czf $1.tar.gz $1
+		rm -rf $1
 		store_source $1
 	fi
 }
@@ -179,66 +207,56 @@ function gitgetkeep {
 }
 
 function fetch_scm {
-	#git clone git://git.sv.gnu.org/gnulib.git
 	gitgetkeep	gnulib									git://git.sv.gnu.org/gnulib.git
 
-	gitget		acl 			master					git://git.savannah.gnu.org/acl.git 			no 		"/build/sources/acl-conf.sh"
-	gitget		bash			devel 					git://git.savannah.gnu.org/bash.git
-	gitget		bc 				master 					https://git.yzena.com/gavin/bc.git
-	gitget		binutils 		binutils-2_35 			git://sourceware.org/git/binutils-gdb.git
-	gitget		bzip 			master 					git://sourceware.org/git/bzip2.git
-	gitget		check 			master					https://github.com/libcheck/check.git 		no 		"autoreconf -i"
-	gitget		coreutils		master					git://git.savannah.gnu.org/coreutils.git  no 	"/build/sources/coreutils-conf.sh"
-	gitget		dbus 			master 					https://gitlab.freedesktop.org/dbus/dbus.git 	no "./autogen.sh"
-	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git	no 		"/build/sources/diffutils-conf.sh"
+	gitget		acl				master					git://git.savannah.gnu.org/acl.git 					no		"/build/sources/acl-conf.sh"
+	gitget		bash			devel					git://git.savannah.gnu.org/bash.git
+	gitget		bc				master					https://git.yzena.com/gavin/bc.git
+	gitget		binutils		binutils-2_35			git://sourceware.org/git/binutils-gdb.git
+	gitget		bzip			master					git://sourceware.org/git/bzip2.git
+	gitget		check			master					https://github.com/libcheck/check.git 				no		"autoreconf -i"
+	gitget		coreutils		master					git://git.savannah.gnu.org/coreutils.git			no		"/build/sources/coreutils-conf.sh"
+	gitget		dbus			master					https://gitlab.freedesktop.org/dbus/dbus.git		no		"./autogen.sh"
+	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git			no		"/build/sources/diffutils-conf.sh"
 	gitget		e				maint					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
-	gitget 		expat 			master					https://github.com/libexpat/libexpat.git 	no 		"/build/sources/expat-conf.sh"
-	gitget		file			master					git://github.com/file/file 					no 		"autoreconf -fi"
-	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git 	no 		"/build/sources/findutils-conf.sh"
+	gitget		expat			master					https://github.com/libexpat/libexpat.git 			no		"/build/sources/expat-conf.sh"
+	gitget		file			master					git://github.com/file/file 							no		"autoreconf -fi"
+	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git 			no		"/build/sources/findutils-conf.sh"
 	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git
-	gitget		gcc 			releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
-	gitget		glibc 			glibc-2.32 				git://sourceware.org/git/glibc.git
-	gitget		iproute 		main					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
+	gitget		gcc				releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
+	gitget		glibc			glibc-2.32				git://sourceware.org/git/glibc.git
+	gitget		iproute			main					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 	gitget		libcap			master					git://git.kernel.org/pub/scm/libs/libcap/libcap.git
 	gitget		libressl		master					https://github.com/libressl-portable/portable.git	no		"./autogen.sh"
-	gitget		linux 			master	 				git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git 		no 		"/build/sources/m4-conf.sh"
-	gitget		meson 			master					https://github.com/mesonbuild/meson.git
-	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git		yes		"autoreconf -i"
+	gitget		linux			master					git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git					no		"/build/sources/m4-conf.sh"
+	gitget		man				master					git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
+	gitget		meson			master					https://github.com/mesonbuild/meson.git
+	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git					yes		"autoreconf -i"
 	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
-	#gitget		openssl 		OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
-	gitget		systemd 		v246					https://github.com/systemd/systemd.git
-	gitget		vim 			master					https://github.com/vim/vim.git
-	gitget		zstd 			dev 					https://github.com/facebook/zstd.git
+	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
+	gitget		systemd			v246					https://github.com/systemd/systemd.git
+	gitget		vim				master					https://github.com/vim/vim.git
+	gitget		zstd			dev						https://github.com/facebook/zstd.git
 
-	mercget		gmp										https://gmplib.org/repo/gmp 					"/build/sources/gmp-conf.sh"
+	mercget		gmp										https://gmplib.org/repo/gmp									"/build/sources/gmp-conf.sh"
 
-	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr 			"autoreconf -i"
+	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr						"autoreconf -i"
 
 	fossilget	expect 									https://core.tcl-lang.org/expect
 
-	#targzget	acl 									http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz
+	bzrget		intltool 								intltool													"./autogen.sh"
+
 	targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
 	tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
-	#tarxzget	bc 										https://github.com/gavinhoward/bc/releases/download/3.1.5/bc-3.1.5.tar.xz
 	tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
-	#targzget	bzip 									https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-	#targzget	check 									https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz
-	#tarxzget	coreutils 								http://ftp.gnu.org/gnu/coreutils/coreutils-8.32.tar.xz
 	#gitget		dbus			dbus-1.13.16			https://gitlab.freedesktop.org/dbus/dbus.git 							yes
-	#targzget	dbus 									https://dbus.freedesktop.org/releases/dbus/dbus-1.12.20.tar.gz
 	targzget	dejagnu									http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.6.2.tar.gz
-	#tarxzget	diffutils								http://ftp.gnu.org/gnu/diffutils/diffutils-3.7.tar.xz
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
-	#tarxzget	expat									https://prdownloads.sourceforge.net/expat/expat-2.2.9.tar.xz
-	#targzget	expect									https://prdownloads.sourceforge.net/expect/expect5.45.4.tar.gz
-	#targzget	file 									ftp://ftp.astron.com/pub/file/file-5.39.tar.gz
-	#tarxzget	findutils								http://ftp.gnu.org/gnu/findutils/findutils-4.7.0.tar.xz
 	targzget	flex									https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
-	#tarxzget	gmp										http://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
 	targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
 	#gitget		grep			v3.4					git://git.savannah.gnu.org/grep.git
 	tarxzget	grep									http://ftp.gnu.org/gnu/grep/grep-3.4.tar.xz
@@ -248,27 +266,18 @@ function fetch_scm {
 	tarxzget	gzip 									http://ftp.gnu.org/gnu/gzip/gzip-1.10.tar.xz
 	targzget	iana									http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
 	tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
-	targzget	intltool								https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
-	#tarxzget	iproute									https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.7.0.tar.xz
+	#targzget	intltool								https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
 	tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
 	tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
 	targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
-	#tarxzget	libcap									https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-2.42.tar.xz
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
-	#tarxzget	m 										http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.xz
 	#gitget		make			4.3						git://git.savannah.gnu.org/make.git
 	targzget 	make 									http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
-	tarxzget	man										https://www.kernel.org/pub/linux/docs/man-pages/man-pages-5.08.tar.xz
 	tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
-	#targzget	meson									https://github.com/mesonbuild/meson/releases/download/0.55.1/meson-0.55.1.tar.gz
-	#targzget	mpc										https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz
-	#tarxzget	mpfr									http://www.mpfr.org/mpfr-4.1.0/mpfr-4.1.0.tar.xz
-	#targzget 	mpfr 									https://gforge.inria.fr/frs/download.php/file/38343/mpfr-4.1.0.tar.gz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
-	#targzget	ninja									https://github.com/ninja-build/ninja/archive/v1.10.0/ninja-1.10.0.tar.gz
-	#targzget	openssl									https://www.openssl.org/source/openssl-1.1.1f.tar.gz
+
 	#gitget		patch			v2.7.6					git://git.savannah.gnu.org/patch.git
 	tarxzget	patch 									http://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
 	tarxzget	perl									https://www.cpan.org/src/5.0/perl-5.32.0.tar.xz
@@ -289,20 +298,14 @@ function fetch_scm {
 	targzget	XML										https://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-2.46.tar.gz
 	tarxzget	xz										https://tukaani.org/xz/xz-5.2.5.tar.xz
 	tarxzget	zlib									https://zlib.net/zlib-1.2.11.tar.xz
-	#targzget	zstd 									https://github.com/facebook/zstd/releases/download/v1.4.5/zstd-1.4.5.tar.gz
 
 	wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
-	wget												https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
+	#wget												https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
 	wget 												https://www.iana.org/time-zones/repository/releases/tzdata2020a.tar.gz
 	mv tzdata2020a.tar.gz tzdata.tar.gz
 
-	#wget http://www.linuxfromscratch.org/patches/lfs/development/bash-5.0-upstream_fixes-1.patch
-	#wget http://www.linuxfromscratch.org/patches/lfs/development/bzip2-1.0.8-install_docs-1.patch
-	#wget http://www.linuxfromscratch.org/patches/lfs/development/coreutils-8.32-i18n-1.patch
 	wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
 	wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
-	#wget http://www.linuxfromscratch.org/patches/lfs/development/libpipeline-1.5.2-check_fixes-3.patch
-	#wget http://www.linuxfromscratch.org/patches/lfs/development/sysvinit-2.97-consolidated-1.patch
 }
 
 function repackage {
