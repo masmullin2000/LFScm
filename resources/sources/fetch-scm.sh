@@ -209,30 +209,45 @@ function gitgetkeep {
 function fetch_scm {
 	gitgetkeep	gnulib									git://git.sv.gnu.org/gnulib.git
 
-	gitget		acl				master					git://git.savannah.gnu.org/acl.git 					no		"/build/sources/acl-conf.sh"
+	gitget		acl				master					git://git.savannah.gnu.org/acl.git \
+	no		"/build/sources/acl-conf.sh"
 	gitget		bash			devel					git://git.savannah.gnu.org/bash.git
 	gitget		bc				master					https://git.yzena.com/gavin/bc.git
 	gitget		binutils		binutils-2_35			git://sourceware.org/git/binutils-gdb.git
 	gitget		bzip			master					git://sourceware.org/git/bzip2.git
-	gitget		check			master					https://github.com/libcheck/check.git 				no		"autoreconf -i"
-	gitget		coreutils		master					git://git.savannah.gnu.org/coreutils.git			no		"/build/sources/coreutils-conf.sh"
-	gitget		dbus			master					https://gitlab.freedesktop.org/dbus/dbus.git		no		"./autogen.sh"
-	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git			no		"/build/sources/diffutils-conf.sh"
+	gitget		check			master					https://github.com/libcheck/check.git \
+	no		"autoreconf -i"
+	gitget		coreutils		master					git://git.savannah.gnu.org/coreutils.git \
+	no		"/build/sources/coreutils-conf.sh"
+	gitget		dbus			master					https://gitlab.freedesktop.org/dbus/dbus.git \
+	no		"./autogen.sh"
+	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git \
+	no		"/build/sources/diffutils-conf.sh"
 	gitget		e				maint					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
-	gitget		expat			master					https://github.com/libexpat/libexpat.git 			no		"/build/sources/expat-conf.sh"
-	gitget		file			master					git://github.com/file/file 							no		"autoreconf -fi"
-	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git 			no		"/build/sources/findutils-conf.sh"
+	gitget		expat			master					https://github.com/libexpat/libexpat.git \
+	no		"/build/sources/expat-conf.sh"
+	gitget		file			master					git://github.com/file/file \
+	no		"autoreconf -fi"
+	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git \
+	no		"/build/sources/findutils-conf.sh"
 	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git
 	gitget		gcc				releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
 	gitget		glibc			glibc-2.32				git://sourceware.org/git/glibc.git
 	gitget		iproute			main					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
+	gitget 		kbd 			master					git://git.kernel.org/pub/scm/linux/kernel/git/legion/kbd.git \
+	no		"./autogen.sh"
+	gitget 		kmod 			master					git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
+	no		"/build/sources/kmod-conf.sh"
 	gitget		libcap			master					git://git.kernel.org/pub/scm/libs/libcap/libcap.git
-	gitget		libressl		master					https://github.com/libressl-portable/portable.git	no		"./autogen.sh"
+	gitget		libressl		master					https://github.com/libressl-portable/portable.git \
+	no		"./autogen.sh"
 	gitget		linux			master					git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git					no		"/build/sources/m4-conf.sh"
+	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git \
+	no		"/build/sources/m4-conf.sh"
 	gitget		man				master					git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
 	gitget		meson			master					https://github.com/mesonbuild/meson.git
-	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git					yes		"autoreconf -i"
+	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git \
+	yes		"autoreconf -i"
 	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
 	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
 	gitget		perl			blead					https://github.com/Perl/perl5.git
@@ -242,13 +257,16 @@ function fetch_scm {
 	gitget		XML				master					https://github.com/toddr/XML-Parser.git
 	gitget		zstd			dev						https://github.com/facebook/zstd.git
 
-	mercget		gmp										https://gmplib.org/repo/gmp									"/build/sources/gmp-conf.sh"
+	mercget		gmp										https://gmplib.org/repo/gmp \
+			"/build/sources/gmp-conf.sh"
 
-	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr						"autoreconf -i"
+	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr \
+			"autoreconf -i"
 
 	fossilget	expect 									https://core.tcl-lang.org/expect
 
-	bzrget		intltool 								intltool													"./autogen.sh"
+	bzrget		intltool 								intltool \
+			"./autogen.sh"
 
 	targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
@@ -270,8 +288,8 @@ function fetch_scm {
 	targzget	iana									http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
 	tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
 	#targzget	intltool								https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
-	tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
-	tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
+	#tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
+	#tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
 	targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz

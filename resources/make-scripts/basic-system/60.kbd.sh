@@ -18,7 +18,8 @@ make -j$(nproc)
 
 make install
 
+set +e
 rm -v /usr/lib/libtswrap.{a,la,so*}
-
+set -e
 cd ../
 rm -rf kbd
