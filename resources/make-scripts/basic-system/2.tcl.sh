@@ -21,16 +21,20 @@ sed -e "s|$SRCDIR/unix|/usr/lib|" \
     -e "s|$SRCDIR|/usr/include|"  \
     -i tclConfig.sh
 
-sed -e "s|$SRCDIR/unix/pkgs/tdbc1.1.1|/usr/lib/tdbc1.1.1|" \
-    -e "s|$SRCDIR/pkgs/tdbc1.1.1/generic|/usr/include|"    \
-    -e "s|$SRCDIR/pkgs/tdbc1.1.1/library|/usr/lib/tcl8.6|" \
-    -e "s|$SRCDIR/pkgs/tdbc1.1.1|/usr/include|"            \
-    -i pkgs/tdbc1.1.1/tdbcConfig.sh
+if [[ -f "pkgs/tdbc1.1.1/tdbcConfig.sh" ]]; then
+    sed -e "s|$SRCDIR/unix/pkgs/tdbc1.1.1|/usr/lib/tdbc1.1.1|" \
+        -e "s|$SRCDIR/pkgs/tdbc1.1.1/generic|/usr/include|"    \
+        -e "s|$SRCDIR/pkgs/tdbc1.1.1/library|/usr/lib/tcl8.6|" \
+        -e "s|$SRCDIR/pkgs/tdbc1.1.1|/usr/include|"            \
+        -i pkgs/tdbc1.1.1/tdbcConfig.sh
+fi
 
-sed -e "s|$SRCDIR/unix/pkgs/itcl4.2.0|/usr/lib/itcl4.2.0|" \
-    -e "s|$SRCDIR/pkgs/itcl4.2.0/generic|/usr/include|"    \
-    -e "s|$SRCDIR/pkgs/itcl4.2.0|/usr/include|"            \
-    -i pkgs/itcl4.2.0/itclConfig.sh
+if [[ -f "pkgs/itcl4.2.0/itclConfig.sh" ]]; then
+    sed -e "s|$SRCDIR/unix/pkgs/itcl4.2.0|/usr/lib/itcl4.2.0|" \
+        -e "s|$SRCDIR/pkgs/itcl4.2.0/generic|/usr/include|"    \
+        -e "s|$SRCDIR/pkgs/itcl4.2.0|/usr/include|"            \
+        -i pkgs/itcl4.2.0/itclConfig.sh
+fi
 
 unset SRCDIR
 
@@ -38,11 +42,12 @@ unset SRCDIR
 
 make install
 
-chmod -v u+w /usr/lib/libtcl8.6.so
+chmod -v u+w /usr/lib/libtcl*.so
 
 make install-private-headers
 
-ln -sfv tclsh8.6 /usr/bin/tclsh
+tclver=(/usr/bin/tclsh*)
+ln -sfv "${tclver}" /usr/bin/tclsh
 
 cd ../..
 rm -rf tcl

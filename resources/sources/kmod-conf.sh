@@ -4,8 +4,6 @@ set -e
 
 ./autogen.sh
 
-dnf install python3-Cython python3-devel libxslt docbook-style-xsl -y
-
 ./configure CFLAGS='-g -O2' --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib64  --enable-debug --enable-python
 set +e
 make tar -j$(nproc)

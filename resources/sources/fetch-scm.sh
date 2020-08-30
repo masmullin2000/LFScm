@@ -252,7 +252,11 @@ function fetch_scm {
 	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
 	gitget		perl			blead					https://github.com/Perl/perl5.git
 	gitget		Python			master					https://github.com/python/cpython.git
+	# current systemd (as of https://github.com/systemd/systemd/commit/b9df353689c34d7180ff4b271e866ca597dd516f#diff-91be33be198dcb660ec3e06b561540db)
+	# has a compile bug that wont compile on machines that do not have libcryptsetup
 	gitget		systemd			v246					https://github.com/systemd/systemd.git
+	gitget 		util 			master					git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git \
+	no 		"/build/sources/util-conf.sh"
 	gitget		vim				master					https://github.com/vim/vim.git
 	gitget		XML				master					https://github.com/toddr/XML-Parser.git
 	gitget		zstd			dev						https://github.com/facebook/zstd.git
@@ -264,6 +268,10 @@ function fetch_scm {
 			"autoreconf -i"
 
 	fossilget	expect 									https://core.tcl-lang.org/expect
+	# using fossil is painful, there is a good gitmirror
+	# TCL also seems fairly unstable.  > 8.6.10 breaks expect
+	#fossilget	tcl										https://core.tcl-lang.org/tcl
+	gitget 		tcl 			core-8-6-10				https://github.com/tcltk/tcl.git
 
 	bzrget		intltool 								intltool \
 			"./autogen.sh"
@@ -287,9 +295,6 @@ function fetch_scm {
 	tarxzget	gzip 									http://ftp.gnu.org/gnu/gzip/gzip-1.10.tar.xz
 	targzget	iana									http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
 	tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
-	#targzget	intltool								https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
-	#tarxzget	kbd 									https://www.kernel.org/pub/linux/utils/kbd/kbd-2.3.0.tar.xz
-	#tarxzget	kmod									https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
 	targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
@@ -298,25 +303,21 @@ function fetch_scm {
 	targzget 	make 									http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
 	tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
-
 	#gitget		patch			v2.7.6					git://git.savannah.gnu.org/patch.git
 	tarxzget	patch 									http://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
-	#tarxzget	perl									https://www.cpan.org/src/5.0/perl-5.32.0.tar.xz
 	targzget 	pkg										https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
 	#gitget		procps			v3.3.16					https://gitlab.com/procps-ng/procps.git 								yes
 	tarxzget	procps 									https://sourceforge.net/projects/procps-ng/files/Production/procps-ng-3.3.16.tar.xz
 	tarxzget	psmisc									https://sourceforge.net/projects/psmisc/files/psmisc/psmisc-23.3.tar.xz
-	#tarxzget	Python									https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz
 	targzget	readline								http://ftp.gnu.org/gnu/readline/readline-8.0.tar.gz
 	#gitget		sed				v4.8					git://git.savannah.gnu.org/sed.git
 	tarxzget	sed 									http://ftp.gnu.org/gnu/sed/sed-4.8.tar.xz
 	tarxzget	shadow									https://github.com/shadow-maint/shadow/releases/download/4.8.1/shadow-4.8.1.tar.xz
 	#gitget		tar				release_1_32			git://git.savannah.gnu.org/tar.git
 	tarxzget	tar 									http://ftp.gnu.org/gnu/tar/tar-1.32.tar.xz
-	targzget	tcl										https://downloads.sourceforge.net/tcl/tcl8.6.10-src.tar.gz
+	#targzget	tcl										https://downloads.sourceforge.net/tcl/tcl8.6.10-src.tar.gz
 	tarxzget	texinfo									http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.xz
-	tarxzget	util									https://www.kernel.org/pub/linux/utils/util-linux/v2.36/util-linux-2.36.tar.xz
-	#targzget	XML										https://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-2.46.tar.gz
+	#tarxzget	util									https://www.kernel.org/pub/linux/utils/util-linux/v2.36/util-linux-2.36.tar.xz
 	tarxzget	xz										https://tukaani.org/xz/xz-5.2.5.tar.xz
 	tarxzget	zlib									https://zlib.net/zlib-1.2.11.tar.xz
 
