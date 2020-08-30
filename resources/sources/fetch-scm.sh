@@ -235,8 +235,11 @@ function fetch_scm {
 	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git					yes		"autoreconf -i"
 	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
 	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
+	gitget		perl			blead					https://github.com/Perl/perl5.git
+	gitget		Python			master					https://github.com/python/cpython.git
 	gitget		systemd			v246					https://github.com/systemd/systemd.git
 	gitget		vim				master					https://github.com/vim/vim.git
+	gitget		XML				master					https://github.com/toddr/XML-Parser.git
 	gitget		zstd			dev						https://github.com/facebook/zstd.git
 
 	mercget		gmp										https://gmplib.org/repo/gmp									"/build/sources/gmp-conf.sh"
@@ -280,12 +283,12 @@ function fetch_scm {
 
 	#gitget		patch			v2.7.6					git://git.savannah.gnu.org/patch.git
 	tarxzget	patch 									http://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
-	tarxzget	perl									https://www.cpan.org/src/5.0/perl-5.32.0.tar.xz
+	#tarxzget	perl									https://www.cpan.org/src/5.0/perl-5.32.0.tar.xz
 	targzget 	pkg										https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
 	#gitget		procps			v3.3.16					https://gitlab.com/procps-ng/procps.git 								yes
 	tarxzget	procps 									https://sourceforge.net/projects/procps-ng/files/Production/procps-ng-3.3.16.tar.xz
 	tarxzget	psmisc									https://sourceforge.net/projects/psmisc/files/psmisc/psmisc-23.3.tar.xz
-	tarxzget	Python									https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz
+	#tarxzget	Python									https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz
 	targzget	readline								http://ftp.gnu.org/gnu/readline/readline-8.0.tar.gz
 	#gitget		sed				v4.8					git://git.savannah.gnu.org/sed.git
 	tarxzget	sed 									http://ftp.gnu.org/gnu/sed/sed-4.8.tar.xz
@@ -295,11 +298,11 @@ function fetch_scm {
 	targzget	tcl										https://downloads.sourceforge.net/tcl/tcl8.6.10-src.tar.gz
 	tarxzget	texinfo									http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.xz
 	tarxzget	util									https://www.kernel.org/pub/linux/utils/util-linux/v2.36/util-linux-2.36.tar.xz
-	targzget	XML										https://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-2.46.tar.gz
+	#targzget	XML										https://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-2.46.tar.gz
 	tarxzget	xz										https://tukaani.org/xz/xz-5.2.5.tar.xz
 	tarxzget	zlib									https://zlib.net/zlib-1.2.11.tar.xz
 
-	wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
+	#wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
 	#wget												https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
 	wget 												https://www.iana.org/time-zones/repository/releases/tzdata2020a.tar.gz
 	mv tzdata2020a.tar.gz tzdata.tar.gz

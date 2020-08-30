@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 tar xvf texinfo.tar.gz
 cd texinfo
 

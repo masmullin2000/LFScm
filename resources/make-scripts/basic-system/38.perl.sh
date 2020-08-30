@@ -21,7 +21,8 @@ sh Configure -des                                         \
              -Dman3dir=/usr/share/man/man3                \
              -Dpager="/usr/bin/less -isR"                 \
              -Duseshrplib                                 \
-             -Dusethreads
+             -Dusethreads                                 \
+             -Dusedevel -Uversiononly
 
 make -j$(nproc)
 

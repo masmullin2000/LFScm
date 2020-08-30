@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 tar xvf util.tar.gz
 cd util
 

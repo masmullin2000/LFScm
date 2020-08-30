@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 tar xvf Python.tar.gz
 cd Python
 
