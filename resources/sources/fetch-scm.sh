@@ -213,6 +213,10 @@ function fetch_scm {
 	no		"/build/sources/acl-conf.sh"
 	gitget 		attr 			master 					git://git.savannah.gnu.org/attr.git \
 	no 		"/build/sources/attr-conf.sh"
+	gitget 		autoconf 		master 					git://git.savannah.gnu.org/autoconf.git \
+	no 		"/build/sources/autoconf-conf.sh"
+	gitget 		automake 		master 					git://git.savannah.gnu.org/automake.git \
+	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
 	gitget		bash			devel					git://git.savannah.gnu.org/bash.git
 	gitget		bc				master					https://git.yzena.com/gavin/bc.git
 	gitget		binutils		binutils-2_35			git://sourceware.org/git/binutils-gdb.git
@@ -302,8 +306,8 @@ function fetch_scm {
 	bzrget		intltool 								intltool \
 			"./autogen.sh"
 
-	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
-	tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
+	#tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
+	#tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
 	tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
@@ -321,12 +325,7 @@ function fetch_scm {
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
-	#gitget		make			4.3						git://git.savannah.gnu.org/make.git
-	#targzget 	make 									http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
-	#tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
-	#
-	#tarxzget	patch 									http://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
 	tarxzget	psmisc									https://sourceforge.net/projects/psmisc/files/psmisc/psmisc-23.3.tar.xz
 	#gitget		sed				v4.8					git://git.savannah.gnu.org/sed.git
 	tarxzget	sed 									http://ftp.gnu.org/gnu/sed/sed-4.8.tar.xz

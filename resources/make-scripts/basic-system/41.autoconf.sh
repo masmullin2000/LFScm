@@ -5,7 +5,7 @@ set -e
 tar xf autoconf.tar.gz
 cd autoconf
 
-sed -i '361 s/{/\\{/' bin/autoscan.in
+#sed -i '361 s/{/\\{/' bin/autoscan.in
 
 ./configure --prefix=/usr
 
