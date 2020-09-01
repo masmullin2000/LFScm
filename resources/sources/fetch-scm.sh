@@ -250,16 +250,22 @@ function fetch_scm {
 	gitget		linux			master					git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git \
 	no		"/build/sources/m4-conf.sh"
+	gitget		make			master					git://git.savannah.gnu.org/make.git \
+	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
 	gitget		man				master					git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
+	gitget 		man-db 			master 					git://git.savannah.gnu.org/man-db.git \
+	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
 	gitget		meson			master					https://github.com/mesonbuild/meson.git
 	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git \
 	yes		"autoreconf -i"
 	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
 	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
+	gitget		patch			master					git://git.savannah.gnu.org/patch.git \
+	no 		"/build/sources/patch-conf.sh"
 	gitget		perl			blead					https://github.com/Perl/perl5.git
 	gitget 		pkg 			master 					https://gitlab.freedesktop.org/pkg-config/pkg-config \
 	no 		"./autogen.sh --no-configure"
-	gitget		procps			v3.3.16					https://gitlab.com/procps-ng/procps.git \
+	gitget		procps			master					https://gitlab.com/procps-ng/procps.git \
 	yes 	"./autogen.sh"
 	gitget		Python			master					https://github.com/python/cpython.git
 	gitget 		readline 		devel 					git://git.savannah.gnu.org/readline.git
@@ -299,7 +305,6 @@ function fetch_scm {
 	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
 	tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
 	tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
-	#gitget		dbus			dbus-1.13.16			https://gitlab.freedesktop.org/dbus/dbus.git 							yes
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
@@ -317,11 +322,11 @@ function fetch_scm {
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
 	#gitget		make			4.3						git://git.savannah.gnu.org/make.git
-	targzget 	make 									http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
-	tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
+	#targzget 	make 									http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
+	#tarxzget	man-db									http://download.savannah.gnu.org/releases/man-db/man-db-2.9.3.tar.xz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
-	#gitget		patch			v2.7.6					git://git.savannah.gnu.org/patch.git
-	tarxzget	patch 									http://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
+	#
+	#tarxzget	patch 									http://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
 	tarxzget	psmisc									https://sourceforge.net/projects/psmisc/files/psmisc/psmisc-23.3.tar.xz
 	#gitget		sed				v4.8					git://git.savannah.gnu.org/sed.git
 	tarxzget	sed 									http://ftp.gnu.org/gnu/sed/sed-4.8.tar.xz
