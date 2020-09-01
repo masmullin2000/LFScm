@@ -211,6 +211,8 @@ function fetch_scm {
 
 	gitget		acl				master					git://git.savannah.gnu.org/acl.git \
 	no		"/build/sources/acl-conf.sh"
+	gitget 		attr 			master 					git://git.savannah.gnu.org/attr.git \
+	no 		"/build/sources/attr-conf.sh"
 	gitget		bash			devel					git://git.savannah.gnu.org/bash.git
 	gitget		bc				master					https://git.yzena.com/gavin/bc.git
 	gitget		binutils		binutils-2_35			git://sourceware.org/git/binutils-gdb.git
@@ -221,6 +223,8 @@ function fetch_scm {
 	no		"/build/sources/coreutils-conf.sh"
 	gitget		dbus			master					https://gitlab.freedesktop.org/dbus/dbus.git \
 	no		"./autogen.sh"
+	gitget		dejagnu			master					git://git.savannah.gnu.org/dejagnu.git \
+	no		"/build/sources/dejagnu-conf.sh"
 	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git \
 	no		"/build/sources/diffutils-conf.sh"
 	gitget		e				maint					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
@@ -230,6 +234,8 @@ function fetch_scm {
 	no		"autoreconf -fi"
 	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git \
 	no		"/build/sources/findutils-conf.sh"
+	gitget 		flex 			master	 				https://github.com/westes/flex.git \
+	no 		"/build/sources/flex-conf.sh"
 	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git
 	gitget		gcc				releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
 	gitget		glibc			glibc-2.32				git://sourceware.org/git/glibc.git
@@ -251,14 +257,28 @@ function fetch_scm {
 	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
 	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
 	gitget		perl			blead					https://github.com/Perl/perl5.git
+	gitget 		pkg 			master 					https://gitlab.freedesktop.org/pkg-config/pkg-config \
+	no 		"./autogen.sh --no-configure"
+	gitget		procps			v3.3.16					https://gitlab.com/procps-ng/procps.git \
+	yes 	"./autogen.sh"
 	gitget		Python			master					https://github.com/python/cpython.git
+	gitget 		readline 		devel 					git://git.savannah.gnu.org/readline.git
+	gitget 		shadow 			master 					https://github.com/shadow-maint/shadow.git \
+	no 		"./autogen.sh"
 	# current systemd (as of https://github.com/systemd/systemd/commit/b9df353689c34d7180ff4b271e866ca597dd516f#diff-91be33be198dcb660ec3e06b561540db)
 	# has a compile bug that wont compile on machines that do not have libcryptsetup
 	gitget		systemd			v246					https://github.com/systemd/systemd.git
+	gitget 		tar 			master 					git://git.savannah.gnu.org/tar.git \
+	no 		"/build/sources/tar-conf.sh"
+	gitget 		texinfo 		master 					git://git.savannah.gnu.org/texinfo.git \
+	no 		"/build/sources/texinfo-conf.sh"
 	gitget 		util 			master					git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git \
 	no 		"/build/sources/util-conf.sh"
 	gitget		vim				master					https://github.com/vim/vim.git
 	gitget		XML				master					https://github.com/toddr/XML-Parser.git
+	gitget 		xz 				master					https://git.tukaani.org/xz.git \
+	yes		"./autogen.sh"
+	gitget 		zlib 			develop 				https://github.com/madler/zlib.git
 	gitget		zstd			dev						https://github.com/facebook/zstd.git
 
 	mercget		gmp										https://gmplib.org/repo/gmp \
@@ -276,14 +296,11 @@ function fetch_scm {
 	bzrget		intltool 								intltool \
 			"./autogen.sh"
 
-	targzget	attr									http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 	tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
 	tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
 	tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
 	#gitget		dbus			dbus-1.13.16			https://gitlab.freedesktop.org/dbus/dbus.git 							yes
-	targzget	dejagnu									http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.6.2.tar.gz
 	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
-	targzget	flex									https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
 	targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
@@ -305,21 +322,9 @@ function fetch_scm {
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
 	#gitget		patch			v2.7.6					git://git.savannah.gnu.org/patch.git
 	tarxzget	patch 									http://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
-	targzget 	pkg										https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
-	#gitget		procps			v3.3.16					https://gitlab.com/procps-ng/procps.git 								yes
-	tarxzget	procps 									https://sourceforge.net/projects/procps-ng/files/Production/procps-ng-3.3.16.tar.xz
 	tarxzget	psmisc									https://sourceforge.net/projects/psmisc/files/psmisc/psmisc-23.3.tar.xz
-	targzget	readline								http://ftp.gnu.org/gnu/readline/readline-8.0.tar.gz
 	#gitget		sed				v4.8					git://git.savannah.gnu.org/sed.git
 	tarxzget	sed 									http://ftp.gnu.org/gnu/sed/sed-4.8.tar.xz
-	tarxzget	shadow									https://github.com/shadow-maint/shadow/releases/download/4.8.1/shadow-4.8.1.tar.xz
-	#gitget		tar				release_1_32			git://git.savannah.gnu.org/tar.git
-	tarxzget	tar 									http://ftp.gnu.org/gnu/tar/tar-1.32.tar.xz
-	#targzget	tcl										https://downloads.sourceforge.net/tcl/tcl8.6.10-src.tar.gz
-	tarxzget	texinfo									http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.xz
-	#tarxzget	util									https://www.kernel.org/pub/linux/utils/util-linux/v2.36/util-linux-2.36.tar.xz
-	tarxzget	xz										https://tukaani.org/xz/xz-5.2.5.tar.xz
-	tarxzget	zlib									https://zlib.net/zlib-1.2.11.tar.xz
 
 	#wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
 	#wget												https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz

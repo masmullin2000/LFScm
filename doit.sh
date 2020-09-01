@@ -1,6 +1,8 @@
 #!/bin/bash
 
-docker build -t build-lfs .
+NAME=lfs-build
+
+docker build -t $NAME .
 if [[ $1 == "man" ]]
 then
 	shift
@@ -10,12 +12,12 @@ then
 	else
 		CPU=$(nproc)
 	fi
-	docker run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it build-lfs bash
+	docker run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME bash
 else
 	if [[ -n $3 ]]; then
 		CPU=$3
 	else
 		CPU=$(nproc)
 	fi
-	docker run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it build-lfs ./makeit.sh $1 $2
+	docker run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME ./makeit.sh $1 $2
 fi

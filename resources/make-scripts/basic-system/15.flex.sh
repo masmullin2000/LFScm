@@ -7,7 +7,8 @@ cd flex
 
 ./configure --prefix=/usr --docdir=/usr/share/doc/flex-2.6.4
 
-make -j$(nproc)
+#make clean
+make #-j$(nproc)
 
 #make check -j$(nproc)
 

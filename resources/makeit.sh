@@ -222,7 +222,7 @@ function make_lfs_system_pt0 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 1 16
+		    	/basic-system/build-system.sh 1 14
 		    "
 		backup /output/system-pt0.tar.xz
 	fi
@@ -243,7 +243,7 @@ function make_lfs_system_pt1 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 17 32
+		    	/basic-system/build-system.sh 15 32
 		    "
 		backup /output/system-pt1.tar.xz
 	fi
@@ -310,7 +310,7 @@ function make_lfs_system_pt3 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 47 60
+		    	/basic-system/build-system.sh 47 65
 		    "
 		backup /output/system-pt3.tar.xz
 	fi
@@ -331,7 +331,7 @@ function make_lfs_system_pt4 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-				/basic-system/build-system.sh 61 72
+				/basic-system/build-system.sh 66 72
 				/basic-system/99.strip.sh
 				rm -rf /tmp/*
 			"
