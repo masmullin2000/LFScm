@@ -246,7 +246,11 @@ function fetch_scm {
 	no 		"/build/sources/flex-conf.sh"
 	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git
 	gitget		gcc				releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
+	gitget 		gdbm 			master 					git://git.gnu.org.ua/gdbm.git \
+	no 		"/build/sources/gdbm-conf.sh"
 	gitget		glibc			glibc-2.32				git://sourceware.org/git/glibc.git
+	gitget 		gperf 			master 					git://git.savannah.gnu.org/gperf.git \
+	no 		"/build/sources/gperf-conf.sh"
 	gitget		iproute			main					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 	gitget 		kbd 			master					git://git.kernel.org/pub/scm/linux/kernel/git/legion/kbd.git \
 	no		"./autogen.sh"
@@ -257,6 +261,8 @@ function fetch_scm {
 	gitget		libcap			master					git://git.kernel.org/pub/scm/libs/libcap/libcap.git
 	gitget		libressl		master					https://github.com/libressl-portable/portable.git \
 	no		"./autogen.sh"
+	gitget 		libtool 		master 					git://git.savannah.gnu.org/libtool.git \
+	no 		"/build/sources/libtool-conf.sh"
 	gitget		linux			master					git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git \
 	no		"/build/sources/m4-conf.sh"
@@ -277,8 +283,12 @@ function fetch_scm {
 	no 		"./autogen.sh --no-configure"
 	gitget		procps			master					https://gitlab.com/procps-ng/procps.git \
 	yes 	"./autogen.sh"
+	gitget 		psmisc 			master 					https://gitlab.com/psmisc/psmisc.git \
+	yes 	"/build/sources/psmisc-conf.sh"
 	gitget		Python			master					https://github.com/python/cpython.git
 	gitget 		readline 		devel 					git://git.savannah.gnu.org/readline.git
+	gitget		sed				master					git://git.savannah.gnu.org/sed.git \
+	no 		"/build/sources/sed-conf.sh"
 	gitget 		shadow 			master 					https://github.com/shadow-maint/shadow.git \
 	no 		"./autogen.sh"
 	# current systemd (as of https://github.com/systemd/systemd/commit/b9df353689c34d7180ff4b271e866ca597dd516f#diff-91be33be198dcb660ec3e06b561540db)
@@ -312,9 +322,9 @@ function fetch_scm {
 	bzrget		intltool 								intltool \
 			"./autogen.sh"
 
-	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
+	#targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
-	targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
+	#targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
 	#gitget		grep			v3.4					git://git.savannah.gnu.org/grep.git
 	tarxzget	grep									http://ftp.gnu.org/gnu/grep/grep-3.4.tar.xz
 	targzget	groff									http://ftp.gnu.org/gnu/groff/groff-1.22.4.tar.gz
@@ -323,14 +333,9 @@ function fetch_scm {
 	tarxzget	gzip 									http://ftp.gnu.org/gnu/gzip/gzip-1.10.tar.xz
 	targzget	iana									http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
 	tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
-	#targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
-	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
-	tarxzget	psmisc									https://sourceforge.net/projects/psmisc/files/psmisc/psmisc-23.3.tar.xz
-	#gitget		sed				v4.8					git://git.savannah.gnu.org/sed.git
-	tarxzget	sed 									http://ftp.gnu.org/gnu/sed/sed-4.8.tar.xz
 
 	#wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
 	#wget												https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
