@@ -252,6 +252,8 @@ function fetch_scm {
 	no		"./autogen.sh"
 	gitget 		kmod 			master					git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
 	no		"/build/sources/kmod-conf.sh"
+	gitget  	less 			master 					https://github.com/gwsw/less.git \
+	no 		"/build/sources/less-conf.sh"
 	gitget		libcap			master					git://git.kernel.org/pub/scm/libs/libcap/libcap.git
 	gitget		libressl		master					https://github.com/libressl-portable/portable.git \
 	no		"./autogen.sh"
@@ -321,7 +323,7 @@ function fetch_scm {
 	tarxzget	gzip 									http://ftp.gnu.org/gnu/gzip/gzip-1.10.tar.xz
 	targzget	iana									http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
 	tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
-	targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
+	#targzget	less									http://www.greenwoodsoftware.com/less/less-551.tar.gz
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	tarxzget	libtool									http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
