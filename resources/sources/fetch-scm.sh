@@ -310,10 +310,6 @@ function fetch_scm {
 	bzrget		intltool 								intltool \
 			"./autogen.sh"
 
-	#tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
-	#tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
-	#tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
-	#tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
 	targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz

@@ -27,7 +27,7 @@ if [[ -f "../python-3.8.5-docs-html.tar.bz2" ]]; then
 	tar --strip-components=1  \
 	    --no-same-owner       \
 	    --no-same-permissions \
-	    -C /usr/share/doc/python-3.8.5/html \
+	    -C /usr/share/doc/python/html \
 	    -xvf ../python-3.8.5-docs-html.tar.bz2
 fi
 
