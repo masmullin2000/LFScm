@@ -6,7 +6,11 @@ tar xf elfutils.tar.gz
 cd elfutils
 
 
-./configure --prefix=/usr --disable-debuginfod --libdir=/lib
+./configure --prefix=/usr \
+	--enable-maintainer-mode \
+	--disable-debuginfod \
+	--disable-libdebuginfod \
+	--libdir=/lib
 
 make -j$(nproc)
 

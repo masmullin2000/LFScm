@@ -5,7 +5,7 @@ set -e
 tar xf bison.tar.gz
 cd bison
 
-./configure --prefix=/usr --docdir=/usr/share/doc/bison-3.7.1
+./configure --prefix=/usr --docdir=/usr/share/doc/bison
 
 make -j$(nproc)
 

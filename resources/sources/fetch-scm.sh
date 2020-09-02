@@ -220,6 +220,8 @@ function fetch_scm {
 	gitget		bash			devel					git://git.savannah.gnu.org/bash.git
 	gitget		bc				master					https://git.yzena.com/gavin/bc.git
 	gitget		binutils		binutils-2_35			git://sourceware.org/git/binutils-gdb.git
+	gitget 		bison 			master 					git://git.savannah.gnu.org/bison.git \
+	no 		"/build/sources/bison-conf.sh"
 	gitget		bzip			master					git://sourceware.org/git/bzip2.git
 	gitget		check			master					https://github.com/libcheck/check.git \
 	no		"autoreconf -i"
@@ -232,6 +234,8 @@ function fetch_scm {
 	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git \
 	no		"/build/sources/diffutils-conf.sh"
 	gitget		e				maint					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+	gitget 		elfutils 		master 					git://sourceware.org/git/elfutils.git \
+	no 		"autoreconf -if"
 	gitget		expat			master					https://github.com/libexpat/libexpat.git \
 	no		"/build/sources/expat-conf.sh"
 	gitget		file			master					git://github.com/file/file \
@@ -308,8 +312,8 @@ function fetch_scm {
 
 	#tarxzget	autoconf								http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
 	#tarxzget	automake								http://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.xz
-	tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
-	tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
+	#tarxzget	bison									http://ftp.gnu.org/gnu/bison/bison-3.7.1.tar.xz
+	#tarbz2get	elfutils								https://sourceware.org/ftp/elfutils/0.180/elfutils-0.180.tar.bz2
 	targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
 	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
 	targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
@@ -408,8 +412,8 @@ function fetch_lfs_dev {
 }
 
 function fetch_lfs {
-	wget http://www.linuxfromscratch.org/lfs/view/10.0-systemd-rc1/wget-list
-	wget http://www.linuxfromscratch.org/lfs/view/10.0-systemd-rc1/md5sums
+	wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/wget-list
+	wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/md5sums
 	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
 	md5sum -c md5sums
 
