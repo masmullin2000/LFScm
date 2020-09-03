@@ -2,8 +2,6 @@
 
 set -e
 
-dnf install texinfo-tex -y
-
 ./autogen.sh
 ./configure
 make -j12

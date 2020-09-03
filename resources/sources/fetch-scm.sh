@@ -248,9 +248,17 @@ function fetch_scm {
 	gitget		gcc				releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
 	gitget 		gdbm 			master 					git://git.gnu.org.ua/gdbm.git \
 	no 		"/build/sources/gdbm-conf.sh"
+	gitget 		gettext 		master 					git://git.savannah.gnu.org/gettext.git \
+	no 		"/build/sources/gettext-conf.sh"
 	gitget		glibc			glibc-2.32				git://sourceware.org/git/glibc.git
 	gitget 		gperf 			master 					git://git.savannah.gnu.org/gperf.git \
 	no 		"/build/sources/gperf-conf.sh"
+	gitget 		grub 			master 					git://git.savannah.gnu.org/grub.git \
+	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
+	gitget		gzip			master					git://git.savannah.gnu.org/gzip.git \
+	no 		"/build/sources/gzip-conf.sh"
+	gitget 		inetutils 		master 					git://git.savannah.gnu.org/inetutils.git \
+	no 		"/build/sources/inetutils-conf.sh"
 	gitget		iproute			main					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 	gitget 		kbd 			master					git://git.kernel.org/pub/scm/linux/kernel/git/legion/kbd.git \
 	no		"./autogen.sh"
@@ -259,6 +267,8 @@ function fetch_scm {
 	gitget  	less 			master 					https://github.com/gwsw/less.git \
 	no 		"/build/sources/less-conf.sh"
 	gitget		libcap			master					git://git.kernel.org/pub/scm/libs/libcap/libcap.git
+	gitget 		libpipeline 	master 					git://git.savannah.gnu.org/libpipeline.git \
+	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
 	gitget		libressl		master					https://github.com/libressl-portable/portable.git \
 	no		"./autogen.sh"
 	gitget 		libtool 		master 					git://git.savannah.gnu.org/libtool.git \
@@ -322,19 +332,14 @@ function fetch_scm {
 	bzrget		intltool 								intltool \
 			"./autogen.sh"
 
-	#targzget	gdbm									http://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz
-	tarxzget	gettext									http://ftp.gnu.org/gnu/gettext/gettext-0.21.tar.xz
-	#targzget	gperf									http://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
 	#gitget		grep			v3.4					git://git.savannah.gnu.org/grep.git
 	tarxzget	grep									http://ftp.gnu.org/gnu/grep/grep-3.4.tar.xz
 	targzget	groff									http://ftp.gnu.org/gnu/groff/groff-1.22.4.tar.gz
-	tarxzget	grub									https://ftp.gnu.org/gnu/grub/grub-2.04.tar.xz
-	#gitget		gzip			v1.10					git://git.savannah.gnu.org/gzip.git
-	tarxzget	gzip 									http://ftp.gnu.org/gnu/gzip/gzip-1.10.tar.xz
+	#tarxzget	grub									https://ftp.gnu.org/gnu/grub/grub-2.04.tar.xz
+	#
+	#tarxzget	gzip 									http://ftp.gnu.org/gnu/gzip/gzip-1.10.tar.xz
 	targzget	iana									http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
-	tarxzget	inetutils								http://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz
 	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
-	targzget	libpipeline 							http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.3.tar.gz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
 
 	#wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
