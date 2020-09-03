@@ -209,6 +209,11 @@ function gitgetkeep {
 function fetch_scm {
 	gitgetkeep	gnulib									git://git.sv.gnu.org/gnulib.git
 
+
+	#Make moved up due to compile error during toolchain
+	gitget		make			master					git://git.savannah.gnu.org/make.git \
+	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
+
 	gitget		acl				master					git://git.savannah.gnu.org/acl.git \
 	no		"/build/sources/acl-conf.sh"
 	gitget 		attr 			master 					git://git.savannah.gnu.org/attr.git \
@@ -253,8 +258,11 @@ function fetch_scm {
 	gitget		glibc			glibc-2.32				git://sourceware.org/git/glibc.git
 	gitget 		gperf 			master 					git://git.savannah.gnu.org/gperf.git \
 	no 		"/build/sources/gperf-conf.sh"
-	gitget 		grub 			master 					git://git.savannah.gnu.org/grub.git \
-	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
+	gitget		grep			master					git://git.savannah.gnu.org/grep.git \
+	no 		"/build/sources/grep-conf.sh"
+	gitget 		groff 			master					git://git.savannah.gnu.org/groff.git \
+	no 		"/build/sources/groff-conf.sh"
+	## Moved GRUB Lower due to some weird conflict with inetutils
 	gitget		gzip			master					git://git.savannah.gnu.org/gzip.git \
 	no 		"/build/sources/gzip-conf.sh"
 	gitget 		inetutils 		master 					git://git.savannah.gnu.org/inetutils.git \
@@ -267,6 +275,8 @@ function fetch_scm {
 	gitget  	less 			master 					https://github.com/gwsw/less.git \
 	no 		"/build/sources/less-conf.sh"
 	gitget		libcap			master					git://git.kernel.org/pub/scm/libs/libcap/libcap.git
+	gitget 		libffi 			master 					https://github.com/libffi/libffi \
+	no 		"./autogen.sh"
 	gitget 		libpipeline 	master 					git://git.savannah.gnu.org/libpipeline.git \
 	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
 	gitget		libressl		master					https://github.com/libressl-portable/portable.git \
@@ -276,8 +286,7 @@ function fetch_scm {
 	gitget		linux			master					git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git \
 	no		"/build/sources/m4-conf.sh"
-	gitget		make			master					git://git.savannah.gnu.org/make.git \
-	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
+	# Make moved up something above it is causing a problem
 	gitget		man				master					git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
 	gitget 		man-db 			master 					git://git.savannah.gnu.org/man-db.git \
 	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
@@ -332,14 +341,7 @@ function fetch_scm {
 	bzrget		intltool 								intltool \
 			"./autogen.sh"
 
-	#gitget		grep			v3.4					git://git.savannah.gnu.org/grep.git
-	tarxzget	grep									http://ftp.gnu.org/gnu/grep/grep-3.4.tar.xz
-	targzget	groff									http://ftp.gnu.org/gnu/groff/groff-1.22.4.tar.gz
-	#tarxzget	grub									https://ftp.gnu.org/gnu/grub/grub-2.04.tar.xz
-	#
-	#tarxzget	gzip 									http://ftp.gnu.org/gnu/gzip/gzip-1.10.tar.xz
 	targzget	iana									http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
-	targzget	libffi									ftp://sourceware.org/pub/libffi/libffi-3.3.tar.gz
 	targzget	ncurses									ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
 
 	#wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
@@ -349,6 +351,10 @@ function fetch_scm {
 
 	wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
 	wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
+
+	## Grub moved to the end because it was causing some sort of conflict with inetutils
+	gitget 		grub 			master 					git://git.savannah.gnu.org/grub.git \
+	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
 }
 
 function repackage {

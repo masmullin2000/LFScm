@@ -2,7 +2,7 @@
 
 set -e
 
-GNULIB_SRCDIR=../gnulib ./bootstrap --copy
+./bootstrap --copy --gnulib-srcdir=../gnulib
 FORCE_UNSAFE_CONFIGURE=1 ./configure
 rm -rf .git
 make distdir -j$(nproc)

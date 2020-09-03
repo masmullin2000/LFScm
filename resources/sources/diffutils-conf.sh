@@ -2,7 +2,7 @@
 
 set -e
 
-GNULIB_SRCDIR=../gnulib ./bootstrap --copy
+./bootstrap --copy --gnulib-srcdir=../gnulib
 ./configure
 make -j12
 make dist-xz

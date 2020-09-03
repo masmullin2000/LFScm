@@ -2,7 +2,6 @@
 
 set -e
 
-
 echo "2.70" > .version
 echo "2.70" > .tarball-version
 

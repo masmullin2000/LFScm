@@ -2,7 +2,7 @@
 
 set -e
 
-GNULIB_SRCDIR=../gnulib ./bootstrap --copy
+./bootstrap --copy --gnulib-srcdir=../gnulib
 ./configure
 rm -rf .git
 make distdir -j$(nproc)
