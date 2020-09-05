@@ -13,7 +13,9 @@ case $(uname -m) in
     ;;
 esac
 
-patch -Np1 -i ../glibc-2.32-fhs-1.patch
+if [[ -f "../glibc-2.32-fhs-1.patch" ]]; then
+  patch -Np1 -i ../glibc-2.32-fhs-1.patch
+fi
 
 mkdir -v build
 cd       build
@@ -30,7 +32,8 @@ make -j$(nproc)
 
 make DESTDIR=$LFS install
 
-$LFS/tools/libexec/gcc/$LFS_TGT/10.2.0/install-tools/mkheaders
+mkh=$(find $LFS/tools/libexec/gcc -name "mkheaders")
+$mkh
 
 cd ../..
 rm -rf glibc

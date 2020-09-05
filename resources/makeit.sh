@@ -53,7 +53,7 @@ function setup_loop {
 
 	set -e
 
-	qemu-img create -f raw lfs.img 10G
+	qemu-img create -f raw lfs.img 15G
 	losetup -fP lfs.img
 
 	sfdisk "$LOOP_DEV" < loop.sfdisk
@@ -495,7 +495,25 @@ function finish_build {
 
 	cd /mnt/lfs
 	BACKUP="yes"
-	backup /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz 9e
+	backup /output/docker-lfs-$SOURCE_FETCH_METHOD.tar.xz
+
+	ROOT_EXT4=/firecracker/rootfs."$SOURCE_FETCH_METHOD".ext4
+	FC_DIR=/firecracker/rootfs
+
+	mkdir -p "$FC_DIR"
+	dd if=/dev/zero of="$ROOT_EXT4" bs=1M count=1536
+	mkfs.ext4 "$ROOT_EXT4"
+	mount "$ROOT_EXT4" "$FC_DIR"
+	#for d in bin etc lib root sbin usr; do tar c "$d" | tar x -C "$FC_DIR"; done
+	#for dir in dev proc run sys var; do mkdir "$FC_DIR"/${dir}; done
+	tar -xf /output/docker-lfs-$SOURCE_FETCH_METHOD.tar.xz -C "$FC_DIR"
+	rm "$FC_DIR"/etc/fstab
+	sync
+	umount "$FC_DIR"
+	cp boot/vmlinux "$FC_DIR"/..
+	rm -rf "$FC_DIR"
+
+	tar	-cf - /firecracker | xz --threads=0 > /output/firecracker-lfs-$SOURCE_FETCH_METHOD.tar.xz
 
 	qemu-img convert -c -f raw -O qcow2 /build/lfs.img /output/lfs-$SOURCE_FETCH_METHOD.qcow2
 }

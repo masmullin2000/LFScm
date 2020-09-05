@@ -8,9 +8,11 @@ cp /basic-system/config .config
 make olddefconfig
 
 make -j$(nproc)
+make vmlinux -j$(nproc)
 make -j$(nproc) modules_install
 
 cp -iv arch/x86/boot/bzImage /boot/vmlinuz
+cp -iv vmlinux /boot/vmlinux
 cp -iv System.map /boot/System.map
 cp -iv .config /boot/config
 

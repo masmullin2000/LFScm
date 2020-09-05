@@ -209,7 +209,6 @@ function gitgetkeep {
 function fetch_scm {
 	gitgetkeep	gnulib									git://git.sv.gnu.org/gnulib.git
 
-
 	#Make moved up due to compile error during toolchain
 	gitget		make			master					git://git.savannah.gnu.org/make.git \
 	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
@@ -224,7 +223,7 @@ function fetch_scm {
 	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
 	gitget		bash			devel					git://git.savannah.gnu.org/bash.git
 	gitget		bc				master					https://git.yzena.com/gavin/bc.git
-	gitget		binutils		binutils-2_35			git://sourceware.org/git/binutils-gdb.git
+	gitget		binutils		master					git://sourceware.org/git/binutils-gdb.git
 	gitget 		bison 			master 					git://git.savannah.gnu.org/bison.git \
 	no 		"/build/sources/bison-conf.sh"
 	gitget		bzip			master					git://sourceware.org/git/bzip2.git
@@ -250,12 +249,12 @@ function fetch_scm {
 	gitget 		flex 			master	 				https://github.com/westes/flex.git \
 	no 		"/build/sources/flex-conf.sh"
 	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git
-	gitget		gcc				releases/gcc-10.2.0		git://gcc.gnu.org/git/gcc.git
+	gitget		gcc				master					git://gcc.gnu.org/git/gcc.git
 	gitget 		gdbm 			master 					git://git.gnu.org.ua/gdbm.git \
 	no 		"/build/sources/gdbm-conf.sh"
 	gitget 		gettext 		master 					git://git.savannah.gnu.org/gettext.git \
 	no 		"/build/sources/gettext-conf.sh"
-	gitget		glibc			glibc-2.32				git://sourceware.org/git/glibc.git
+	gitget		glibc			master					git://sourceware.org/git/glibc.git
 	gitget 		gperf 			master 					git://git.savannah.gnu.org/gperf.git \
 	no 		"/build/sources/gperf-conf.sh"
 	gitget		grep			master					git://git.savannah.gnu.org/grep.git \
@@ -346,11 +345,11 @@ function fetch_scm {
 
 	#wget 												https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
 	#wget												https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
-	wget 												https://www.iana.org/time-zones/repository/releases/tzdata2020a.tar.gz
-	mv tzdata2020a.tar.gz tzdata.tar.gz
+	wget 		https://www.iana.org/time-zones/repository/releases/tzdata2020a.tar.gz
+	mv 			tzdata2020a.tar.gz 						tzdata.tar.gz
 
-	wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
-	wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
+	#wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
+	#wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
 
 	## Grub moved to the end because it was causing some sort of conflict with inetutils
 	gitget 		grub 			master 					git://git.savannah.gnu.org/grub.git \

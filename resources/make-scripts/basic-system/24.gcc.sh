@@ -30,17 +30,18 @@ make -j$(nproc)
 #../contrib/test_summary
 
 make install
-rm -rf /usr/lib/gcc/$(gcc -dumpmachine)/10.2.0/include-fixed/bits/
+gcc_ver=$(gcc -dumpversion)
+rm -rf /usr/lib/gcc/$(gcc -dumpmachine)/$gcc_ver/include-fixed/bits/
 
 # TODO: test if we can change /usr/lib/gcc/ recursive rather than this specific area
 chown -v -R root:root \
-    /usr/lib/gcc/*linux-gnu/10.2.0/include{,-fixed}
+    /usr/lib/gcc/*linux-gnu/$gcc_ver/include{,-fixed}
 
 ln -sv ../usr/bin/cpp /lib
 
 # TODO: get rid of the 10.2.0 specific nature here
 install -v -dm755 /usr/lib/bfd-plugins
-ln -sfv ../../libexec/gcc/$(gcc -dumpmachine)/10.2.0/liblto_plugin.so \
+ln -sfv ../../libexec/gcc/$(gcc -dumpmachine)/$gcc_ver/liblto_plugin.so \
         /usr/lib/bfd-plugins/
 
 echo 'int main(){}' > dummy.c

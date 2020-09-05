@@ -8,6 +8,8 @@ cd gcc
 mkdir -v build
 cd       build
 
+gcc_ver=$($LFS_TGT-gcc -dumpversion)
+
 ../libstdc++-v3/configure           \
     --host=$LFS_TGT                 \
     --build=$(../config.guess)      \
@@ -15,7 +17,7 @@ cd       build
     --disable-multilib              \
     --disable-nls                   \
     --disable-libstdcxx-pch         \
-    --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/10.2.0
+    --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/$gcc_ver
 
 make -j$(nproc)
 

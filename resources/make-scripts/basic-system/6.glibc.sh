@@ -5,7 +5,9 @@ set -e
 tar xf glibc.tar.gz
 cd glibc
 
-patch -Np1 -i ../glibc-2.32-fhs-1.patch
+if [[ -f "../glibc-2.32-fhs-1.patch" ]]; then
+  patch -Np1 -i ../glibc-2.32-fhs-1.patch
+fi
 
 mkdir -v build
 cd       build
