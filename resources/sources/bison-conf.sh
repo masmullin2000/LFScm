@@ -5,8 +5,8 @@ set -e
 git config user.email "build-maker@example.com"
 git config user.name "Build Maker"
 
-echo "3.7.2" > .version
-echo "3.7.2" > .tarball-version
+echo "3.7.69" > .version
+echo "3.7.69" > .tarball-version
 git submodule update --init
 ./bootstrap --copy --gnulib-srcdir=../gnulib
 ./configure
@@ -14,7 +14,7 @@ git clean -fd .
 git status
 
 set +e
-make release-commit RELEASE='3.7.2 alpha'
+make release-commit RELEASE='3.7.69 alpha'
 set -e
 rm -rf .git
 make dist-xz

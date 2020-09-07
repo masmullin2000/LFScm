@@ -455,7 +455,7 @@ if [[ "scm" == "$FETCH" ]]; then
 elif [[ "lfs" == "$FETCH" ]]; then
 	fetch_lfs
 elif [[ "lfs_dev" == "$FETCH" ]]; then
-	fetch_lfs
+	fetch_lfs_dev
 elif [[ "wget" == "$FETCH" ]]; then
 	fetch_wget_lfs
 elif [[ "ssh" == "$FETCH" ]]; then

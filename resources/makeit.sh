@@ -44,33 +44,26 @@ function setup_loop {
 
 	set +e
 
-	umount "$LFS"/boot
-	umount "$LFS"
-
 	losetup -d $"LOOP_DEV"
 
-	rm lfs.img
+	rm /build/lfs.img
 
 	set -e
 
-	qemu-img create -f raw lfs.img 15G
-	losetup -fP lfs.img
+	qemu-img create -f raw /build/lfs.img 2304M
+	losetup -fP /build/lfs.img
 
-	sfdisk "$LOOP_DEV" < loop.sfdisk
+	sfdisk "$LOOP_DEV" < /build/loop.sfdisk
 	mkswap "$LOOP_DEV"p1
 	mkfs.ext4 "$LOOP_DEV"p2
 	mkfs.ext4 "$LOOP_DEV"p3
 }
 
-function create_and_mount {
-	local LOOP_DEV=$1
-
+function create_dirs {
 	mkdir -p "$LFS"
-	mount "$LOOP_DEV"p3 "$LFS"
 	rm -rf "$LFS"/*
+
 	mkdir -p "$LFS"/boot
-	mount "$LOOP_DEV"p2 "$LFS"/boot
-	rm -rf "$LFS"/boot/*
 	mkdir -p "$LFS"/sources
 	chmod -v a+wt "$LFS"/sources
 
@@ -113,17 +106,36 @@ function make_toolchain {
 }
 
 function make_vfs {
-	set +e
-	mount -v --bind /dev $LFS/dev
 
-	mount -v --bind /dev/pts $LFS/dev/pts
-	mount -vt proc proc $LFS/proc
-	mount -vt sysfs sysfs $LFS/sys
-	mount -vt tmpfs tmpfs $LFS/run
-	if [ -h $LFS/dev/shm ]; then
-		mkdir -pv $LFS/$(readlink $LFS/dev/shm)
+	local DIR=$LFS
+	if [[ -n $1 ]]; then
+		DIR=$1
+	fi
+
+	set +e
+	mount -v --bind /dev $DIR/dev
+	mount -v --bind /dev/pts $DIR/dev/pts
+	mount -vt proc proc $DIR/proc
+	mount -vt sysfs sysfs $DIR/sys
+	mount -vt tmpfs tmpfs $DIR/run
+	if [ -h $DIR/dev/shm ]; then
+		mkdir -pv $DIR/$(readlink $DIR/dev/shm)
 	fi
 	set -e
+}
+
+function umake_vfs {
+
+	local DIR=$LFS
+	if [[ -n $1 ]]; then
+		DIR=$1
+	fi
+
+	umount $DIR/dev/pts
+	umount $DIR/dev
+	umount $DIR/proc
+	umount $DIR/sys
+	umount $DIR/run
 }
 
 function make_temp_system {
@@ -465,62 +477,65 @@ function make_extras {
 }
 
 function finish_build {
+	cd /mnt/lfs
+	BACKUP="yes"
+	rm -rf "$LFS"/usr/share/{info,man,doc}
+	rm -rf "$LFS"/tools
+	rm -rf "$LFS"/sources
+	rm -rf "$LFS"/extra-sources
+	rm -rf "$LFS"/mnt/lfs
+	rm -rf "$LFS"/extras
+	rm -rf "$LFS"/basic-system
+	backup /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz $1
 
-	cp /build/config-scripts/grub.cfg "$LFS"/basic-system/
+	QEMU_DIR="/mnt/qemu"
+	setup_loop drive
+	mkdir -p "$QEMU_DIR"
+	mount "$drive"p3 "$QEMU_DIR"
+	rm -rf "$QEMU_DIR"/*
+	mkdir -p "$QEMU_DIR"/boot
+	mount "$drive"p2 "$QEMU_DIR"/boot
+	rm -rf "$QEMU_DIR"/boot/*
+	
+	cd "$QEMU_DIR"
+	tar xf /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz
+	mkdir -p "$QEMU_DIR"/boot/grub
+	cp /build/config-scripts/grub.cfg "$QEMU_DIR"/boot/grub/
+	
+	make_vfs "$QEMU_DIR"
 
-	make_vfs
-
-	chroot "$LFS" /usr/bin/env -i          \
+	chroot "$QEMU_DIR" /usr/bin/env -i          \
 	    HOME=/root TERM="$TERM"            \
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-	    /bin/bash --login -c "
-			rm -rf /usr/share/{info,man,doc}
-			rm -rf /tools
-			rm -rf /sources
-			rm -rf /extra-sources
-			rm -rf /mnt/lfs
-			rm -rf /extras
-
-			set -e
-
-			grub-install --target=i386-pc $1
-			mkdir -p /boot/grub/
-			cp /basic-system/grub.cfg /boot/grub/grub.cfg
-
-			rm -rf /basic-system
-
+	    /bin/bash --login -c "set -e
+			grub-install --target=i386-pc $drive
 			sync
 		"
 
-	cd /mnt/lfs
-	BACKUP="yes"
-	backup /output/docker-lfs-$SOURCE_FETCH_METHOD.tar.xz
-
 	ROOT_EXT4=/firecracker/rootfs."$SOURCE_FETCH_METHOD".ext4
-	FC_DIR=/firecracker/rootfs
+	FC_DIR="/firecracker"
+	FC_ROOTFS="$FC_DIR"/rootfs
 
-	mkdir -p "$FC_DIR"
+	mkdir -p "$FC_ROOTFS"
 	dd if=/dev/zero of="$ROOT_EXT4" bs=1M count=1536
 	mkfs.ext4 "$ROOT_EXT4"
-	mount "$ROOT_EXT4" "$FC_DIR"
-	#for d in bin etc lib root sbin usr; do tar c "$d" | tar x -C "$FC_DIR"; done
-	#for dir in dev proc run sys var; do mkdir "$FC_DIR"/${dir}; done
-	tar -xf /output/docker-lfs-$SOURCE_FETCH_METHOD.tar.xz -C "$FC_DIR"
-	rm "$FC_DIR"/etc/fstab
+	mount "$ROOT_EXT4" "$FC_ROOTFS"
+	tar -xf /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz -C "$FC_ROOTFS"
+	rm "$FC_ROOTFS"/etc/fstab
 	sync
-	umount "$FC_DIR"
-	cp boot/vmlinux "$FC_DIR"/..
-	rm -rf "$FC_DIR"
+	umount "$FC_ROOTFS"
+	cp boot/vmlinux "$FC_ROOTFS"/..
+	rm -rf "$FC_ROOTFS"
 
-	tar	-cf - /firecracker | xz --threads=0 > /output/firecracker-lfs-$SOURCE_FETCH_METHOD.tar.xz
+	tar -cf - "$FC_DIR" | xz -$1 --threads=0 > /output/firecracker-lfs-$SOURCE_FETCH_METHOD.tar.xz
 
 	qemu-img convert -c -f raw -O qcow2 /build/lfs.img /output/lfs-$SOURCE_FETCH_METHOD.qcow2
 }
 
-setup_loop val
-create_and_mount $val
+#setup_loop val
+create_dirs
 fetch_sources "$SOURCE_FETCH_METHOD"
 make_lfs_system
 make_extras
-finish_build $val
+finish_build 1
