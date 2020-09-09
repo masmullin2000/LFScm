@@ -468,12 +468,33 @@ function make_ssh {
 	    "
 }
 
+function make_htop {
+	make_vfs
+
+	mkdir -p "$LFS"/extras
+	cp /build/make-scripts/extras/* "$LFS"/extras
+
+	mkdir -p "$LFS"/extra-sources
+	cd "$LFS"/extra-sources
+	/build/sources/fetch-scm.sh htop
+
+	chroot "$LFS" /usr/bin/env -i          \
+		HOME=/root TERM="$TERM"            \
+		PS1='(lfs chroot) \u:\w\$ '        \
+		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+		/bin/bash --login -c "set -e
+			cd /extra-sources
+			/extras/htop.sh
+		"
+}
+
 function make_extras {
 	mkdir -p "$LFS"/extras
 	cp /build/make-scripts/extras/* "$LFS"/extras
 
 	make_wget
 	make_ssh allow_root
+	make_htop
 }
 
 function finish_build {
