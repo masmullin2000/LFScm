@@ -432,15 +432,19 @@ function make_wget {
 	    "
 }
 
-function make_ssh {
+function ready_extras {
 	make_vfs
 
 	mkdir -p "$LFS"/extras
 	cp /build/make-scripts/extras/* "$LFS"/extras
-	cp /build/config-scripts/extras/ssh/* "$LFS"/extras
 
 	mkdir -p "$LFS"/extra-sources
 	cd "$LFS"/extra-sources
+}
+
+function make_ssh {
+	ready_extras
+	cp /build/config-scripts/extras/ssh/* "$LFS"/extras
 	/build/sources/fetch-scm.sh ssh
 
 	ALLOW_ROOT="no"
@@ -469,13 +473,7 @@ function make_ssh {
 }
 
 function make_htop {
-	make_vfs
-
-	mkdir -p "$LFS"/extras
-	cp /build/make-scripts/extras/* "$LFS"/extras
-
-	mkdir -p "$LFS"/extra-sources
-	cd "$LFS"/extra-sources
+	ready_extras
 	/build/sources/fetch-scm.sh htop
 
 	chroot "$LFS" /usr/bin/env -i          \
@@ -488,6 +486,35 @@ function make_htop {
 		"
 }
 
+function make_wireguard {
+	ready_extras
+	/build/sources/fetch-scm.sh wireguard
+
+	chroot "$LFS" /usr/bin/env -i          \
+		HOME=/root TERM="$TERM"            \
+		PS1='(lfs chroot) \u:\w\$ '        \
+		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+		/bin/bash --login -c "set -e
+			cd /extra-sources
+			/extras/wireguard.sh
+		"
+}
+
+function make_git {
+	ready_extras
+	/build/sources/fetch-scm.sh git
+
+	chroot "$LFS" /usr/bin/env -i          \
+		HOME=/root TERM="$TERM"            \
+		PS1='(lfs chroot) \u:\w\$ '        \
+		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+		/bin/bash --login -c "set -e
+			cd /extra-sources
+			/extras/curl.sh
+			/extras/git.sh
+		"
+}
+
 function make_extras {
 	mkdir -p "$LFS"/extras
 	cp /build/make-scripts/extras/* "$LFS"/extras
@@ -495,6 +522,8 @@ function make_extras {
 	make_wget
 	make_ssh allow_root
 	make_htop
+	make_wireguard
+	make_git
 }
 
 function finish_build {

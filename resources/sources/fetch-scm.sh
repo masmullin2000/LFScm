@@ -448,6 +448,15 @@ function fetch_htop_scm {
 	gitget 		htop		master						https://github.com/htop-dev/htop.git
 }
 
+function fetch_wireguard_scm {
+	gitget 		wireguard 	master 						https://git.zx2c4.com/wireguard-tools
+}
+
+function fetch_git_scm {
+	gitget 		curl 		master 						https://github.com/curl/curl.git
+	gitget 		git 		master 						git://git.kernel.org/pub/scm/git/git.git
+}
+
 FETCH=$1
 if [ -z "$FETCH" ]
 then
@@ -466,4 +475,8 @@ elif [[ "ssh" == "$FETCH" ]]; then
 	fetch_ssh_lfs
 elif [[ "htop" == "$FETCH" ]]; then
 	fetch_htop_scm
+elif [[ "wireguard" == "$FETCH" ]]; then
+	fetch_wireguard_scm
+elif [[ "git" == "$FETCH" ]]; then
+	fetch_git_scm
 fi
