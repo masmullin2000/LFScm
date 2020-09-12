@@ -496,6 +496,9 @@ function make_wireguard {
 		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 		/bin/bash --login -c "set -e
 			cd /extra-sources
+			/extras/libpcap.sh
+			/extras/tcpdump.sh
+			/extras/iptables.sh
 			/extras/wireguard.sh
 		"
 }

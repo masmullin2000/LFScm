@@ -9,7 +9,7 @@ make olddefconfig
 
 make -j$(nproc)
 make vmlinux -j$(nproc)
-make -j$(nproc) modules_install
+#make -j$(nproc) modules_install
 
 cp -iv arch/x86/boot/bzImage /boot/vmlinuz
 cp -iv vmlinux /boot/vmlinux

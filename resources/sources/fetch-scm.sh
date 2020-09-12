@@ -458,6 +458,9 @@ function fetch_htop_scm {
 }
 
 function fetch_wireguard_scm {
+	gitget		tcpdump		master						https://github.com/the-tcpdump-group/tcpdump.git
+	gitget		libpcap		master						https://github.com/the-tcpdump-group/libpcap.git
+	gitget		iptables	master						git://git.netfilter.org/iptables
 	gitget 		wireguard 	master 						https://git.zx2c4.com/wireguard-tools
 }
 
