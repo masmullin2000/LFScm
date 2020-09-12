@@ -536,4 +536,4 @@ create_dirs
 fetch_sources "$SOURCE_FETCH_METHOD"
 make_lfs_system
 make_extras
-finish_build 1
+finish_build 9e
