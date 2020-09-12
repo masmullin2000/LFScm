@@ -9,8 +9,7 @@ cd Python
             --enable-shared \
             --without-ensurepip
 
-#make -j$(nproc)
-make -j4
+make -j$(nproc)
 make install
 
 cd ..

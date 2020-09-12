@@ -41,6 +41,12 @@ function gitget {
 		if [ "yes" == $DUMB_GIT ]
 		then
 			git clone -b $2 $3 $1
+			if [[ ! -z "$6" ]]; then
+				cd $1
+				echo "Checkout at sha:$6"
+				git checkout -b to_sha $6
+				cd ..
+			fi
 		else
 			git clone -b $2 --depth 1 $3 $1
 		fi
@@ -249,7 +255,9 @@ function fetch_scm {
 	gitget 		flex 			master	 				https://github.com/westes/flex.git \
 	no	"/build/sources/pre-condition/flex-conf.sh"
 	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git
-	gitget		gcc			releases/gcc-10					git://gcc.gnu.org/git/gcc.git
+	# Sometime around Sept7 2020 master of gcc started
+	# causing a hung compile of python
+	gitget		gcc				releases/gcc-10			git://gcc.gnu.org/git/gcc.git
 	gitget 		gdbm 			master 					git://git.gnu.org.ua/gdbm.git \
 	no	"/build/sources/pre-condition/gdbm-conf.sh"
 	gitget 		gettext 		master 					git://git.savannah.gnu.org/gettext.git \
@@ -257,8 +265,9 @@ function fetch_scm {
 	gitget		glibc			master					git://sourceware.org/git/glibc.git
 	gitget 		gperf 			master 					git://git.savannah.gnu.org/gperf.git \
 	no	"/build/sources/pre-condition/gperf-conf.sh"
-	gitget		grep			v3.4					git://git.savannah.gnu.org/grep.git \
-	no	"/build/sources/pre-condition/grep-conf.sh"
+	# After commit 7ded8... grep causes a compile break in GCC
+	gitget		grep			master					git://git.savannah.gnu.org/grep.git \
+	yes	"/build/sources/pre-condition/grep-conf.sh" 	"7ded8efd721ce2abf2b781931e0a0bdd46b156d7"
 	gitget 		groff 			master					git://git.savannah.gnu.org/groff.git \
 	no	"/build/sources/pre-condition/groff-conf.sh"
 	## Moved GRUB Lower due to some weird conflict with inetutils
@@ -283,29 +292,29 @@ function fetch_scm {
 	gitget 		libtool 		master 					git://git.savannah.gnu.org/libtool.git \
 	no	"/build/sources/pre-condition/libtool-conf.sh"
 	gitget		linux			master					git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-	gitget		m			branch-1.4				git://git.savannah.gnu.org/m4.git \
-	no		"/build/sources/pre-condition/m4-conf.sh"
+	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git \
+	no	"/build/sources/pre-condition/m4-conf.sh"
 	# Make moved up something above it is causing a problem
-	gitget		man			master					git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
+	gitget		man				master					git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
 	gitget 		man-db 			master 					git://git.savannah.gnu.org/man-db.git \
-	no		"./bootstrap --copy --gnulib-srcdir=../gnulib"
+	no	"./bootstrap --copy --gnulib-srcdir=../gnulib"
 	gitget		meson			master					https://github.com/mesonbuild/meson.git
-	gitget		mpc			master					https://gitlab.inria.fr/mpc/mpc.git \
-	yes		"autoreconf -i"
+	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git \
+	yes	"autoreconf -i"
 	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
 	#gitget		openssl			OpenSSL_1_1_1-stable			https://github.com/openssl/openssl.git
 	gitget		patch			master					git://git.savannah.gnu.org/patch.git \
-	no		"/build/sources/pre-condition/patch-conf.sh"
+	no	"/build/sources/pre-condition/patch-conf.sh"
 	gitget		perl			blead					https://github.com/Perl/perl5.git
 	gitget 		pkg 			master 					https://gitlab.freedesktop.org/pkg-config/pkg-config \
-	no		"./autogen.sh --no-configure"
+	no	"./autogen.sh --no-configure"
 	gitget		procps			master					https://gitlab.com/procps-ng/procps.git \
-	yes 	"./autogen.sh"
+	yes "./autogen.sh"
 	gitget 		psmisc 			master 					https://gitlab.com/psmisc/psmisc.git \
-	yes 	"/build/sources/pre-condition/psmisc-conf.sh"
+	yes "/build/sources/pre-condition/psmisc-conf.sh"
 	gitget		Python			master					https://github.com/python/cpython.git
 	gitget 		readline 		devel 					git://git.savannah.gnu.org/readline.git
-	gitget		sed			master					git://git.savannah.gnu.org/sed.git \
+	gitget		sed				master					git://git.savannah.gnu.org/sed.git \
 	no	"/build/sources/pre-condition/sed-conf.sh"
 	gitget 		shadow 			master 					https://github.com/shadow-maint/shadow.git \
 	no	"./autogen.sh"
@@ -318,26 +327,26 @@ function fetch_scm {
 	no	"/build/sources/pre-condition/texinfo-conf.sh"
 	gitget 		util 			master					git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git \
 	no	"/build/sources/pre-condition/util-conf.sh"
-	gitget		vim			master					https://github.com/vim/vim.git
-	gitget		XML			master					https://github.com/toddr/XML-Parser.git
-	gitget 		xz			master					https://git.tukaani.org/xz.git \
+	gitget		vim				master					https://github.com/vim/vim.git
+	gitget		XML				master					https://github.com/toddr/XML-Parser.git
+	gitget 		xz				master					https://git.tukaani.org/xz.git \
 	yes	"./autogen.sh"
 	gitget 		zlib 			develop 				https://github.com/madler/zlib.git
-	gitget		zstd			dev					https://github.com/facebook/zstd.git
+	gitget		zstd			dev						https://github.com/facebook/zstd.git
 
-	mercget		gmp								https://gmplib.org/repo/gmp \
+	mercget		gmp										https://gmplib.org/repo/gmp \
 		"/build/sources/pre-condition/gmp-conf.sh"
 
 	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr \
 		"autoreconf -i"
 
-	fossilget	expect								https://core.tcl-lang.org/expect
+	fossilget	expect									https://core.tcl-lang.org/expect
 	# using fossil is painful, there is a good gitmirror
 	# TCL also seems fairly unstable.  > 8.6.10 breaks expect
 	#fossilget	tcl								https://core.tcl-lang.org/tcl
 	gitget 		tcl 			core-8-6-10				https://github.com/tcltk/tcl.git
 
-	bzrget		intltool							intltool \
+	bzrget		intltool								intltool \
 		"./autogen.sh"
 
 	targzget	iana								http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
@@ -346,14 +355,14 @@ function fetch_scm {
 	#wget										https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
 	#wget										https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
 	wget 		https://www.iana.org/time-zones/repository/releases/tzdata2020a.tar.gz
-	mv		tzdata2020a.tar.gz 						tzdata.tar.gz
+	mv	tzdata2020a.tar.gz 						tzdata.tar.gz
 
 	#wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
 	#wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
 
 	## Grub moved to the end because it was causing some sort of conflict with inetutils
 	gitget 		grub 			master 					git://git.savannah.gnu.org/grub.git \
-	no 		"./bootstrap --copy --gnulib-srcdir=../gnulib"
+	no 	"./bootstrap --copy --gnulib-srcdir=../gnulib"
 }
 
 function repackage {
