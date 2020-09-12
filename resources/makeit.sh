@@ -13,8 +13,7 @@ if [[ -n "$1" ]]; then
 fi
 
 function backup {
-
-	local LEVEL=1
+ 	local LEVEL=1
 	if [[ -n $2 ]]; then
 		LEVEL=$2
 	fi
@@ -37,7 +36,6 @@ function backup {
 }
 
 function setup_loop {
-
 	local __ret=$1
 	local LOOP_DEV=$(losetup -f)
 	eval $__ret="'$LOOP_DEV'"
@@ -87,26 +85,7 @@ function fetch_sources {
 	fi
 }
 
-function make_toolchain {
-	cd "$LFS"/sources
-
-	mv /build/config-scripts/bashrc /home/lfs/.bashrc
-	mv /build/config-scripts/bash_profile /home/lfs/.bash_profile
-	chown lfs:lfs /home/lfs/ -R
-	chown lfs:lfs /build/make-scripts/toolchain/ -R
-
-	chown -R lfs:lfs $LFS
-	case $(uname -m) in
-		x86_64) chown lfs $LFS/lib64 ;;
-	esac
-
-	chown -R lfs:lfs "$LFS"/sources
-	sudo -u lfs /bin/bash -c "/build/make-scripts/toolchain/build-toolchain.sh $BACKUP"
-	chown -R root:root "$LFS"
-}
-
 function make_vfs {
-
 	local DIR=$LFS
 	if [[ -n $1 ]]; then
 		DIR=$1
@@ -125,7 +104,6 @@ function make_vfs {
 }
 
 function umake_vfs {
-
 	local DIR=$LFS
 	if [[ -n $1 ]]; then
 		DIR=$1
@@ -138,8 +116,25 @@ function umake_vfs {
 	umount $DIR/run
 }
 
-function make_temp_system {
+function make_toolchain {
+	cd "$LFS"/sources
 
+	mv /build/config-scripts/bashrc /home/lfs/.bashrc
+	mv /build/config-scripts/bash_profile /home/lfs/.bash_profile
+	chown lfs:lfs /home/lfs/ -R
+	chown lfs:lfs /build/make-scripts/toolchain/ -R
+
+	chown -R lfs:lfs $LFS
+	case $(uname -m) in
+		x86_64) chown lfs $LFS/lib64 ;;
+	esac
+
+	chown -R lfs:lfs "$LFS"/sources
+	sudo -u lfs /bin/bash -c "/build/make-scripts/toolchain/build-toolchain.sh $BACKUP"
+	chown -R root:root "$LFS"
+}
+
+function make_temp_system {
 	if test -f "/input/tools.tar.xz"
 	then
 		tar xf /input/tools.tar.xz -C "$LFS"
@@ -219,12 +214,14 @@ set -e
 	fi
 }
 
-function make_lfs_system_pt0 {
-	if test -f "/input/system-pt0.tar.xz"
+function make_lfs_sys {
+	echo -e "check for existance of /input/system-pt$1.tar.xz"
+
+	if test -f "/input/system-pt$1.tar.xz"
 	then
-		tar xf /input/system-pt0.tar.xz -C "$LFS"
+		tar xf "/input/system-pt$1.tar.xz" -C "$LFS"
 	else
-		make_temp_system
+		$4
 
 		make_vfs
 
@@ -234,122 +231,65 @@ function make_lfs_system_pt0 {
 			PS1='(lfs chroot) \u:\w\$ ' \
 			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 1 16
+		    	/basic-system/build-system.sh $2 $3
 		    "
-		backup /output/system-pt0.tar.xz
+
+		if [[ -n $5 ]]; then
+			$5
+		fi
+		backup "/output/system-pt$1.tar.xz"
 	fi
+}
+
+function make_ssl {
+	make_vfs
+
+	if [[ $SOURCE_FETCH_METHOD == "scm" ]]; then
+		echo -e "Building LibreSSL\n\n\n\n\n\n"
+		chroot "$LFS" /usr/bin/env -i   \
+			HOME=/root                  \
+			TERM="$TERM"                \
+			PS1='(lfs chroot) \u:\w\$ ' \
+			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+			/bin/bash --login +h -c "set -e
+				cd /sources && /basic-system/46.libressl.sh > /dev/null || exit
+			"
+	else
+		echo -e "Building OpenSSL\n\n\n\n\n\n"
+
+		chroot "$LFS" /usr/bin/env -i   \
+			HOME=/root                  \
+			TERM="$TERM"                \
+			PS1='(lfs chroot) \u:\w\$ ' \
+			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+			/bin/bash --login +h -c "set -e
+				cd /sources && /basic-system/46.openssl.sh > /dev/null || exit
+			"
+	fi
+}
+
+function make_lfs_system_pt0 {
+
+	make_lfs_sys 0 1 16 make_temp_system
 }
 
 function make_lfs_system_pt1 {
-	if test -f "/input/system-pt1.tar.xz"
-	then
-		tar xf /input/system-pt1.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt0
 
-		make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   \
-			HOME=/root                  \
-			TERM="$TERM"                \
-			PS1='(lfs chroot) \u:\w\$ ' \
-			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 17 32
-		    "
-		backup /output/system-pt1.tar.xz
-	fi
+	make_lfs_sys 1 17 32 make_lfs_system_pt0
 }
 
 function make_lfs_system_pt2 {
-	if test -f "/input/system-pt2.tar.xz"
-	then
-		tar xf /input/system-pt2.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt1
 
-		make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   \
-			HOME=/root                  \
-			TERM="$TERM"                \
-			PS1='(lfs chroot) \u:\w\$ ' \
-			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 33 45
-		    "
-		backup /output/system-pt2.tar.xz
-	fi
+	make_lfs_sys 2 33 45 make_lfs_system_pt1 make_ssl
 }
 
 function make_lfs_system_pt3 {
-	if test -f "/input/system-pt3.tar.xz"
-	then
-		tar xf /input/system-pt3.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt2
 
-		make_vfs
-
-    	if [[ $SOURCE_FETCH_METHOD == "scm" ]]; then
-    		echo -e "Building LibreSSL\n\n\n\n\n\n"
-    		chroot "$LFS" /usr/bin/env -i   \
-				HOME=/root                  \
-				TERM="$TERM"                \
-				PS1='(lfs chroot) \u:\w\$ ' \
-				PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-				/bin/bash --login +h -c "set -e
-					cd /sources && /basic-system/46.libressl.sh > /dev/null || exit
-				"
-		else
-			echo -e "Building OpenSSL\n\n\n\n\n\n"
-
-			chroot "$LFS" /usr/bin/env -i   \
-				HOME=/root                  \
-				TERM="$TERM"                \
-				PS1='(lfs chroot) \u:\w\$ ' \
-				PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-				/bin/bash --login +h -c "set -e
-					cd /sources && /basic-system/46.openssl.sh > /dev/null || exit
-				"
-    	fi
-
-    	make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   \
-			HOME=/root                  \
-			TERM="$TERM"                \
-			PS1='(lfs chroot) \u:\w\$ ' \
-			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-			/bin/bash --login +h -c "set -e
-		    	/basic-system/build-system.sh 47 60
-		    "
-		backup /output/system-pt3.tar.xz
-	fi
+	make_lfs_sys 3 47 60 make_lfs_system_pt2
 }
 
 function make_lfs_system_pt4 {
-	if test -f "/input/system-pt4.tar.xz"
-	then
-		tar xf /input/system-pt4.tar.xz -C "$LFS"
-	else
-		make_lfs_system_pt3
-
-		make_vfs
-
-		chroot "$LFS" /usr/bin/env -i   \
-			HOME=/root                  \
-			TERM="$TERM"                \
-			PS1='(lfs chroot) \u:\w\$ ' \
-			PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-			/bin/bash --login +h -c "set -e
-				/basic-system/build-system.sh 61 72
-				/basic-system/99.strip.sh
-				rm -rf /tmp/*
-			"
-
-		backup /output/system-pt4.tar.xz
-	fi		
+	make_lfs_sys 4 61 72 make_lfs_system_pt3
 }
 
 function make_lfs_system_final {
@@ -367,6 +307,9 @@ function make_lfs_system_final {
 		    PS1='(lfs chroot) \u:\w\$ '        \
 		    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 		    /bin/bash --login -c "
+		    	/basic-system/99.strip.sh
+				rm -rf /tmp/*
+
 		    	rm -f /usr/lib/lib{bfd,opcodes}.a
 				rm -f /usr/lib/libctf{,-nobfd}.a
 				rm -f /usr/lib/libbz2.a
@@ -404,15 +347,19 @@ function make_lfs_system {
 	make_lfs_system_final $1
 }
 
-function make_wget {
+function ready_extras {
 	make_vfs
 
 	mkdir -p "$LFS"/extras
 	cp /build/make-scripts/extras/* "$LFS"/extras
-	cp /build/config-scripts/extras/certs/* "$LFS"/extras
 
 	mkdir -p "$LFS"/extra-sources
 	cd "$LFS"/extra-sources
+}
+
+function make_wget {
+	ready_extras
+	cp /build/config-scripts/extras/certs/* "$LFS"/extras
 	/build/sources/fetch-scm.sh wget
 
 	# Make WGET and dependencies
@@ -430,16 +377,6 @@ function make_wget {
 	    	cp /extras/update-pki.timer /lib/systemd/system/update-pki.timer
 	    	systemctl enable update-pki.timer
 	    "
-}
-
-function ready_extras {
-	make_vfs
-
-	mkdir -p "$LFS"/extras
-	cp /build/make-scripts/extras/* "$LFS"/extras
-
-	mkdir -p "$LFS"/extra-sources
-	cd "$LFS"/extra-sources
 }
 
 function make_ssh {
@@ -536,7 +473,7 @@ function finish_build {
 	rm -rf "$LFS"/tools
 	rm -rf "$LFS"/sources
 	rm -rf "$LFS"/extra-sources
-	rm -rf "$LFS"/mnt/lfs
+	#rm -rf "$LFS"/mnt/lfs
 	rm -rf "$LFS"/extras
 	rm -rf "$LFS"/basic-system
 	backup /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz $1
@@ -584,6 +521,14 @@ function finish_build {
 	tar -cf - "$FC_DIR" | xz -$1 --threads=0 > /output/firecracker-lfs-$SOURCE_FETCH_METHOD.tar.xz
 
 	qemu-img convert -c -f raw -O qcow2 /build/lfs.img /output/lfs-$SOURCE_FETCH_METHOD.qcow2
+
+	DATE=$(date +%Y-%m-%d)
+	FINAL_DIR=/output/$SOURCE_FETCH_METHOD-$DATE
+	mkdir -p $FINAL_DIR
+	mv /output/lfs-$SOURCE_FETCH_METHOD.qcow2 $FINAL_DIR
+	mv /output/firecracker-lfs-$SOURCE_FETCH_METHOD.tar.xz $FINAL_DIR
+	mv /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz $FINAL_DIR
+	tar -cf - $FINAL_DIR | xz -$1 --threads=0 > /output/$SOURCE_FETCH_METHOD-$DATE.tar.xz
 }
 
 #setup_loop val

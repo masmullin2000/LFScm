@@ -17,62 +17,54 @@ function backup {
 	fi
 }
 
-if test -f "/input/tools-pt4.tar.xz"
-then
-	tar xf /input/tools-pt4.tar.xz -C "$LFS"
-else
-	if test -f "/input/tools-pt3.tar.xz"
+function build_toolchain {
+	echo -e "check for existance of /input/toolchain.tar.xz"
+
+	if test -f "/input/toolchain.tar.xz"
 	then
-		tar xf /input/tools-pt3.tar.xz -C "$LFS"
+		tar xf /input/toolchain.tar.xz -C "$LFS"
 	else
-		if test -f "/input/tools-pt2.tar.xz"
-		then
-			tar xf /input/tools-pt2.tar.xz -C "$LFS"
-		else
-			if test -f "/input/tools-pt1.tar.xz"
-			then
-				tar xf /input/tools-pt1.tar.xz -C "$LFS"
-			else
-				if test -f "/input/toolchain.tar.xz"
-				then
-					tar xf /input/toolchain.tar.xz -C "$LFS"
-				else
-					for i in {1..5}
-					do
-						echo -e "Building $i\n\n\n\n\n"
-						cd "$LFS"/sources && /build/make-scripts/toolchain/toolchain/$i.*.sh > /dev/null || exit
-					done
-					backup /output/toolchain.tar.xz
-				fi
-
-				for i in {6..9}
-				do
-					echo -e "Building $i\n\n\n\n\n"
-					cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null || exit
-				done
-				backup /output/tools-pt1.tar.xz
-			fi
-
-			for i in {10..12}
-			do
-				echo -e "Building $i\n\n\n\n\n"
-				cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null|| exit
-			done
-			backup /output/tools-pt2.tar.xz
-		fi
-
-		for i in {13..17}
+		for (( i=1; i<=5; i++ ))
 		do
-			echo -e "Building $i\n\n\n\n\n"
+			echo -e "Building Toolchain $i\n\n\n\n\n"
+			cd "$LFS"/sources && /build/make-scripts/toolchain/toolchain/$i.*.sh > /dev/null || exit
+		done
+		backup /output/toolchain.tar.xz
+	fi
+}
+
+function build_tools {
+	echo -e "check for existance of /input/tools-pt$1.tar.xz"
+
+	if test -f "/input/tools-pt$1.tar.xz"
+	then
+		tar xf "/input/tools-pt$1.tar.xz" -C "$LFS"
+	else
+		$4
+
+		for (( i=$2; i<=$3; i++ ))
+		do
+			echo -e "Building Tool $i\n\n\n\n\n"
 			cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null || exit
 		done
-		backup /output/tools-pt3.tar.xz
+		backup "/output/tools-pt$1.tar.xz"
 	fi
+}
 
-	for i in {18..22}
-	do
-		echo -e "Building $i\n\n\n\n\n"
-		cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null|| exit
-	done
-	backup /output/tools-pt4.tar.xz
-fi
+function build_tools_4 {
+	build_tools 4 18 22 build_tools_3
+}
+
+function build_tools_3 {
+	build_tools 3 13 17 build_tools_2
+}
+
+function build_tools_2 {
+	build_tools 2 10 12 build_tools_1
+}
+
+function build_tools_1 {
+	build_tools 1 6 9 build_toolchain
+}
+
+build_tools_4
