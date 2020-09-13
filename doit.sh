@@ -2,7 +2,7 @@
 
 NAME=lfs-build
 
-docker build -t $NAME .
+podman build -t $NAME .
 if [[ $1 == "man" ]]
 then
 	shift
@@ -12,12 +12,12 @@ then
 	else
 		CPU=$(nproc)
 	fi
-	docker run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME bash
+	podman run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME bash
 else
 	if [[ -n $3 ]]; then
 		CPU=$3
 	else
 		CPU=$(nproc)
 	fi
-	docker run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME ./makeit.sh $1 $2
+	podman run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME ./makeit.sh $1 $2
 fi

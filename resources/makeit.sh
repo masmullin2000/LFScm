@@ -119,7 +119,7 @@ function umake_vfs {
 function make_toolchain {
 	cd "$LFS"/sources
 
-	mv /build/config-scripts/bashrc /home/lfs/.bashrc
+	mv /build/config-scripts/make_bashrc /home/lfs/.bashrc
 	mv /build/config-scripts/bash_profile /home/lfs/.bash_profile
 	chown lfs:lfs /home/lfs/ -R
 	chown lfs:lfs /build/make-scripts/toolchain/ -R
@@ -299,7 +299,9 @@ function make_lfs_system_final {
 	else
 		make_lfs_system_pt4
 
-		cp /build/config-scripts/{grub.cfg,config,hosts,locale.conf,inputrc,shells,fstab,10-eth-dhcp.network,passwd,group} "$LFS"/basic-system/
+		cp /build/config-scripts/{grub.cfg,config,hosts,locale.conf,inputrc,profile} "$LFS"/basic-system/
+		cp /build/config-scripts/{shells,fstab,10-eth-dhcp.network,passwd,group,bashrc} "$LFS"/basic-system/
+		cp /build/config-scripts/{lsb-release,os-release,motd} "$LFS"/basic-system/
 	    make_vfs
 
 	    chroot "$LFS" /usr/bin/env -i          \
@@ -318,6 +320,8 @@ function make_lfs_system_final {
 				rm -f /usr/lib/libfl.a
 				rm -f /usr/lib/libz.a
 
+				DATE=$(date +%Y-%m-%d)
+				VERSION=$SOURCE_FETCH_METHOD-$DATE
 				echo $VERSION
 
 				find /usr/lib /usr/libexec -name \*.la -delete
@@ -331,7 +335,14 @@ function make_lfs_system_final {
 				cp basic-system/inputrc /etc/inputrc
 				cp basic-system/shells /etc/shells
 				cp basic-system/fstab /etc/fstab
+				cp basic-system/profile /etc/profile
+				cp basic-system/bashrc /etc/bashrc
 				cp basic-system/10-eth-dhcp.network /etc/systemd/network/
+				cp basic-system/motd /etc/motd
+				cp basic-system/lsb-release /etc/lsb-release
+				cp basic-system/os-release /etc/os-release
+				sed -i 's/DATE/$VERSION/g' /etc/lsb-release
+				sed -i 's/DATE/$VERSION/g' /etc/os-release
 
 				cd /sources && /basic-system/100.kernel.sh
 			"
@@ -473,7 +484,7 @@ function finish_build {
 	rm -rf "$LFS"/tools
 	rm -rf "$LFS"/sources
 	rm -rf "$LFS"/extra-sources
-	#rm -rf "$LFS"/mnt/lfs
+	rm -rf "$LFS"/mnt/lfs
 	rm -rf "$LFS"/extras
 	rm -rf "$LFS"/basic-system
 	backup /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz $1
@@ -494,7 +505,7 @@ function finish_build {
 	
 	make_vfs "$QEMU_DIR"
 
-	chroot "$QEMU_DIR" /usr/bin/env -i          \
+	chroot "$QEMU_DIR" /usr/bin/env -i     \
 	    HOME=/root TERM="$TERM"            \
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
@@ -503,9 +514,9 @@ function finish_build {
 			sync
 		"
 
-	ROOT_EXT4=/firecracker/rootfs."$SOURCE_FETCH_METHOD".ext4
 	FC_DIR="/firecracker"
 	FC_ROOTFS="$FC_DIR"/rootfs
+	ROOT_EXT4="$FC_ROOTFS"."$SOURCE_FETCH_METHOD".ext4
 
 	mkdir -p "$FC_ROOTFS"
 	dd if=/dev/zero of="$ROOT_EXT4" bs=1M count=1536
@@ -528,7 +539,8 @@ function finish_build {
 	mv /output/lfs-$SOURCE_FETCH_METHOD.qcow2 $FINAL_DIR
 	mv /output/firecracker-lfs-$SOURCE_FETCH_METHOD.tar.xz $FINAL_DIR
 	mv /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz $FINAL_DIR
-	tar -cf - $FINAL_DIR | xz -$1 --threads=0 > /output/$SOURCE_FETCH_METHOD-$DATE.tar.xz
+	cd /output
+	tar -cf - "$SOURCE_FETCH_METHOD-$DATE" | xz -$1 --threads=0 > /output/$SOURCE_FETCH_METHOD-$DATE.tar.xz
 }
 
 #setup_loop val
