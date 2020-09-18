@@ -301,8 +301,9 @@ function fetch_scm {
 	gitget		meson			master					https://github.com/mesonbuild/meson.git
 	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git \
 	yes	"autoreconf -i"
-	gitget		ninja			master					https://github.com/ninja-build/ninja.git		
-	#gitget		openssl			OpenSSL_1_1_1-stable			https://github.com/openssl/openssl.git
+	gitget		ninja			master					https://github.com/ninja-build/ninja.git
+	# Use libressl for scm builds
+	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
 	gitget		patch			master					git://git.savannah.gnu.org/patch.git \
 	no	"/build/sources/pre-condition/patch-conf.sh"
 	gitget		perl			blead					https://github.com/Perl/perl5.git
@@ -318,9 +319,7 @@ function fetch_scm {
 	no	"/build/sources/pre-condition/sed-conf.sh"
 	gitget 		shadow 			master 					https://github.com/shadow-maint/shadow.git \
 	no	"./autogen.sh"
-	# current systemd (as of https://github.com/systemd/systemd/commit/b9df353689c34d7180ff4b271e866ca597dd516f#diff-91be33be198dcb660ec3e06b561540db)
-	# has a compile bug that wont compile on machines that do not have libcryptsetup
-	gitget		systemd			v246					https://github.com/systemd/systemd.git
+	gitget		systemd			master					https://github.com/systemd/systemd.git
 	gitget 		tar 			master 					git://git.savannah.gnu.org/tar.git \
 	no	"/build/sources/pre-condition/tar-conf.sh"
 	gitget 		texinfo 		master 					git://git.savannah.gnu.org/texinfo.git \

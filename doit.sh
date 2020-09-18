@@ -2,7 +2,10 @@
 
 NAME=lfs-build
 
-podman build -t $NAME .
+if [[ $1 == "rebuild" ]]; then
+	shift
+	podman build -t $NAME .
+fi
 if [[ $1 == "man" ]]
 then
 	shift
