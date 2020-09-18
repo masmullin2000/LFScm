@@ -1,0 +1,5 @@
+NAME="Linux From SCM"
+VERSION="DATE"
+ID=lfs
+PRETTY_NAME="Linux From SCM DATE"
+VERSION_CODENAME="October Penguin"

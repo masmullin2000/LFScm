@@ -1,0 +1,4 @@
+DISTRIB_ID="Linux From SCM"
+DISTRIB_RELEASE="DATE"
+DISTRIB_CODENAME="October Penguin"
+DISTRIB_DESCRIPTION="Linux From Scratch built from SCM sources"

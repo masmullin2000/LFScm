@@ -1,0 +1,113 @@
+From e79ebe11b9010bf5ed8b9f21a08a0b4934af7ccc Mon Sep 17 00:00:00 2001
+From: Michael Mullin <masmullin@gmail.com>
+Date: Tue, 15 Sep 2020 16:50:50 -0400
+Subject: [PATCH 1/2] Fix Compile break for machines which do not have
+ libcryptsetup installed
+
+---
+ src/partition/repart.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/src/partition/repart.c b/src/partition/repart.c
+index 28c9de7b2b..fabd69ea77 100644
+--- a/src/partition/repart.c
++++ b/src/partition/repart.c
+@@ -72,6 +72,17 @@
+ /* LUKS2 takes off 16M of the partition size with its metadata by default */
+ #define LUKS2_METADATA_SIZE (16*1024*1024)
+ 
++#if !HAVE_LIBCRYPTSETUP
++        struct crypt_device {
++
++        };
++        static inline void sym_crypt_free(struct crypt_device* cd) {
++            if (cd)
++                    free(cd);
++        }
++        DEFINE_TRIVIAL_CLEANUP_FUNC(struct crypt_device *, sym_crypt_free);
++#endif
++
+ /* Note: When growing and placing new partitions we always align to 4K sector size. It's how newer hard disks
+  * are designed, and if everything is aligned to that performance is best. And for older hard disks with 512B
+  * sector size devices were generally assumed to have an even number of sectors, hence at the worst we'll
+@@ -2369,7 +2380,7 @@ static int partition_encrypt(
+                 struct crypt_device **ret_cd,
+                 char **ret_volume,
+                 int *ret_fd) {
+-
++#if HAVE_LIBCRYPTSETUP
+         _cleanup_(sym_crypt_freep) struct crypt_device *cd = NULL;
+         _cleanup_(erase_and_freep) void *volume_key = NULL;
+         _cleanup_free_ char *dm_name = NULL, *vol = NULL;
+@@ -2465,9 +2476,13 @@ static int partition_encrypt(
+                 *ret_volume = TAKE_PTR(vol);
+ 
+         return 0;
++#else
++        return log_error_errno(-ENOENT, "libcryptsetup not found, cannot encrypt: %m");
++#endif
+ }
+ 
+ static int deactivate_luks(struct crypt_device *cd, const char *node) {
++#if HAVE_LIBCRYPTSETUP
+         int r;
+ 
+         if (!cd)
+@@ -2483,6 +2498,9 @@ static int deactivate_luks(struct crypt_device *cd, const char *node) {
+                 return log_error_errno(r, "Failed to deactivate LUKS device: %m");
+ 
+         return 1;
++#else
++        return 0;
++#endif
+ }
+ 
+ static int context_copy_blocks(Context *context) {
+-- 
+2.26.2
+
+
+From 63ea98229a920a9d01807897f75f53c48e18552b Mon Sep 17 00:00:00 2001
+From: Michael Mullin <masmullin@gmail.com>
+Date: Wed, 16 Sep 2020 18:06:44 -0400
+Subject: [PATCH 2/2] update compile fix for !HAVE_LIBCRYPTSETUP due to code
+ review comments
+
+---
+ src/partition/repart.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/src/partition/repart.c b/src/partition/repart.c
+index fabd69ea77..faad42dc00 100644
+--- a/src/partition/repart.c
++++ b/src/partition/repart.c
+@@ -73,14 +73,9 @@
+ #define LUKS2_METADATA_SIZE (16*1024*1024)
+ 
+ #if !HAVE_LIBCRYPTSETUP
+-        struct crypt_device {
+-
+-        };
+-        static inline void sym_crypt_free(struct crypt_device* cd) {
+-            if (cd)
+-                    free(cd);
+-        }
+-        DEFINE_TRIVIAL_CLEANUP_FUNC(struct crypt_device *, sym_crypt_free);
++struct crypt_device;
++static inline void sym_crypt_free(struct crypt_device* cd) {}
++static inline void sym_crypt_freep(struct crypt_device** cd) {}
+ #endif
+ 
+ /* Note: When growing and placing new partitions we always align to 4K sector size. It's how newer hard disks
+@@ -2477,7 +2472,7 @@ static int partition_encrypt(
+ 
+         return 0;
+ #else
+-        return log_error_errno(-ENOENT, "libcryptsetup not found, cannot encrypt: %m");
++        return log_error_errno(SYNTHETIC_ERRNO(EOPNOTSUPP), "libcryptsetup is not supported, cannot encrypt: %m");
+ #endif
+ }
+ 
+-- 
+2.26.2
+

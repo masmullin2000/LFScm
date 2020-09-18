@@ -2,17 +2,20 @@
 
 set -e
 
-tar xf libcap-2.31.tar.xz
-cd libcap-2.31
+tar xf libcap.tar.gz
+cd libcap
 
-sed -i '/install.*STA...LIBNAME/d' libcap/Makefile
+sed -i '/install -m.*STACAPLIBNAME/d' libcap/Makefile
 
 make lib=lib -j$(nproc)
 
 #make test -j$(nproc)
 
-make lib=lib install
-chmod -v 755 /lib/libcap.so.2.31
+make lib=lib PKGCONFIGDIR=/usr/lib/pkgconfig install
+chmod -v 755 /lib/libcap.so*
+mv -v /lib/libpsx.a /usr/lib
+rm -v /lib/libcap.so
+ln -sfv ../../lib/libcap.so.2 /usr/lib/libcap.so
 
 cd ../
-rm -rf libcap-2.31
+rm -rf libcap

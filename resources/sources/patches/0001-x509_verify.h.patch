@@ -1,0 +1,38 @@
+From a5d629eab31e7e56bf9892d9e73fa070ab5d47bd Mon Sep 17 00:00:00 2001
+From: Michael Mullin <masmullin@gmail.com>
+Date: Tue, 15 Sep 2020 22:48:17 -0400
+Subject: [PATCH] x509_verify.h
+
+---
+ crypto/Makefile.am | 1 +
+ update.sh          | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/crypto/Makefile.am b/crypto/Makefile.am
+index 247c66b..031ab4b 100644
+--- a/crypto/Makefile.am
++++ b/crypto/Makefile.am
+@@ -954,6 +954,7 @@ libcrypto_la_SOURCES += x509/x509_txt.c
+ libcrypto_la_SOURCES += x509/x509_utl.c
+ libcrypto_la_SOURCES += x509/x509_v3.c
+ libcrypto_la_SOURCES += x509/x509_vfy.c
++libcrypto_la_SOURCES += x509/x509_verify.c
+ libcrypto_la_SOURCES += x509/x509_vpm.c
+ libcrypto_la_SOURCES += x509/x509cset.c
+ libcrypto_la_SOURCES += x509/x509name.c
+diff --git a/update.sh b/update.sh
+index cc1deb7..a9d92d2 100755
+--- a/update.sh
++++ b/update.sh
+@@ -126,7 +126,7 @@ copy_hdrs $libcrypto_src "stack/stack.h lhash/lhash.h stack/safestack.h
+ 	objects/objects.h asn1/asn1.h bn/bn.h ec/ec.h ecdsa/ecdsa.h
+ 	ecdh/ecdh.h rsa/rsa.h sha/sha.h x509/x509_vfy.h pkcs7/pkcs7.h pem/pem.h
+ 	pem/pem2.h hkdf/hkdf.h hmac/hmac.h rand/rand.h md5/md5.h
+-	x509/x509v3.h conf/conf.h ocsp/ocsp.h
++	x509/x509v3.h conf/conf.h ocsp/ocsp.h x509/x509_verify.h
+ 	aes/aes.h modes/modes.h asn1/asn1t.h dso/dso.h bf/blowfish.h
+ 	bio/bio.h cast/cast.h cmac/cmac.h cms/cms.h conf/conf_api.h des/des.h dh/dh.h
+ 	dsa/dsa.h engine/engine.h ui/ui.h pkcs12/pkcs12.h ts/ts.h
+-- 
+2.26.2
+
