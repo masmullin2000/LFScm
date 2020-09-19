@@ -77,6 +77,7 @@ lfs-docker-build/resources/sources/pre-condition
 3) Global CFLAGS - It would be nice to start playing with -march=native
 4) fetch-scm.sh is messy, this should be re-written in a cleaner way
 5) Numbering the build order is messy and makes it difficult to insert new packages.  We should refactor this somehow (remember we don't have any other scripting language at build time other than bash)
+6) Integrate LiveScratch to create a bootable ISO of the finalized product (https://github.com/masmullin2000/LiveScratch)
 
 # Bugs Found and Fixed because of Linux From SCM
 Systemd compile break
