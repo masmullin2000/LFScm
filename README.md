@@ -11,13 +11,13 @@ Please see your distributions package repository on how to install docker or pod
 # Build it
 
 ## Quick Start: 
-$ sudo ./doit.sh -n
+    $ sudo ./doit.sh -n
 
 The above will create a new docker image and use that image to build LFS 10.0.
 The resulting output will be stored in output/lfs-(date).tar.xz
 - lfs-lfs.qcow : A qemu virtual machine image
 - firecracker-lfs-lfs.tar.xz : A tarball containing the linux kernel and root file system to run in a firecracker microvm
-- final-lfs-lfs.tar.xz : A tarball containing the entire lfs filesystem.  You can use this tarball to create a docker or podman container :)
+- finished-lfs-lfs.tar.xz : A tarball containing the entire lfs filesystem.  You can use this tarball to create a docker or podman container :)
   
 ## More build options
 	-t|--type (scm|lfs|dev): type of build
@@ -56,13 +56,13 @@ Additionally, in an scm build openssl is replaced with libressl.
 As an SCM build fetches sources from the web, it stores the 'pre-conditioned' code as tarballs in input/sources.  Developers can pre-load input/sources with their own source code in input/sources rather than fetching the code as part of the build process.
 
 Example.
-$ pwd
-/home/masmullin/code/lfs-docker-build/
-$ cd input/sources/
-$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-$ vim linux/fs/exec.c #do stuff to the exec syscall
-$ cd ../../
-$ sudo ./doit.sh -p -t scm -s
+    $ pwd
+    /home/masmullin/code/lfs-docker-build/
+    $ cd input/sources/
+    $ git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+    $ vim linux/fs/exec.c #do stuff to the exec syscall
+    $ cd ../../
+    $ sudo ./doit.sh -p -t scm -s
 
 #### Preconditioning
 Code which requires preconditioning (note: code which requires pre-conditioning is often from https://git.savannah.gnu.org) must be in a conditioned state in the input/sources directory; pre-condition scripts will not be run on developer provided sources.  This means that you will probably have to run the same commands as are in the pre-condition scripts.
