@@ -478,7 +478,7 @@ if [[ "scm" == "$FETCH" ]]; then
 	fetch_scm
 elif [[ "lfs" == "$FETCH" ]]; then
 	fetch_lfs
-elif [[ "lfs_dev" == "$FETCH" ]]; then
+elif [[ "dev" == "$FETCH" ]]; then
 	fetch_lfs_dev
 elif [[ "wget" == "$FETCH" ]]; then
 	fetch_wget_lfs

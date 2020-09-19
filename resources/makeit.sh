@@ -541,6 +541,8 @@ function finish_build {
 	mv /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz $FINAL_DIR
 	cd /output
 	tar -cf - "$SOURCE_FETCH_METHOD-$DATE" | xz -$1 --threads=0 > /output/$SOURCE_FETCH_METHOD-$DATE.tar.xz
+
+	losetup -d "$drive"
 }
 
 #setup_loop val
