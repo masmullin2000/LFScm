@@ -56,6 +56,7 @@ Additionally, in an scm build openssl is replaced with libressl.
 As an SCM build fetches sources from the web, it stores the 'pre-conditioned' code as tarballs in input/sources.  Developers can pre-load input/sources with their own source code in input/sources rather than fetching the code as part of the build process.
 
 Example.
+
     $ pwd
     /home/masmullin/code/lfs-docker-build/
     $ cd input/sources/
