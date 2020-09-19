@@ -14,10 +14,10 @@ Please see your distributions package repository on how to install docker or pod
 $ sudo ./doit.sh -n
 
 The above will create a new docker image and use that image to build LFS 10.0.
-The resulting output will be stored in output/lfs-<date>.tar.xz
+The resulting output will be stored in output/lfs-(date).tar.xz
 - lfs-lfs.qcow : A qemu virtual machine image
-- firecracker-lfs.tar.xz : A tarball containing the linux kernel and root file system to run in a firecracker microvm
-- final-lfs.tar.xz : A tarball containing the entire lfs filesystem
+- firecracker-lfs-lfs.tar.xz : A tarball containing the linux kernel and root file system to run in a firecracker microvm
+- final-lfs-lfs.tar.xz : A tarball containing the entire lfs filesystem.  You can use this tarball to create a docker or podman container :)
   
 ## More build options
 	-t|--type (scm|lfs|dev): type of build
