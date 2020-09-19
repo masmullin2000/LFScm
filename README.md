@@ -1,4 +1,4 @@
-# LFScm Linux From SCM (A derivitive of Linux From Scratch)
+# LFScm - Linux From SCM (A derivitive of Linux From Scratch)
 
 Linux From SCM is a Linux distribution where sources are compiled as close to the tip of their github master branch tips as possible.
 The goal is to be able to develop software components, and see how those software components fit within a holistic running operating system.
