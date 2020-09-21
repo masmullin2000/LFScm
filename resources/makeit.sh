@@ -1,15 +1,20 @@
 #!/bin/bash
 
 BACKUP="no"
-if [[ -n "$1" ]]; then
+if [[ "$1" == "yes" || "$1" == "no" ]]; then
 	BACKUP=$1
 	shift
 fi
 
 SOURCE_FETCH_METHOD="scm"
-if [[ -n "$1" ]]; then
+if [[ "$1" == "lfs" || "$1" == "dev" || "$1" == "scm" ]]; then
 	SOURCE_FETCH_METHOD=$1
 	shift
+fi
+
+JUST_FETCH="no"
+if [[ "$1" == "jf" ]]; then
+	JUST_FETCH="yes"
 fi
 
 function backup {
@@ -548,6 +553,9 @@ function finish_build {
 #setup_loop val
 create_dirs
 fetch_sources "$SOURCE_FETCH_METHOD"
-make_lfs_system
-make_extras
-finish_build 9e
+
+if [[ "$JUST_FETCH" != "yes" ]]; then
+	make_lfs_system
+	make_extras
+	finish_build 9e
+fi

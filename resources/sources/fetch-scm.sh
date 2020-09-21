@@ -267,7 +267,7 @@ function fetch_scm {
 	no	"/build/sources/pre-condition/gperf-conf.sh"
 	# After commit 7ded8... grep causes a compile break in GCC
 	gitget		grep			master					git://git.savannah.gnu.org/grep.git \
-	yes	"/build/sources/pre-condition/grep-conf.sh" 	"7ded8efd721ce2abf2b781931e0a0bdd46b156d7"
+	yes	"/build/sources/pre-condition/grep-conf.sh" 	#"7ded8efd721ce2abf2b781931e0a0bdd46b156d7"
 	gitget 		groff 			master					git://git.savannah.gnu.org/groff.git \
 	no	"/build/sources/pre-condition/groff-conf.sh"
 	## Moved GRUB Lower due to some weird conflict with inetutils
@@ -366,6 +366,9 @@ function fetch_scm {
 
 function repackage {
 	set +e
+
+	echo "$1 vs $2 vs $3"
+
 	is_html=$(echo $1 | grep html)
 	is_tz=$(echo $1 | grep tzdata)
 	is_sysd_man=$(echo $1 | grep systemd-man-pages)
@@ -384,17 +387,28 @@ function repackage {
 				then
 					pkg_to+="-db"
 				fi
-				echo "repackaging -> $pkg_to :: $pkg_from :: $2"
-				tar xf $1
-				if test -f "$1"
-				then
-					rm $1
+
+				if [[ "$2" == ".tar.gz" ]]; then
+					echo "$pkg_to :: $pkg_from :: $3"
+					targzget  $pkg_to $3
+				elif [[ "$2" == ".tar.xz" ]]; then
+					tarxzget  $pkg_to $3
+				else
+					tarbz2get $pkg_to $3
 				fi
-				mv "$pkg_from" "$pkg_to"
-				tar czf "$pkg_to".tar.gz "$pkg_to"
-				rm -rf "$pkg_to"
+
+				# echo "repackaging -> $pkg_to :: $pkg_from :: $2"
+				# tar xf $1
+				# if test -f "$1"
+				# then
+				# 	rm $1
+				# fi
+				# mv "$pkg_from" "$pkg_to"
+				# tar czf "$pkg_to".tar.gz "$pkg_to"
+				# rm -rf "$pkg_to"
 
 			else
+				wget $3
 				mv $1 tzdata.tar.gz
 			fi
 		else
@@ -404,39 +418,40 @@ function repackage {
 }
 
 function pak {
-	for f in *.tar.gz
+	while read url;
 	do
-		echo "$f"
-		repackage "$f" ".tar.gz"
-	done
-
-	for f in *.tar.xz
-	do
-		echo "$f"
-		repackage "$f" ".tar.xz"
-	done
-
-	for f in *.tar.bz2
-	do
-		echo "$f"		
-		repackage "$f" ".tar.bz2"
-	done
+		set +e
+		file=$(echo "$url" | sed 's/.*\///g')
+		is_gz=$(echo "$file" | grep tar.gz)
+		is_xz=$(echo "$file" | grep tar.xz)
+		is_bz2=$(echo "$file" | grep tar.bz2)
+		if [[ -n $is_gz ]]; then
+			repackage "$file" ".tar.gz" "$url"
+		elif [[ -n $is_xz ]]; then
+			repackage "$file" ".tar.xz" "$url"
+		elif [[ -n $is_bz2 ]]; then
+			repackage "$file" ".tar.bz2" "$url"
+		else
+			wget $url
+		fi
+		set -e
+	done < wget-list
 }
 
 function fetch_lfs_dev {
 	wget http://www.linuxfromscratch.org/lfs/view/systemd/wget-list
-	wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums
-	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
-	md5sum -c md5sums
+	# wget http://www.linuxfromscratch.org/lfs/view/systemd/md5sums
+	# wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+	# md5sum -c md5sums
 
 	pak
 }
 
 function fetch_lfs {
 	wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/wget-list
-	wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/md5sums
-	wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
-	md5sum -c md5sums
+	# wget http://www.linuxfromscratch.org/lfs/view/stable-systemd/md5sums
+	# wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+	# md5sum -c md5sums
 
 	pak
 }
@@ -448,8 +463,9 @@ function fetch_wget_lfs {
 	targzget	libtasn1	https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.16.0.tar.gz
 }
 
-function fetch_ssh_lfs {
-	targzget	openssh		http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-8.3p1.tar.gz
+function fetch_ssh {
+	#targzget	openssh		http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-8.3p1.tar.gz
+	gitget 		openssh 	master						git://anongit.mindrot.org/openssh.git
 }
 
 function fetch_htop_scm {
@@ -483,7 +499,7 @@ elif [[ "dev" == "$FETCH" ]]; then
 elif [[ "wget" == "$FETCH" ]]; then
 	fetch_wget_lfs
 elif [[ "ssh" == "$FETCH" ]]; then
-	fetch_ssh_lfs
+	fetch_ssh
 elif [[ "htop" == "$FETCH" ]]; then
 	fetch_htop_scm
 elif [[ "wireguard" == "$FETCH" ]]; then

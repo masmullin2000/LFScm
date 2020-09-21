@@ -5,6 +5,8 @@ set -e
 tar xf openssh.tar.gz
 cd openssh
 
+autoreconf -if
+
 install  -v -m700 -d /var/lib/sshd &&
 chown    -v root:sys /var/lib/sshd &&
 
