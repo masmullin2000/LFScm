@@ -2,6 +2,9 @@
 
 set -e
 
+me=$(basename "$0" | sed 's/.sh//g')
+touch "$LFS"/completed/started.$me
+
 tar xvf binutils.tar.gz
 cd binutils
 
@@ -20,3 +23,6 @@ make install
 
 cd ../../
 rm -rf binutils
+
+rm -f "$LFS"/completed/started.$me
+touch "$LFS"/completed/$me

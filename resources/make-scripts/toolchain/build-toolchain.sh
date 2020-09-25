@@ -27,8 +27,9 @@ function build_toolchain {
 		for (( i=1; i<=5; i++ ))
 		do
 			echo -e "Building Toolchain $i\n\n\n\n\n"
-			cd "$LFS"/sources && /build/make-scripts/toolchain/toolchain/$i.*.sh > /dev/null || exit
+			cd "$LFS"/sources && /build/make-scripts/toolchain/toolchain/$i.*.sh > /dev/null || exit &
 		done
+		wait
 		backup /output/toolchain.tar.xz
 	fi
 }
@@ -45,26 +46,19 @@ function build_tools {
 		for (( i=$2; i<=$3; i++ ))
 		do
 			echo -e "Building Tool $i\n\n\n\n\n"
-			cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null || exit
+			cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null || exit &
 		done
+		wait
 		backup "/output/tools-pt$1.tar.xz"
 	fi
 }
 
-function build_tools_4 {
-	build_tools 4 18 22 build_tools_3
-}
-
-function build_tools_3 {
-	build_tools 3 13 17 build_tools_2
-}
-
 function build_tools_2 {
-	build_tools 2 10 12 build_tools_1
+	build_tools 2 13 22 build_tools_1
 }
 
 function build_tools_1 {
-	build_tools 1 6 9 build_toolchain
+	build_tools 1 6 12 build_toolchain
 }
 
-build_tools_4
+build_tools_2

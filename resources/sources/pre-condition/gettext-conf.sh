@@ -6,7 +6,7 @@ set -e
 ./autogen.sh
 ./configure
 make -j$(nproc)
-make dist-xz
+make dist-xz -j$(nproc)
 mv gettext*.tar.xz ..
 cd ..
 rm -rf gettext

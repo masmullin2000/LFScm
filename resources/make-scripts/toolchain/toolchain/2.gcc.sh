@@ -2,6 +2,15 @@
 
 set -e
 
+me=$(basename "$0" | sed 's/.sh//g')
+
+while [[ ! -f "$LFS"/completed/1.binutils ]]; do
+    sleep 5
+done
+
+touch "$LFS"/completed/started.$me
+
+
 tar xvf gcc.tar.gz
 cd gcc
 
@@ -53,3 +62,6 @@ cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
 
 cd ../
 rm -rf gcc
+
+rm -f "$LFS"/completed/started.$me
+touch "$LFS"/completed/$me

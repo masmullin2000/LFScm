@@ -2,6 +2,13 @@
 
 set -e
 
+while [[ ! -f "$LFS"/completed/4.glibc ]]; do
+    sleep 5
+done
+
+me=$(basename "$0" | sed 's/.sh//g')
+touch "$LFS"/completed/started.$me
+
 tar xvf gcc.tar.gz
 cd gcc
 
@@ -25,3 +32,7 @@ make DESTDIR=$LFS install
 
 cd ../..
 rm -rf gcc
+
+rm -f "$LFS"/completed/started.$me
+touch "$LFS"/completed/$me
+

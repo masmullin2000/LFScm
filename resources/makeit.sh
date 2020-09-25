@@ -357,6 +357,7 @@ function make_lfs_system_final {
 
 function make_lfs_system {
 	mkdir -p "$LFS"/basic-system
+	mkdir -p "$LFS"/completed
 	cp -R /build/make-scripts/basic-system/*.sh "$LFS"/basic-system
 	chmod +x "$LFS"/basic-system	
 
@@ -368,9 +369,6 @@ function ready_extras {
 
 	mkdir -p "$LFS"/extras
 	cp /build/make-scripts/extras/* "$LFS"/extras
-
-	mkdir -p "$LFS"/extra-sources
-	cd "$LFS"/extra-sources
 }
 
 function make_wget {
@@ -384,7 +382,7 @@ function make_wget {
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 	    /bin/bash --login -c "set -e
-	    	cd /extra-sources
+	    	cd /sources
 	    	/extras/libtasn1.sh
 	    	/extras/p11-kit.sh
 	    	/extras/make-ca.sh
@@ -410,7 +408,7 @@ function make_ssh {
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 	    /bin/bash --login -c "set -e
-	    	cd /extra-sources
+	    	cd /sources
 	    	/extras/openssh.sh
 
 	    	cp /extras/sshd.* /lib/systemd/system/
@@ -434,7 +432,7 @@ function make_htop {
 		PS1='(lfs chroot) \u:\w\$ '        \
 		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 		/bin/bash --login -c "set -e
-			cd /extra-sources
+			cd /sources
 			/extras/htop.sh
 		"
 }
@@ -448,7 +446,7 @@ function make_wireguard {
 		PS1='(lfs chroot) \u:\w\$ '        \
 		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 		/bin/bash --login -c "set -e
-			cd /extra-sources
+			cd /sources
 			/extras/libpcap.sh
 			/extras/tcpdump.sh
 			/extras/iptables.sh
@@ -465,7 +463,7 @@ function make_git {
 		PS1='(lfs chroot) \u:\w\$ '        \
 		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 		/bin/bash --login -c "set -e
-			cd /extra-sources
+			cd /sources
 			/extras/curl.sh
 			/extras/git.sh
 		"
@@ -488,7 +486,7 @@ function finish_build {
 	rm -rf "$LFS"/usr/share/{info,man,doc}
 	rm -rf "$LFS"/tools
 	rm -rf "$LFS"/sources
-	rm -rf "$LFS"/extra-sources
+	rm -rf "$LFS"/sources
 	rm -rf "$LFS"/mnt/lfs
 	rm -rf "$LFS"/extras
 	rm -rf "$LFS"/basic-system

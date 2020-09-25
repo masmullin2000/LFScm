@@ -2,6 +2,13 @@
 
 set -e
 
+while [[ ! -f "$LFS"/completed/2.gcc ]]; do
+    sleep 5
+done
+
+me=$(basename "$0" | sed 's/.sh//g')
+touch "$LFS"/completed/started.$me
+
 tar xvf glibc.tar.gz
 cd glibc
 
@@ -43,3 +50,6 @@ $LFS_TGT-gcc dummy.c
 readelf -l a.out | grep '/ld-linux'
 
 rm -v dummy.c a.out
+
+rm -f "$LFS"/completed/started.$me
+touch "$LFS"/completed/$me
