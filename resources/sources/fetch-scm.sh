@@ -39,8 +39,6 @@ function gitget {
 			DUMB_GIT="$4"
 		fi
 
-		echo "$4 vs $DUMB_GIT"
-
 		mkdir -p /input/sources/fetcher
 		touch /input/sources/fetcher/$1.start
 
@@ -126,41 +124,6 @@ function mercget {
 	fi
 }
 
-function tarballget {
-	cd "$LFS"/sources
-
-	provided_source $1 getit
-
-	echo $getit
-
-	if [[ $getit -eq 1 ]]; then
-		echo "Developer provided $1"
-	else
-		echo "WGET fetching $2 to $1"
-		echo "---------------------------------"
-		wget $2 -O $1.tar.$3
-		tar xf $1.tar.$3
-		rm $1.tar.$3
-		mv ./$1* $1
-		tar czf $1.tar.gz $1
-
-		rm -rf $1
-		store_source $1
-	fi
-}
-
-function targzget {
-	tarballget $1 $2 gz
-}
-
-function tarxzget {
-	tarballget $1 $2 xz
-}
-
-function tarbz2get {
-	tarballget $1 $2 bz2
-}
-
 function fossilget {
 	cd "$LFS"/sources
 
@@ -229,183 +192,51 @@ function gitgetkeep {
 	fi
 }
 
-function fetch_scm {
-	gitgetkeep	gnulib									git://git.sv.gnu.org/gnulib.git
+function tarballget {
+	cd "$LFS"/sources
 
-	#Make moved up due to compile error during toolchain
-	gitget		make			master					git://git.savannah.gnu.org/make.git \
-	no	"./bootstrap --copy --gnulib-srcdir=../gnulib" &
+	provided_source $1 getit
 
-	gitget		acl				master					git://git.savannah.gnu.org/acl.git \
-	no	"/build/sources/pre-condition/acl-conf.sh" &
-	gitget 		attr 			master 					git://git.savannah.gnu.org/attr.git \
-	no	"/build/sources/pre-condition/attr-conf.sh" &
-	gitget 		autoconf 		master 					git://git.savannah.gnu.org/autoconf.git \
-	no	"/build/sources/pre-condition/autoconf-conf.sh" &
-	gitget 		automake 		master 					git://git.savannah.gnu.org/automake.git \
-	no	"./bootstrap --copy --gnulib-srcdir=../gnulib" &
-	gitget		bash			devel					git://git.savannah.gnu.org/bash.git &
-	gitget		bc				master					https://git.yzena.com/gavin/bc.git &
-	gitget		binutils		master					git://sourceware.org/git/binutils-gdb.git &
+	echo $getit
 
-	#wait
+	if [[ $getit -eq 1 ]]; then
+		echo "Developer provided $1"
+	else
+		echo "WGET fetching $2 to $1"
+		echo "---------------------------------"
+		set -e
 
-	gitget 		bison 			master 					git://git.savannah.gnu.org/bison.git \
-	no	"/build/sources/pre-condition/bison-conf.sh" &
-	gitget		bzip			master					git://sourceware.org/git/bzip2.git &
-	gitget		check			master					https://github.com/libcheck/check.git \
-	no	"autoreconf -i" &
-	gitget		coreutils		master					git://git.savannah.gnu.org/coreutils.git \
-	no	"/build/sources/pre-condition/coreutils-conf.sh" &
-	gitget		dbus			master					https://gitlab.freedesktop.org/dbus/dbus.git \
-	no	"./autogen.sh" &
-	gitget		dejagnu			master					git://git.savannah.gnu.org/dejagnu.git \
-	no	"/build/sources/pre-condition/dejagnu-conf.sh" &
-	gitget		diffutils		master					git://git.savannah.gnu.org/diffutils.git \
-	no	"/build/sources/pre-condition/diffutils-conf.sh" &
-	gitget		e				maint					git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git &
-	
-	wait
+		mkdir -p /input/sources/fetcher
+		touch /input/sources/fetcher/$1.start
 
-	gitget 		elfutils 		master 					git://sourceware.org/git/elfutils.git \
-	no	"autoreconf -if" &
-	gitget		expat			master					https://github.com/libexpat/libexpat.git \
-	no	"/build/sources/pre-condition/expat-conf.sh" &
-	gitget		file			master					git://github.com/file/file \
-	no	"autoreconf -fi" &
-	gitget		findutils		master					git://git.savannah.gnu.org/findutils.git \
-	no	"/build/sources/pre-condition/findutils-conf.sh" &
-	gitget 		flex 			master	 				https://github.com/westes/flex.git \
-	no	"/build/sources/pre-condition/flex-conf.sh" &
-	gitget		gawk			master					git://git.savannah.gnu.org/gawk.git &
-	# Sometime around Sept7 2020 master of gcc started
-	# causing a hung compile of python
-	gitget		gcc				releases/gcc-10			git://gcc.gnu.org/git/gcc.git &
-	gitget 		gdbm 			master 					git://git.gnu.org.ua/gdbm.git \
-	no	"/build/sources/pre-condition/gdbm-conf.sh" &
+		wget $2 -O $1.tar.$3
+		tar xf $1.tar.$3
+		rm $1.tar.$3
+		dir=$(find . -type d -name "$1*" -print | grep "^./$1" | head -n 1)
+		mv "$dir" $1
+		tar czf $1.tar.gz $1
 
-	#wait 
+		rm -rf $1
 
-	gitget 		gettext 		master 					git://git.savannah.gnu.org/gettext.git \
-	no	"/build/sources/pre-condition/gettext-conf.sh" &
-	gitget		glibc			master					git://sourceware.org/git/glibc.git &
-	gitget 		gperf 			master 					git://git.savannah.gnu.org/gperf.git \
-	no	"/build/sources/pre-condition/gperf-conf.sh" &
-	# After commit 7ded8... grep causes a compile break in GCC
-	gitget		grep			master					git://git.savannah.gnu.org/grep.git \
-	yes	"/build/sources/pre-condition/grep-conf.sh" &	#"7ded8efd721ce2abf2b781931e0a0bdd46b156d7"
-	gitget 		groff 			master					git://git.savannah.gnu.org/groff.git \
-	no	"/build/sources/pre-condition/groff-conf.sh" &
-	## Moved GRUB Lower due to some weird conflict with inetutils
-	gitget		gzip			master					git://git.savannah.gnu.org/gzip.git \
-	no	"/build/sources/pre-condition/gzip-conf.sh" &
-	gitget 		inetutils 		master 					git://git.savannah.gnu.org/inetutils.git \
-	no	"/build/sources/pre-condition/inetutils-conf.sh" &
-	gitget		iproute			main					git://git.kernel.org/pub/scm/network/iproute2/iproute2.git &
+		rm /input/sources/fetcher/$1.start
+		store_source $1
+	fi
+}
 
-	wait
+function targzget {
+	tarballget $1 $2 gz
+}
 
-	gitget 		kbd 			master					git://git.kernel.org/pub/scm/linux/kernel/git/legion/kbd.git \
-	no	"./autogen.sh" &
-	gitget 		kmod 			master					git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
-	no	"/build/sources/pre-condition/kmod-conf.sh" &
-	gitget  	less 			master 					https://github.com/gwsw/less.git \
-	no	"/build/sources/pre-condition/less-conf.sh" &
-	gitget		libcap			master					git://git.kernel.org/pub/scm/libs/libcap/libcap.git &
-	gitget 		libffi 			master 					https://github.com/libffi/libffi \
-	no	"./autogen.sh" &
-	gitget 		libpipeline		master 					git://git.savannah.gnu.org/libpipeline.git \
-	no	"./bootstrap --copy --gnulib-srcdir=../gnulib" &
-	gitget		libressl		master					https://github.com/libressl-portable/portable.git \
-	no	"./autogen.sh" &
-	gitget 		libtool 		master 					git://git.savannah.gnu.org/libtool.git \
-	no	"/build/sources/pre-condition/libtool-conf.sh" &
-	gitget		linux			master					git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git &
-	gitget		m				branch-1.4				git://git.savannah.gnu.org/m4.git \
-	no	"/build/sources/pre-condition/m4-conf.sh" &
-	# Make moved up something above it is causing a problem
-	gitget		man				master					git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git &
+function tarxzget {
+	tarballget $1 $2 xz
+}
 
-	wait
-
-	gitget 		man-db 			master 					git://git.savannah.gnu.org/man-db.git \
-	no	"./bootstrap --copy --gnulib-srcdir=../gnulib" &
-	gitget		meson			master					https://github.com/mesonbuild/meson.git &
-	gitget		mpc				master					https://gitlab.inria.fr/mpc/mpc.git \
-	yes	"autoreconf -i" &
-	gitget		ninja			master					https://github.com/ninja-build/ninja.git &
-	# Use libressl for scm builds
-	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
-	gitget		patch			master					git://git.savannah.gnu.org/patch.git \
-	no	"/build/sources/pre-condition/patch-conf.sh" &
-	gitget		perl			blead					https://github.com/Perl/perl5.git &
-	gitget 		pkg 			master 					https://gitlab.freedesktop.org/pkg-config/pkg-config \
-	no	"./autogen.sh --no-configure" &
-	gitget		procps			master					https://gitlab.com/procps-ng/procps.git \
-	yes "./autogen.sh" &
-	gitget 		psmisc 			master 					https://gitlab.com/psmisc/psmisc.git \
-	yes "/build/sources/pre-condition/psmisc-conf.sh" &
-	gitget		Python			master					https://github.com/python/cpython.git &
-	gitget 		readline 		devel 					git://git.savannah.gnu.org/readline.git &
-	gitget		sed				master					git://git.savannah.gnu.org/sed.git \
-	no	"/build/sources/pre-condition/sed-conf.sh" &
-	gitget 		shadow 			master 					https://github.com/shadow-maint/shadow.git \
-	no	"./autogen.sh" &
-	
-	wait
-
-	gitget		systemd			master					https://github.com/systemd/systemd.git &
-	gitget 		tar 			master 					git://git.savannah.gnu.org/tar.git \
-	no	"/build/sources/pre-condition/tar-conf.sh" &
-	gitget 		texinfo 		master 					git://git.savannah.gnu.org/texinfo.git \
-	no	"/build/sources/pre-condition/texinfo-conf.sh" &
-	gitget 		util 			master					git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git \
-	no	"/build/sources/pre-condition/util-conf.sh" &
-	gitget		vim				master					https://github.com/vim/vim.git &
-	gitget		XML				master					https://github.com/toddr/XML-Parser.git &
-	gitget 		xz				master					https://git.tukaani.org/xz.git \
-	yes	"./autogen.sh" &
-	gitget 		zlib 			develop 				https://github.com/madler/zlib.git &
-	gitget		zstd			dev						https://github.com/facebook/zstd.git &
-
-	wait
-
-	mercget		gmp										https://gmplib.org/repo/gmp \
-		"/build/sources/pre-condition/gmp-conf.sh" &
-
-	svnget		mpfr			trunk					svn://scm.gforge.inria.fr/svnroot/mpfr \
-		"autoreconf -i" &
-
-	fossilget	expect									https://core.tcl-lang.org/expect &
-	# using fossil is painful, there is a good gitmirror
-	# TCL also seems fairly unstable.  > 8.6.10 breaks expect
-	#fossilget	tcl								https://core.tcl-lang.org/tcl
-	gitget 		tcl 			core-8-6-10				https://github.com/tcltk/tcl.git &
-
-	bzrget		intltool								intltool \
-		"./autogen.sh" &
-
-	targzget	iana								http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz &
-	targzget	ncurses								ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz &
-
-	#wget										https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
-	#wget										https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
-	wget 		https://www.iana.org/time-zones/repository/releases/tzdata2020a.tar.gz
-	mv	tzdata2020a.tar.gz 						tzdata.tar.gz
-
-	#wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
-	#wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
-
-	wait
-	## Grub moved to the end because it was causing some sort of conflict with inetutils
-	gitget 		grub 			master 					git://git.savannah.gnu.org/grub.git \
-	no 	"./bootstrap --copy --gnulib-srcdir=../gnulib"
+function tarbz2get {
+	tarballget $1 $2 bz2
 }
 
 function repackage {
 	set +e
-
-	echo "$1 vs $2 vs $3"
 
 	is_html=$(echo $1 | grep html)
 	is_tz=$(echo $1 | grep tzdata)
@@ -421,30 +252,18 @@ function repackage {
 			then
 				pkg_from=$(echo $1 | sed "s/$2//g" | sed "s/-src//g")
 				pkg_to=$(echo $1 | sed "s/$2//g" | sed 's/-.*//g' | sed 's/[0-9].*//g')
-				if test -f "$is_mandb"
+				if test -n "$is_mandb"
 				then
 					pkg_to+="-db"
 				fi
 
 				if [[ "$2" == ".tar.gz" ]]; then
-					echo "$pkg_to :: $pkg_from :: $3"
 					targzget  $pkg_to $3
 				elif [[ "$2" == ".tar.xz" ]]; then
 					tarxzget  $pkg_to $3
 				else
 					tarbz2get $pkg_to $3
 				fi
-
-				# echo "repackaging -> $pkg_to :: $pkg_from :: $2"
-				# tar xf $1
-				# if test -f "$1"
-				# then
-				# 	rm $1
-				# fi
-				# mv "$pkg_from" "$pkg_to"
-				# tar czf "$pkg_to".tar.gz "$pkg_to"
-				# rm -rf "$pkg_to"
-
 			else
 				wget $3
 				mv $1 tzdata.tar.gz
@@ -452,6 +271,21 @@ function repackage {
 		else
 			echo "retaining"
 		fi
+	fi
+}
+
+max_children=$(nproc)
+#max_children=$((max_children / 2))
+
+
+function parallel {
+	"$@" || exit 1 &
+
+	local my_pid=$$
+  	local children=$(ps -eo ppid | grep -w $my_pid | wc -w)
+
+	if [[ $children -ge $max_children ]]; then
+		wait -n
 	fi
 }
 
@@ -463,18 +297,129 @@ function pak {
 		is_gz=$(echo "$file" | grep tar.gz)
 		is_xz=$(echo "$file" | grep tar.xz)
 		is_bz2=$(echo "$file" | grep tar.bz2)
-		if [[ -n $is_gz ]]; then
-			repackage "$file" ".tar.gz" "$url" &
-		elif [[ -n $is_xz ]]; then
-			repackage "$file" ".tar.xz" "$url" &
-		elif [[ -n $is_bz2 ]]; then
-			repackage "$file" ".tar.bz2" "$url" &
-		else
-			wget $url
-		fi
 		set -e
+		if [[ -n $is_gz ]]; then
+			parallel repackage "$file" ".tar.gz" "$url"
+		elif [[ -n $is_xz ]]; then
+			parallel repackage "$file" ".tar.xz" "$url"
+		elif [[ -n $is_bz2 ]]; then
+			parallel repackage "$file" ".tar.bz2" "$url"
+		else
+			parallel wget $url
+		fi
+
+		local my_pid=$$
+  		local children=$(ps -eo ppid | grep -w $my_pid | wc -w)
+
+		if [[ $children -ge $max_children ]]; then
+			wait -n
+		fi
 	done < wget-list
 
+	wait
+}
+
+
+
+function fetch_scm {
+	gitgetkeep	gnulib									git://git.sv.gnu.org/gnulib.git
+
+	#Make moved up due to compile error during toolchain
+	parallel  gitget  make  master  git://git.savannah.gnu.org/make.git  no  "./bootstrap --copy --gnulib-srcdir=../gnulib"
+	parallel  gitget  inetutils  master  git://git.savannah.gnu.org/inetutils.git  no  "/build/sources/pre-condition/inetutils-conf.sh"
+	wait
+	parallel  gitget  acl  master  git://git.savannah.gnu.org/acl.git  no  "/build/sources/pre-condition/acl-conf.sh"
+	parallel  gitget  attr  master  git://git.savannah.gnu.org/attr.git  no  "/build/sources/pre-condition/attr-conf.sh"
+	parallel  gitget  autoconf  master  git://git.savannah.gnu.org/autoconf.git  no  "/build/sources/pre-condition/autoconf-conf.sh"
+	parallel  gitget  automake  master  git://git.savannah.gnu.org/automake.git  no  "./bootstrap --copy --gnulib-srcdir=../gnulib"
+	parallel  gitget  bash  devel  git://git.savannah.gnu.org/bash.git
+	parallel  gitget  bc  master  https://git.yzena.com/gavin/bc.git
+	parallel  gitget  binutils  master  git://sourceware.org/git/binutils-gdb.git
+	parallel  gitget  bison  master  git://git.savannah.gnu.org/bison.git  no  "/build/sources/pre-condition/bison-conf.sh"
+	parallel  gitget  bzip  master  git://sourceware.org/git/bzip2.git
+	parallel  gitget  check  master  https://github.com/libcheck/check.git  no  "autoreconf -i"
+	parallel  gitget  coreutils master  git://git.savannah.gnu.org/coreutils.git  no  "/build/sources/pre-condition/coreutils-conf.sh"
+	parallel  gitget  dbus  master  https://gitlab.freedesktop.org/dbus/dbus.git  no  "./autogen.sh"
+	parallel  gitget  dejagnu  master git://git.savannah.gnu.org/dejagnu.git  no  "/build/sources/pre-condition/dejagnu-conf.sh"
+	parallel  gitget  diffutils  master  git://git.savannah.gnu.org/diffutils.git  no  "/build/sources/pre-condition/diffutils-conf.sh"
+	parallel  gitget  e  maint  git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+	parallel  gitget  elfutils  master  git://sourceware.org/git/elfutils.git  no  "autoreconf -if"
+	parallel  gitget  expat  master  https://github.com/libexpat/libexpat.git  no  "/build/sources/pre-condition/expat-conf.sh"
+	parallel  gitget  file  master  git://github.com/file/file  no  "autoreconf -fi"
+	parallel  gitget  findutils  master  git://git.savannah.gnu.org/findutils.git  no  "/build/sources/pre-condition/findutils-conf.sh"
+	parallel  gitget  flex  master  https://github.com/westes/flex.git  no  "/build/sources/pre-condition/flex-conf.sh"
+	parallel  gitget  gawk  master  git://git.savannah.gnu.org/gawk.git
+	# Sometime around Sept7 2020 master of gcc started
+	# causing a hung compile of python
+	parallel  gitget  gcc  releases/gcc-10  git://gcc.gnu.org/git/gcc.git
+	parallel  gitget  gdbm  master  git://git.gnu.org.ua/gdbm.git  no  "/build/sources/pre-condition/gdbm-conf.sh"
+	parallel  gitget  gettext  master  git://git.savannah.gnu.org/gettext.git  no  "/build/sources/pre-condition/gettext-conf.sh"
+	parallel  gitget  glibc  master  git://sourceware.org/git/glibc.git
+	parallel  gitget  gperf  master  git://git.savannah.gnu.org/gperf.git  no  "/build/sources/pre-condition/gperf-conf.sh"
+	parallel  gitget  grep  master  git://git.savannah.gnu.org/grep.git  yes  "/build/sources/pre-condition/grep-conf.sh"
+	parallel  gitget  groff  master  git://git.savannah.gnu.org/groff.git  yes  "/build/sources/pre-condition/groff-conf.sh"  "a334cc97abbdfb9c41e28fcd7c187b81a0a3ceac"
+	parallel  gitget  grub  master  git://git.savannah.gnu.org/grub.git  no  "./bootstrap --copy --gnulib-srcdir=../gnulib"
+	parallel  gitget  gzip  master  git://git.savannah.gnu.org/gzip.git  no  "/build/sources/pre-condition/gzip-conf.sh"
+	parallel  gitget  iproute  main  git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
+	parallel  gitget  kbd  master  git://git.kernel.org/pub/scm/linux/kernel/git/legion/kbd.git  no  "./autogen.sh"
+	parallel  gitget  kmod  master  git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git  no  "/build/sources/pre-condition/kmod-conf.sh"
+	parallel  gitget  less  master  https://github.com/gwsw/less.git  no  "/build/sources/pre-condition/less-conf.sh"
+	parallel  gitget  libcap  master  git://git.kernel.org/pub/scm/libs/libcap/libcap.git
+	parallel  gitget  libffi  master  https://github.com/libffi/libffi  no  "./autogen.sh"
+	parallel  gitget  libpipeline  master  git://git.savannah.gnu.org/libpipeline.git  no  "./bootstrap --copy --gnulib-srcdir=../gnulib"
+	parallel  gitget  libressl  master  https://github.com/libressl-portable/portable.git  no  "./autogen.sh"
+	parallel  gitget  libtool  master  git://git.savannah.gnu.org/libtool.git  no  "/build/sources/pre-condition/libtool-conf.sh"
+	parallel  gitget  linux  master  git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+	parallel  gitget  m  branch-1.4  git://git.savannah.gnu.org/m4.git  no  "/build/sources/pre-condition/m4-conf.sh"
+	# Make moved up something above it is causing a problem
+	parallel  gitget  man  master  git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
+	parallel  gitget  man-db  master  git://git.savannah.gnu.org/man-db.git  no  "./bootstrap --copy --gnulib-srcdir=../gnulib"
+	parallel  gitget  meson  master  https://github.com/mesonbuild/meson.git
+	parallel  gitget  mpc  master  https://gitlab.inria.fr/mpc/mpc.git  yes  "autoreconf -i"
+	parallel  gitget  ninja  master  https://github.com/ninja-build/ninja.git
+	# Use libressl for scm builds
+	#gitget		openssl			OpenSSL_1_1_1-stable	https://github.com/openssl/openssl.git
+	parallel  gitget  patch  master  git://git.savannah.gnu.org/patch.git  no  "/build/sources/pre-condition/patch-conf.sh"
+	parallel  gitget  perl  blead  https://github.com/Perl/perl5.git
+	parallel  gitget  pkg  master  https://gitlab.freedesktop.org/pkg-config/pkg-config  no  "./autogen.sh --no-configure"
+	parallel  gitget  procps  master  https://gitlab.com/procps-ng/procps.git  yes  "./autogen.sh"
+	parallel  gitget  psmisc  master  https://gitlab.com/psmisc/psmisc.git  yes  "/build/sources/pre-condition/psmisc-conf.sh"
+	parallel  gitget  Python  master  https://github.com/python/cpython.git
+	parallel  gitget  readline  devel  git://git.savannah.gnu.org/readline.git
+	parallel  gitget  sed  master  git://git.savannah.gnu.org/sed.git  no  "/build/sources/pre-condition/sed-conf.sh"
+	parallel  gitget  shadow  master  https://github.com/shadow-maint/shadow.git  no  "./autogen.sh"
+	parallel  gitget  systemd  master  https://github.com/systemd/systemd.git
+	parallel  gitget  tar  master  git://git.savannah.gnu.org/tar.git  no  "/build/sources/pre-condition/tar-conf.sh"
+	parallel  gitget  texinfo  master  git://git.savannah.gnu.org/texinfo.git  no  "/build/sources/pre-condition/texinfo-conf.sh"
+	parallel  gitget  util  master  git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git  no  "/build/sources/pre-condition/util-conf.sh"
+	parallel  gitget  vim  master  https://github.com/vim/vim.git
+	parallel  gitget  XML  master  https://github.com/toddr/XML-Parser.git
+	parallel  gitget  xz  master  https://git.tukaani.org/xz.git  yes  "./autogen.sh"
+	parallel  gitget  zlib  develop  https://github.com/madler/zlib.git
+	parallel  gitget  zstd  dev  https://github.com/facebook/zstd.git
+
+	parallel  mercget  gmp  https://gmplib.org/repo/gmp  "/build/sources/pre-condition/gmp-conf.sh"
+
+	parallel  svnget  mpfr  trunk  svn://scm.gforge.inria.fr/svnroot/mpfr  "autoreconf -i"
+
+	parallel  fossilget  expect  https://core.tcl-lang.org/expect
+	# using fossil is painful, there is a good gitmirror
+	# TCL also seems fairly unstable.  > 8.6.10 breaks expect
+	#fossilget	tcl								https://core.tcl-lang.org/tcl
+	parallel  gitget  tcl  core-8-6-10  https://github.com/tcltk/tcl.git
+
+	parallel  bzrget  intltool  intltool  "./autogen.sh"
+
+	parallel  targzget  iana  http://anduin.linuxfromscratch.org/LFS/iana-etc-20200429.tar.gz
+	parallel  targzget  ncurses  ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz
+
+	#wget										https://www.python.org/ftp/python/doc/3.8.5/python-3.8.5-docs-html.tar.bz2
+	#wget										https://downloads.sourceforge.net/tcl/tcl8.6.10-html.tar.gz
+	wget  https://www.iana.org/time-zones/repository/releases/tzdata2020a.tar.gz
+	mv  tzdata2020a.tar.gz  tzdata.tar.gz
+
+	#wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.32-fhs-1.patch
+	#wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-2.3.0-backspace-1.patch
 	wait
 }
 
