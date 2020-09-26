@@ -103,13 +103,17 @@ lfs-docker-build/resources/sources/pre-condition
 5) Numbering the build order is messy and makes it difficult to insert new packages.  We should refactor this somehow (remember we don't have any other scripting language at build time other than bash)
 6) Integrate LiveScratch to create a bootable ISO of the finalized product (https://github.com/masmullin2000/LiveScratch)
 
-# Bugs Found and Fixed because of Linux From SCM
+# Bugs Found because of LFScm
+
+## Bugs Found and Fixed
 Systemd compile break
 https://github.com/systemd/systemd/commit/3dd8ae5c70aaf5d6d70079b1b14f1a66cb6b633a
 
 binutils compile break
 https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=e1044e6adca7d48674d70a860b3a5939fe44323f
 
+## Reported Bugs
+- https://savannah.gnu.org/bugs/index.php?59186
+
 ## Bugs found and not fixed (unsure how to report)
 - GCC master head causes a forever compile on python 3.10.  GCC master downgrated to 10.2.1
-- https://savannah.gnu.org/bugs/index.php?59186
