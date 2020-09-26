@@ -112,4 +112,4 @@ https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=e1044e6adca7d48674d70a
 
 ## Bugs found and not fixed (unsure how to report)
 - GCC master head causes a forever compile on python 3.10.  GCC master downgrated to 10.2.1
-- grep master head causes a compile break in gcc (versions 10.2.0, 10.2.1, and master head).  grep downgraded to a commit just prior to the bug
+- https://savannah.gnu.org/bugs/index.php?59186
