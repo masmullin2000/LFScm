@@ -113,7 +113,7 @@ binutils compile break
 https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=e1044e6adca7d48674d70a860b3a5939fe44323f
 
 ## Reported Bugs
-- https://savannah.gnu.org/bugs/index.php?59186
+- Groff Compile break https://savannah.gnu.org/bugs/index.php?59186
 
 ## Bugs found and not fixed (unsure how to report)
 - GCC master head causes a forever compile on python 3.10.  GCC master downgrated to 10.2.1
