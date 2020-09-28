@@ -112,8 +112,10 @@ https://github.com/systemd/systemd/commit/3dd8ae5c70aaf5d6d70079b1b14f1a66cb6b63
 binutils compile break
 https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=e1044e6adca7d48674d70a860b3a5939fe44323f
 
-## Reported Bugs
-- Groff Compile break https://savannah.gnu.org/bugs/index.php?59186
+Groff Compile break https://savannah.gnu.org/bugs/index.php?59186.  Fix https://git.savannah.gnu.org/cgit/groff.git/commit/?id=00bccfc7418ef7d55ddbf527af0f50c64bb76fa7
+
+## Reported Unfixed Bugs
+
 
 ## Bugs found and not fixed (unsure how to report)
 - GCC master head causes a forever compile on python 3.10.  GCC master downgrated to 10.2.1
