@@ -357,7 +357,7 @@ function fetch_scm {
 	parallel  gitget  glibc  master  git://sourceware.org/git/glibc.git
 	parallel  gitget  gperf  master  git://git.savannah.gnu.org/gperf.git  no  "/build/sources/pre-condition/gperf-conf.sh"
 	parallel  gitget  grep  master  git://git.savannah.gnu.org/grep.git  yes  "/build/sources/pre-condition/grep-conf.sh"
-	parallel  gitget  groff  master  git://git.savannah.gnu.org/groff.git  yes  "/build/sources/pre-condition/groff-conf.sh"  "a334cc97abbdfb9c41e28fcd7c187b81a0a3ceac"
+	parallel  gitget  groff  master  git://git.savannah.gnu.org/groff.git  yes  "/build/sources/pre-condition/groff-conf.sh"
 	parallel  gitget  grub  master  git://git.savannah.gnu.org/grub.git  no  "./bootstrap --copy --gnulib-srcdir=../gnulib"
 	parallel  gitget  gzip  master  git://git.savannah.gnu.org/gzip.git  no  "/build/sources/pre-condition/gzip-conf.sh"
 	parallel  gitget  iproute  main  git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
