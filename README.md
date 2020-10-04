@@ -98,7 +98,7 @@ lfs-docker-build/resources/sources/pre-condition
 1) Non-SCM builds should check for developer provided sources in input/sources
 2) A lof ot build time is consumed by running ./configure scripts.  Decrease the build time by running some of these in parallel
   A) This requires a very intimate knowledge of which packages require which other packages, and which packages can be configured in parallel
-3) Global CFLAGS - It would be nice to start playing with -march=native
+3) Global CFLAGS - It would be nice to start playing with -march=native (started playing, but user input would be good)
 4) fetch-scm.sh is messy, this should be re-written in a cleaner way
 5) Numbering the build order is messy and makes it difficult to insert new packages.  We should refactor this somehow (remember we don't have any other scripting language at build time other than bash)
 6) Integrate LiveScratch to create a bootable ISO of the finalized product (https://github.com/masmullin2000/LiveScratch)
