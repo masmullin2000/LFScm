@@ -387,7 +387,9 @@ function fetch_scm {
 	parallel  gitget  Python  master  https://github.com/python/cpython.git
 	parallel  gitget  readline  devel  git://git.savannah.gnu.org/readline.git
 	parallel  gitget  sed  master  git://git.savannah.gnu.org/sed.git  no  "/build/sources/pre-condition/sed-conf.sh"
-	parallel  gitget  shadow  master  https://github.com/shadow-maint/shadow.git  no  "./autogen.sh"
+	# Shadow is broken; use mine until it's fixed
+	#parallel  gitget  shadow  master  https://github.com/shadow-maint/shadow.git  no  "./autogen.sh"
+	parallel  gitget  shadow  master  https://github.com/masmullin2000/shadow.git  no  "./autogen.sh"
 	parallel  gitget  systemd  master  https://github.com/systemd/systemd.git
 	parallel  gitget  tar  master  git://git.savannah.gnu.org/tar.git  no  "/build/sources/pre-condition/tar-conf.sh"
 	parallel  gitget  texinfo  master  git://git.savannah.gnu.org/texinfo.git  no  "/build/sources/pre-condition/texinfo-conf.sh"

@@ -17,6 +17,8 @@ if [[ "$1" == "jf" ]]; then
 	JUST_FETCH="yes"
 fi
 
+BUILD_CFLAGS="-march=native -Ofast -fstack-protector-all"
+
 function backup {
  	local LEVEL=1
 	if [[ -n $2 ]]; then
@@ -231,6 +233,7 @@ function make_lfs_sys {
 		make_vfs
 
 		chroot "$LFS" /usr/bin/env -i   \
+			CFLAGS="$BUILD_CFLAGS" \
 			HOME=/root                  \
 			TERM="$TERM"                \
 			PS1='(lfs chroot) \u:\w\$ ' \
@@ -252,6 +255,7 @@ function make_ssl {
 	if [[ $SOURCE_FETCH_METHOD == "scm" ]]; then
 		echo -e "Building LibreSSL\n\n\n\n\n\n"
 		chroot "$LFS" /usr/bin/env -i   \
+			CFLAGS="$BUILD_CFLAGS" \
 			HOME=/root                  \
 			TERM="$TERM"                \
 			PS1='(lfs chroot) \u:\w\$ ' \
@@ -263,6 +267,7 @@ function make_ssl {
 		echo -e "Building OpenSSL\n\n\n\n\n\n"
 
 		chroot "$LFS" /usr/bin/env -i   \
+			CFLAGS="$BUILD_CFLAGS" \
 			HOME=/root                  \
 			TERM="$TERM"                \
 			PS1='(lfs chroot) \u:\w\$ ' \
@@ -310,6 +315,7 @@ function make_lfs_system_final {
 	    make_vfs
 
 	    chroot "$LFS" /usr/bin/env -i          \
+			CFLAGS="$BUILD_CFLAGS" \
 		    HOME=/root TERM="$TERM"            \
 		    PS1='(lfs chroot) \u:\w\$ '        \
 		    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
@@ -378,6 +384,7 @@ function make_wget {
 
 	# Make WGET and dependencies
 	chroot "$LFS" /usr/bin/env -i          \
+		CFLAGS="$BUILD_CFLAGS" \
 	    HOME=/root TERM="$TERM"            \
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
@@ -404,6 +411,7 @@ function make_ssh {
 	fi
 
 	chroot "$LFS" /usr/bin/env -i          \
+		CFLAGS="$BUILD_CFLAGS" \
 	    HOME=/root TERM="$TERM"            \
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
@@ -428,6 +436,7 @@ function make_htop {
 	/build/sources/fetch-scm.sh htop
 
 	chroot "$LFS" /usr/bin/env -i          \
+		CFLAGS="$BUILD_CFLAGS" \
 		HOME=/root TERM="$TERM"            \
 		PS1='(lfs chroot) \u:\w\$ '        \
 		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
@@ -442,6 +451,7 @@ function make_wireguard {
 	/build/sources/fetch-scm.sh wireguard
 
 	chroot "$LFS" /usr/bin/env -i          \
+		CFLAGS="$BUILD_CFLAGS" \
 		HOME=/root TERM="$TERM"            \
 		PS1='(lfs chroot) \u:\w\$ '        \
 		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
@@ -459,6 +469,7 @@ function make_git {
 	/build/sources/fetch-scm.sh git
 
 	chroot "$LFS" /usr/bin/env -i          \
+		CFLAGS="$BUILD_CFLAGS" \
 		HOME=/root TERM="$TERM"            \
 		PS1='(lfs chroot) \u:\w\$ '        \
 		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
@@ -490,6 +501,7 @@ function finish_build {
 	rm -rf "$LFS"/mnt/lfs
 	rm -rf "$LFS"/extras
 	rm -rf "$LFS"/basic-system
+	rm -rf "$LFS"/completed
 	backup /output/finished-lfs-$SOURCE_FETCH_METHOD.tar.xz $1
 
 	QEMU_DIR="/mnt/qemu"
@@ -513,6 +525,7 @@ function finish_build {
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 	    /bin/bash --login -c "set -e
+	    	rm -rf /lost+found
 			grub-install --target=i386-pc $drive
 			sync
 		"

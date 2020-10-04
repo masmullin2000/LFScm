@@ -5,7 +5,6 @@ set -e
 tar xf libressl.tar.gz
 cd libressl
 
-CFLAGS="-Ofast -fstack-protector-all" \
 ./config --prefix=/usr         \
          --openssldir=/etc/ssl \
          --libdir=lib          \

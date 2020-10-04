@@ -12,6 +12,8 @@ fi
 mkdir -v build
 cd       build
 
+export CFLAGS=$(echo $CFLAGS | sed 's/Ofast/O3/g')
+
 ../configure --prefix=/usr                            \
              --disable-werror                         \
              --enable-kernel=3.2                      \

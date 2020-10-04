@@ -15,7 +15,9 @@ sed -i '/test.lock/s/^/#/' gnulib-tests/gnulib.mk
 autoreconf -fiv
 FORCE_UNSAFE_CONFIGURE=1 ./configure \
             --prefix=/usr            \
-            --enable-no-install-program=kill,uptime
+            --enable-no-install-program=kill,uptime \
+            --enable-single-binary=shebangs \
+            --with-openssl=yes
 
 make -j$(nproc)
 

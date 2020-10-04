@@ -5,6 +5,8 @@ set -e
 tar xf Python.tar.gz
 cd Python
 
+export CFLAGS=$(echo $CFLAGS | sed 's/Ofast/O3/g')
+
 ./configure --prefix=/usr       \
             --enable-shared     \
             --with-system-expat \

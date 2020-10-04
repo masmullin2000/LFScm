@@ -46,7 +46,7 @@ function build_tools {
 		for (( i=$2; i<=$3; i++ ))
 		do
 			echo -e "Building Tool $i\n\n\n\n\n"
-			cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null || exit &
+			cd "$LFS"/sources && /build/make-scripts/toolchain/tools/$i.*.sh > /dev/null || exit
 		done
 		wait
 		backup "/output/tools-pt$1.tar.xz"
