@@ -5,7 +5,7 @@ set -e
 tar xf grub.tar.gz
 cd grub
 
-export CFLAGS=$(echo $CFLAGS | sed 's/-fstack-protector[^ ]*/-fno-stack-protector /g')
+unset CFLAGS
 ./configure --prefix=/usr          \
             --sbindir=/sbin        \
             --sysconfdir=/etc      \

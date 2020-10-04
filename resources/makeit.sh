@@ -525,7 +525,6 @@ function finish_build {
 	    PS1='(lfs chroot) \u:\w\$ '        \
 	    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
 	    /bin/bash --login -c "set -e
-	    	rm -rf /lost+found
 			grub-install --target=i386-pc $drive
 			sync
 		"
@@ -567,6 +566,6 @@ fetch_sources "$SOURCE_FETCH_METHOD"
 
 if [[ "$JUST_FETCH" != "yes" ]]; then
 	make_lfs_system
-	make_extras
+	#make_extras
 	finish_build 9e
 fi
