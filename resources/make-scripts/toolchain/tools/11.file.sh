@@ -5,7 +5,8 @@ set -e
 tar xvf file.tar.gz
 cd file
 
-./configure --prefix=/usr --host=$LFS_TGT
+#./configure --prefix=/usr --host=$LFS_TGT
+./configure --prefix=/usr
 
 make -j$(nproc)
 

@@ -2,6 +2,8 @@
 
 set -e
 
+max_children=$(nproc)
+
 function provided_source {
 
 	local __ret=$2
@@ -274,10 +276,6 @@ function repackage {
 	fi
 }
 
-max_children=$(nproc)
-#max_children=$((max_children / 2))
-
-
 function parallel {
 	"$@" || exit 1 &
 
@@ -290,6 +288,7 @@ function parallel {
 }
 
 function pak {
+	max_children=4
 	while read url;
 	do
 		set +e
@@ -332,7 +331,7 @@ function fetch_scm {
 	parallel  gitget  attr  master  git://git.savannah.gnu.org/attr.git  no  "/build/sources/pre-condition/attr-conf.sh"
 	parallel  gitget  autoconf  master  git://git.savannah.gnu.org/autoconf.git  no  "/build/sources/pre-condition/autoconf-conf.sh"
 	parallel  gitget  automake  master  git://git.savannah.gnu.org/automake.git  no  "./bootstrap --copy --gnulib-srcdir=../gnulib"
-	parallel  gitget  bash  devel  git://git.savannah.gnu.org/bash.git
+	parallel  gitget  bash  master  git://git.savannah.gnu.org/bash.git
 	parallel  gitget  bc  master  https://git.yzena.com/gavin/bc.git
 	parallel  gitget  binutils  master  git://sourceware.org/git/binutils-gdb.git
 	parallel  gitget  bison  master  git://git.savannah.gnu.org/bison.git  no  "/build/sources/pre-condition/bison-conf.sh"
@@ -355,6 +354,7 @@ function fetch_scm {
 	parallel  gitget  gdbm  master  git://git.gnu.org.ua/gdbm.git  no  "/build/sources/pre-condition/gdbm-conf.sh"
 	parallel  gitget  gettext  master  git://git.savannah.gnu.org/gettext.git  no  "/build/sources/pre-condition/gettext-conf.sh"
 	parallel  gitget  glibc  master  git://sourceware.org/git/glibc.git
+	#parallel  gitget  glibc  release/2.32/master  git://sourceware.org/git/glibc.git
 	parallel  gitget  gperf  master  git://git.savannah.gnu.org/gperf.git  no  "/build/sources/pre-condition/gperf-conf.sh"
 	parallel  gitget  grep  master  git://git.savannah.gnu.org/grep.git  yes  "/build/sources/pre-condition/grep-conf.sh"
 	parallel  gitget  groff  master  git://git.savannah.gnu.org/groff.git  yes  "/build/sources/pre-condition/groff-conf.sh"

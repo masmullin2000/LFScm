@@ -8,6 +8,7 @@ CPU=`nproc`
 SAVE_PROG="no"
 MANUAL=0
 JUST_FETCH=""
+EXTRA=""
 
 function usage {
 	echo -e "doit:\n\t-t|--type (scm|lfs|dev): type of build\n\t\tbuild an scm (git based) lfs (10.0) or dev (current lfs development version)"
@@ -17,6 +18,7 @@ function usage {
 	echo -e "\t-m|--manual: manual container\n\t\trun the container but do not run the makeit script"
 	echo -e "\t-p|--podman:\n\t\tuse podman instead of docker"
 	echo -e "\t-f|--fetch:\n\t\tJust fetch the code, do not compile anything"
+	echo -e "\t-e|--extra:\n\t\tAdd Extras (wireguard ssh wget etc"
 	echo -e "\n\n\tExample:\n\t\t$ sudo ./doit -t scm -n -c 4 -s -p"
 	echo -e "\tmeaning:\n\t\tUse podman to run the SCM build with 4 cpus,\n\t\tensure that the Dockerfile has been run,\n\t\tsave progress into output dir as we build"
 }
@@ -55,6 +57,9 @@ do
 		-f|--fetch)
 			JUST_FETCH="jf"
 			;;
+		-e|--extra)
+			EXTRA="extra"
+			;;
 		*)
 			echo "Unrecognized Parameter $1"
 			exit 1
@@ -80,5 +85,5 @@ then
 	$CONTAINER run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME bash
 else
 	#echo "$CONTAINER run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME ./makeit.sh $SAVE_PROG $TYPE"
-	$CONTAINER run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME ./makeit.sh $SAVE_PROG $TYPE $JUST_FETCH
+	$CONTAINER run --rm --privileged --cpus $CPU -v /dev:/dev -v $PWD/output/:/output/ -v $PWD/input/:/input -it $NAME ./makeit.sh $SAVE_PROG $TYPE $JUST_FETCH $EXTRA
 fi

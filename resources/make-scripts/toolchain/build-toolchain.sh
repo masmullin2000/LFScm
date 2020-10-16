@@ -54,11 +54,11 @@ function build_tools {
 }
 
 function build_tools_2 {
-	build_tools 2 13 22 build_tools_1
+	build_tools 2 12 22 build_tools_1
 }
 
 function build_tools_1 {
-	build_tools 1 6 12 build_toolchain
+	build_tools 1 6 10 build_toolchain
 }
 
 build_tools_2

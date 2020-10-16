@@ -15,6 +15,12 @@ fi
 JUST_FETCH="no"
 if [[ "$1" == "jf" ]]; then
 	JUST_FETCH="yes"
+	shift
+fi
+
+EXTRAS="no"
+if [[ "$1" == "extra" ]]; then
+	EXTRAS="no"
 fi
 
 BUILD_CFLAGS="-march=native -Ofast -fstack-protector-all"
@@ -137,7 +143,7 @@ function make_toolchain {
 	esac
 
 	chown -R lfs:lfs "$LFS"/sources
-	sudo -u lfs /bin/bash -c "/build/make-scripts/toolchain/build-toolchain.sh $BACKUP"
+	sudo -u lfs /bin/bash -c "/build/make-scripts/toolchain/build-toolchain.sh $BACKUP" || exit
 	chown -R root:root "$LFS"
 }
 
@@ -159,6 +165,9 @@ function make_temp_system {
 		mkdir -p "$LFS"/additional
 		cp /build/make-scripts/toolchain/build-additional.sh "$LFS"/additional/
 		cp /build/make-scripts/toolchain/additional/*.sh "$LFS"/additional/
+
+		mkdir -p "$LFS"/tools/
+		cp /build/make-scripts/toolchain/tools/*.sh "$LFS"/tools/
 
 		chroot "$LFS" /usr/bin/env -i   \
 		    HOME=/root                  \
@@ -566,6 +575,8 @@ fetch_sources "$SOURCE_FETCH_METHOD"
 
 if [[ "$JUST_FETCH" != "yes" ]]; then
 	make_lfs_system
-	#make_extras
+	if [[ $EXTRAS == "yes" ]]; then
+		make_extras
+	fi
 	finish_build 9e
 fi
