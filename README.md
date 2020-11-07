@@ -115,7 +115,7 @@ https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=e1044e6adca7d48674d70a
 Groff Compile break https://savannah.gnu.org/bugs/index.php?59186.  Fix https://git.savannah.gnu.org/cgit/groff.git/commit/?id=00bccfc7418ef7d55ddbf527af0f50c64bb76fa7
 
 Shadow compile break
-https://github.com/shadow-maint/shadow/issues/284 (proposed change: https://github.com/shadow-maint/shadow/pull/285)
+https://github.com/shadow-maint/shadow/issues/284 Fix https://github.com/shadow-maint/shadow/commit/af0f55a6257a07c19162ac28037b0a65f286d3dd
 
 ## Reported Unfixed Bugs
 
