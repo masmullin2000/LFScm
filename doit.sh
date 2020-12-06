@@ -18,7 +18,8 @@ function usage {
 	echo -e "\t-m|--manual: manual container\n\t\trun the container but do not run the makeit script"
 	echo -e "\t-p|--podman:\n\t\tuse podman instead of docker"
 	echo -e "\t-f|--fetch:\n\t\tJust fetch the code, do not compile anything"
-	echo -e "\t-e|--extra:\n\t\tAdd Extras (wireguard ssh wget etc"
+	echo -e "\t-e|--extra:\n\t\tAdd Extras (wireguard ssh wget etc)"
+	echo -e "\t-cl|--clean:\n\t\tClean previous downloaded sources"
 	echo -e "\n\n\tExample:\n\t\t$ sudo ./doit -t scm -n -c 4 -s -p"
 	echo -e "\tmeaning:\n\t\tUse podman to run the SCM build with 4 cpus,\n\t\tensure that the Dockerfile has been run,\n\t\tsave progress into output dir as we build"
 }
@@ -36,6 +37,10 @@ do
 		-c|--cpus)
 			CPU=$2
 			shift
+			;;
+		-cl|--clean)
+			rm -f input/sources/*.gz
+			rm -rf input/sources/fetcher
 			;;
 		-s|--save_prog)
 			SAVE_PROG="yes"
