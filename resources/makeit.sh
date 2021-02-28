@@ -55,13 +55,14 @@ function setup_loop {
 
 	set +e
 
-	losetup -d $"LOOP_DEV"
+	echo $LOOP_DEV
+	losetup -d $LOOP_DEV
 
 	rm /build/lfs.img
 
 	set -e
 
-	qemu-img create -f raw /build/lfs.img 2304M
+	qemu-img create -f raw /build/lfs.img 5G
 	losetup -fP /build/lfs.img
 
 	sfdisk "$LOOP_DEV" < /build/loop.sfdisk

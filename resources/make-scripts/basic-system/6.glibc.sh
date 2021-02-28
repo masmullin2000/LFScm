@@ -5,8 +5,8 @@ set -e
 tar xf glibc.tar.gz
 cd glibc
 
-if [[ -f "../glibc-2.32-fhs-1.patch" ]]; then
-  patch -Np1 -i ../glibc-2.32-fhs-1.patch
+if [[ -f "../glibc-*.patch" ]]; then
+  patch -Np1 -i ../glibc-*.patch
 fi
 
 mkdir -v build
@@ -96,7 +96,7 @@ ZONEINFO=/usr/share/zoneinfo
 mkdir -pv $ZONEINFO/{posix,right}
 
 for tz in etcetera southamerica northamerica europe africa antarctica  \
-          asia australasia backward pacificnew systemv; do
+          asia australasia backward; do
     zic -L /dev/null   -d $ZONEINFO       ${tz}
     zic -L /dev/null   -d $ZONEINFO/posix ${tz}
     zic -L leapseconds -d $ZONEINFO/right ${tz}
